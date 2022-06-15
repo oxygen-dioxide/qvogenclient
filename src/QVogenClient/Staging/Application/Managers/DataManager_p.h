@@ -19,7 +19,7 @@ public:
     QMap<QString, QString> lastOpenPaths;
 
     // Global Used Strings
-    QString projectFilter;         // *.ust
+    QString projectFilter;         // *.vog
     QString importFilter;          // *.mid *.svp *.s5p *.vsqx *.vsq *.ustx
     QString appendFilter;          // *.mid *.ust *.svp *.s5p *.vsqx *.vsq *.ustx
     QString exportSelectionFilter; // *.mid *.ust *.svp *.vsqx

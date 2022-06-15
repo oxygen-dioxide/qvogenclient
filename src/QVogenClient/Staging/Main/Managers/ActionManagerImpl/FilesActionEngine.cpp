@@ -30,7 +30,14 @@ void FilesActionEngine::q_actionTriggered(QAction *action) {
 
     Q_D(FilesActionEngine);
     if (menu == d->fileMenu) {
-        if (action == d->file_importFile) {
+        if (action == d->file_openFile) {
+            QString path =
+                qData->openFile(tr("Open"), qData->getFileFilter(DataManager::ProjectFiles),
+                                FLAG_OPEN, d->window());
+            if (!path.isEmpty()) {
+                d->eventMgr->open(path);
+            }
+        } else if (action == d->file_importFile) {
             QString path =
                 qData->openFile(tr("Import"), qData->getFileFilter(DataManager::ImportFile),
                                 FLAG_IMPORT, d->window());

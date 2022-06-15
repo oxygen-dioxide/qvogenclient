@@ -1,4 +1,4 @@
-set(CURRENT_PROJECT_NAME QMidi)
+project(QMidi)
 
 set(BUILD_STATIC OFF)
 
@@ -32,11 +32,11 @@ endif ()
 
 # Add library
 if (BUILD_STATIC)
-    add_library(${CURRENT_PROJECT_NAME} STATIC ${SOURCES})
-    target_compile_definitions(${CURRENT_PROJECT_NAME} PRIVATE Q_MIDI_BUILD_STATIC)
+    add_library(${PROJECT_NAME} STATIC ${SOURCES})
+    target_compile_definitions(${PROJECT_NAME} PRIVATE Q_MIDI_BUILD_STATIC)
 else ()
-    add_library(${CURRENT_PROJECT_NAME} SHARED ${SOURCES})
+    add_library(${PROJECT_NAME} SHARED ${SOURCES})
 endif ()
 
-target_include_directories(${CURRENT_PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
-target_link_libraries(${CURRENT_PROJECT_NAME} ${LIBRARIES})
+target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
+target_link_libraries(${PROJECT_NAME} ${LIBRARIES})

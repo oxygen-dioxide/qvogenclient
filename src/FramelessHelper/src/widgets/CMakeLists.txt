@@ -23,9 +23,9 @@
 ]]
 
 set(SUB_MOD_NAME Widgets)
-set(SUB_PROJ_NAME ${CURRENT_PROJECT_NAME}${SUB_MOD_NAME})
+set(SUB_PROJ_NAME ${PROJECT_NAME}${SUB_MOD_NAME})
 
-set(INCLUDE_PREFIX ../../include/${CURRENT_PROJECT_NAME}/${SUB_MOD_NAME})
+set(INCLUDE_PREFIX ../../include/${PROJECT_NAME}/${SUB_MOD_NAME})
 
 set(SOURCES
     ${INCLUDE_PREFIX}/framelesshelperwidgets_global.h
@@ -58,7 +58,7 @@ if(FRAMELESSHELPER_BUILD_STATIC)
 else()
     add_library(${SUB_PROJ_NAME} SHARED ${SOURCES})
 endif()
-add_library(${CURRENT_PROJECT_NAME}::${SUB_MOD_NAME} ALIAS ${SUB_PROJ_NAME})
+add_library(${PROJECT_NAME}::${SUB_MOD_NAME} ALIAS ${SUB_PROJ_NAME})
 
 if(FRAMELESSHELPER_BUILD_STATIC)
     target_compile_definitions(${SUB_PROJ_NAME} PUBLIC
@@ -95,7 +95,7 @@ target_link_libraries(${SUB_PROJ_NAME} PRIVATE
 )
 
 target_link_libraries(${SUB_PROJ_NAME} PUBLIC
-    ${CURRENT_PROJECT_NAME}::Core
+    ${PROJECT_NAME}::Core
 )
 
 target_include_directories(${SUB_PROJ_NAME} PUBLIC

@@ -47,7 +47,7 @@ namespace Sys {
     }
 
     inline bool mkDir(const QString &dirname) {
-        return QDir(dirname).mkpath(dirname);
+        return isDirExist(dirname) || QDir(dirname).mkpath(dirname);
     }
 
     inline bool rmDir(const QString &dirname) {

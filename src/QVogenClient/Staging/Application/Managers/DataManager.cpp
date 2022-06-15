@@ -95,41 +95,65 @@ bool DataManager::save() {
 void DataManager::reloadStrings() {
     Q_D(DataManager);
 
+    QString allFiles;
+
 #if defined(Q_OS_WINDOWS)
-    d->projectFilter = tr("UTAU Sequence Text(*.ust);;All Files(*.*)");
-    d->importFilter = tr("Standard MIDI Files(*.mid);;"
-                         "Synthesizer V Files(*.svp *.s5p);;VOCALOID Files(*.vsqx *.vsq);;"
-                         "OpenUtau Files(*.ustx);;All Files(*.*)");
-    d->appendFilter = tr("Standard MIDI Files(*.mid);;UTAU Sequence Text(*.ust);;"
-                         "Synthesizer V Files(*.svp *.s5p);;VOCALOID Files(*.vsqx *.vsq);;"
-                         "OpenUtau Files(*.ustx);;All Files(*.*)");
-    d->exportSelectionFilter =
-        tr("Standard MIDI Files(*.mid);;UTAU Sequence Text(*.ust);;"
-           "Synthesizer V Files(*.svp);;VOCALOID Files(*.vsqx);;All Files(*.*)");
-    d->exportTrackFilter = tr("Standard MIDI Files(*.mid);;"
-                              "Synthesizer V Files(*.svp);;VOCALOID Files(*.vsqx);;All Files(*.*)");
-    d->exportOtoIniFilter = tr("Voice Configurations(oto.ini);;All Files(*.*)");
-    d->imageFilter = tr("Image Files(*.bmp *.jpg *.jpeg *.png *.gif *.webp);;All Files(*.*)");
-
-    d->audioFilter = tr("Audio Files(*.wav);;All Files(*.*)");
-    d->toolsFilter = tr("Executable(*.exe);;All Files(*.*)");
+    allFiles = tr("*.*");
 #else
-    d->projectFilter = tr("UTAU Sequence Text(*.ust);;All Files(*)");
-    d->importFilter = tr("Standard MIDI Files(*.mid);;"
-                         "Synthesizer V Files(*.svp *.s5p);;VOCALOID Files(*.vsqx *.vsq);;"
-                         "OpenUtau Files(*.ustx);;All Files(*)");
-    d->appendFilter = tr("Standard MIDI Files(*.mid);;UTAU Sequence Text(*.ust);;"
-                         "Synthesizer V Files(*.svp *.s5p);;VOCALOID Files(*.vsqx *.vsq);;"
-                         "OpenUtau Files(*.ustx);;All Files(*)");
-    d->exportSelectionFilter =
-        tr("Standard MIDI Files(*.mid);;UTAU Sequence Text(*.ust);;"
-           "Synthesizer V Files(*.svp);;VOCALOID Files(*.vsqx);;All Files(*)");
-    d->exportTrackFilter = tr("Standard MIDI Files(*.mid);;"
-                              "Synthesizer V Files(*.svp);;VOCALOID Files(*.vsqx);;All Files(*)");
-    d->exportOtoIniFilter = tr("Voice Configurations(oto.ini);;All Files(*)");
-    d->imageFilter = tr("Image Files(*.bmp *.jpg *.jpeg *.png *.gif *.webp);;All Files(*)");
+    allFiles = tr("*");
+#endif
 
-    d->audioFilter = tr("Audio Files(*.wav);;All Files(*)");
+    d->projectFilter = tr("Vogen Package File(*.vog);;"
+                          "All Files(%1)")
+                           .arg(allFiles);
+
+    d->importFilter = tr("Standard MIDI Files(*.mid);;"
+                         "UTAU Sequence Text(*.ust);;"
+                         "Synthesizer V Files(*.svp *.s5p);;"
+                         "VOCALOID Files(*.vsqx *.vsq);;"
+                         "OpenUtau Files(*.ustx);;"
+                         "All Files(%1)")
+                          .arg(allFiles);
+
+    d->appendFilter = tr("Standard MIDI Files(*.mid);;"
+                         "UTAU Sequence Text(*.ust);;"
+                         "Vogen Package File(*.vog);;"
+                         "Synthesizer V Files(*.svp *.s5p);;"
+                         "VOCALOID Files(*.vsqx *.vsq);;"
+                         "OpenUtau Files(*.ustx);;"
+                         "All Files(%1)")
+                          .arg(allFiles);
+
+    d->exportSelectionFilter = tr("Standard MIDI Files(*.mid);;"
+                                  "UTAU Sequence Text(*.ust);;"
+                                  "Vogen Package File(*.vog);;"
+                                  "Synthesizer V Files(*.svp);;"
+                                  "VOCALOID Files(*.vsqx);;"
+                                  "All Files(%1)")
+                                   .arg(allFiles);
+
+    d->exportTrackFilter = tr("Standard MIDI Files(*.mid);;"
+                              "UTAU Sequence Text(*.ust);;"
+                              "Synthesizer V Files(*.svp);;"
+                              "VOCALOID Files(*.vsqx);;"
+                              "All Files(%1)")
+                               .arg(allFiles);
+
+    d->exportOtoIniFilter = tr("Voice Configurations(oto.ini);;"
+                               "All Files(%1)")
+                                .arg(allFiles);
+
+    d->imageFilter = tr("Image Files(*.bmp *.jpg *.jpeg *.png *.gif *.webp);;"
+                        "All Files(%1)")
+                         .arg(allFiles);
+
+    d->audioFilter = tr("Audio Files(*.wav);;"
+                        "All Files(%1)")
+                         .arg(allFiles);
+
+#if defined(Q_OS_WINDOWS)
+    d->toolsFilter = tr("Executable(*.exe);;All Files(%1)").arg(allFiles);
+#else
     d->toolsFilter = tr("Executable(*)");
 #endif
 

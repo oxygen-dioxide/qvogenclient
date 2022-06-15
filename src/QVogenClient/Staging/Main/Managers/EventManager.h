@@ -17,6 +17,7 @@ public:
     bool load() override;
 
 public:
+    bool open(const QString &filename);
     bool import(const QString &filename);
 
 protected:

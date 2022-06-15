@@ -1,7 +1,5 @@
 # ------------------------------ Basic information ------------------------------
 
-set (CURRENT_PROJECT_NAME ${PROJECT_NAME})
-
 # Include current directory
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -114,30 +112,30 @@ add_files(PROJECT_HEADERS
 # Add executable
 if (SYS_WIN)
     # Windows need rc files
-    add_executable(${CURRENT_PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${QT_RESOURCES} ${RC_FILES})
+    add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${QT_RESOURCES} ${RC_FILES})
 elseif (SYS_MAC)
     # Mac need icon
-    add_executable(${CURRENT_PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${QT_RESOURCES} ${ICONS})
+    add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${QT_RESOURCES} ${ICONS})
 else ()
     # Linux
-    add_executable(${CURRENT_PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${QT_RESOURCES})
+    add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${QT_RESOURCES})
 endif ()
 
 # Add Definitions
-target_compile_definitions(${CURRENT_PROJECT_NAME} PRIVATE APP_VERSION="${APP_VERSION}")
+target_compile_definitions(${PROJECT_NAME} PRIVATE APP_VERSION="${APP_VERSION}")
 
 # Link OS dependent libraries
 if (SYS_WIN)
-    target_link_libraries(${CURRENT_PROJECT_NAME} PRIVATE dwmapi user32 shell32 advapi32 winmm)
+    target_link_libraries(${PROJECT_NAME} PRIVATE dwmapi user32 shell32 advapi32 winmm)
 elseif (SYS_MAC)
-    target_link_libraries(${CURRENT_PROJECT_NAME} PRIVATE CoreMIDI CoreFoundation CoreAudio)
+    target_link_libraries(${PROJECT_NAME} PRIVATE CoreMIDI CoreFoundation CoreAudio)
 else ()
-    target_link_libraries(${CURRENT_PROJECT_NAME} PRIVATE asound)
+    target_link_libraries(${PROJECT_NAME} PRIVATE asound)
 endif ()
 
 # Set Properties
 if (APP_DEPLOY)
-    set_target_properties(${CURRENT_PROJECT_NAME} PROPERTIES
+    set_target_properties(${PROJECT_NAME} PROPERTIES
             WIN32_EXECUTABLE TRUE
             MACOSX_BUNDLE TRUE
             MACOSX_BUNDLE_BUNDLE_VERSION 1.0.0.0
@@ -146,12 +144,14 @@ if (APP_DEPLOY)
 endif()
 
 # Link Custom libraries
-target_link_libraries(${CURRENT_PROJECT_NAME} PRIVATE FramelessHelper::Widgets)
+target_link_libraries(${PROJECT_NAME} PRIVATE FramelessHelper::Widgets)
 
-target_link_libraries(${CURRENT_PROJECT_NAME} PRIVATE QMidi)
+target_link_libraries(${PROJECT_NAME} PRIVATE QMidi)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE QuaZip::QuaZip)
 
 # Link Qt libraries
-target_link_libraries(${CURRENT_PROJECT_NAME} PRIVATE ${QT_LIBS})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${QT_LIBS})
 
 # ------------------------------ Translations ------------------------------
 

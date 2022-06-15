@@ -22,7 +22,7 @@
   SOFTWARE.
 ]]
 
-set (CURRENT_PROJECT_NAME FramelessHelper)
+project (FramelessHelper)
 
 option(FRAMELESSHELPER_BUILD_STATIC "Build FramelessHelper as a static library." OFF)
 option(FRAMELESSHELPER_BUILD_WIDGETS "Build FramelessHelper's Widgets module." ON)

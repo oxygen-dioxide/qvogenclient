@@ -4,7 +4,9 @@
 #include "MainWindow.h"
 
 #include "CommonScore.h"
+
 #include "FileParser.h"
+#include "QVogenFile.h"
 
 #include <QEvent>
 
@@ -15,6 +17,17 @@ EventManager::~EventManager() {
 }
 
 bool EventManager::load() {
+    return true;
+}
+
+bool EventManager::open(const QString &filename) {
+    QVogenFile file(filename);
+
+    file.setTempDir("E:/temp");
+    if (!file.load()){
+        return false;
+    }
+
     return true;
 }
 

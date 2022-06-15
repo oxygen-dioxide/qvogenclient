@@ -38,5 +38,7 @@ add_subdirectory(FramelessHelper)
 
 add_subdirectory(QMidi)
 
+add_subdirectory(QuaZip)
+
 # Application
 add_subdirectory(QVogenClient)
