@@ -10,7 +10,7 @@
 #include "WindowManager.h"
 
 static const char FLAG_OPEN[] = "%PROJ%";
-static const char FLAG_OPEN_FOLDER[] = "%DIR%";
+//static const char FLAG_OPEN_FOLDER[] = "%DIR%";
 static const char FLAG_SAVE[] = "%SAVE%";
 static const char FLAG_IMPORT[] = "%IMPORT%";
 static const char FLAG_APPEND[] = "%APPEND%";

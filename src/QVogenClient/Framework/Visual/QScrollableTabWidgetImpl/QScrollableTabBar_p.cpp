@@ -167,7 +167,7 @@ void QScrollableTabBarPrivate::setCurrentTab(QScrollableTabBarTab *tab) {
 
 out:
     needAutoScroll = true;
-    q->updateGeometry();
+    entityLayout->invalidate();
 
     emit q->currentChanged(entityLayout->indexOf(tab), orgIndex);
 }
@@ -176,6 +176,10 @@ void QScrollableTabBarPrivate::autoScrollToCurrent() const {
     Q_Q(const QScrollableTabBar);
 
     auto tab = current;
+    if (!tab) {
+        return;
+    }
+
     // Move View Port
     if (tab->x() + entity->x() < 0) {
         scrollBar->setValue(tab->x());

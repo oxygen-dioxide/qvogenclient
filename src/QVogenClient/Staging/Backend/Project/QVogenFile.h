@@ -1,6 +1,7 @@
 #ifndef QVOGENFILE_H
 #define QVOGENFILE_H
 
+#include <QList>
 #include <QString>
 
 #include "CompressedFile.h"
@@ -15,8 +16,39 @@ public:
     QVogenFile(const QString &filename);
     ~QVogenFile();
 
+    struct Phoneme {
+        QString name;
+        int start;
+        int end;
+    };
+
+    struct Note {
+        int pitch;
+        QString lyric;
+        QString rom;
+        int start;
+        int duration;
+
+        QList<Phoneme> cg;
+    };
+
+    struct Utterance {
+        QString name;
+        QString singer;
+        QString romScheme;
+        QList<Note> notes;
+
+        QList<double> f0;
+    };
+
 public:
     QString projectName;
+
+    double tempo;
+    QPoint beat;
+    int accomOffset;
+
+    QList<Utterance> utterances;
 
 protected:
     bool loadCore(bool *valid) override;
