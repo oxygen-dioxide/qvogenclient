@@ -37,8 +37,6 @@ bool CompressedFile::loadCore(bool *valid) {
     qDebug() << "Files count:" << files.size();
     qDebug() << "Extract time:" << timer.elapsed() << "ms";
 
-    qDebug() << files;
-
     return true;
 }
 

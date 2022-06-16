@@ -88,6 +88,9 @@ public:
     QString deletedPrefix() const;
     QString fileManagerName() const;
 
+public:
+    QString allocGlobalTempDirName() const;
+
 protected:
     DataManager(DataManagerPrivate &d, QObject *parent = nullptr);
 

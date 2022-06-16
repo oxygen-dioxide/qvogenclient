@@ -19,6 +19,7 @@ public:
 public:
     bool open(const QString &filename);
     bool import(const QString &filename);
+    bool append(const QString &filename);
 
 protected:
     EventManager(EventManagerPrivate &d, MainWindow *parent = nullptr);

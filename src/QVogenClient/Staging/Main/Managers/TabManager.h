@@ -16,6 +16,10 @@ public:
 public:
     bool load() override;
 
+    bool closeOthers(int index);
+    bool closeSaved();
+    bool closeAll();
+
 protected:
     TabManager(TabManagerPrivate &d, MainWindow *parent = nullptr);
 

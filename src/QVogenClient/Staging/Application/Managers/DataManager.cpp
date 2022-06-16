@@ -10,6 +10,7 @@
 #include <QDebug>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QRandomGenerator>
 #include <QStandardPaths>
 
 static const char Slash = '/';
@@ -18,8 +19,23 @@ static const QChar ZH_CN_UTFCODE[] = {0x7B80, 0x4F53, 0x4E2D, 0x6587};
 static const QChar ZH_CHT_UTFCODE[] = {0x7E41, 0x9AD4, 0x4E2D, 0x6587};
 static const QChar JA_JP_UTFCODE[] = {0x65E5, 0x672C, 0x8A9E};
 
+static const char RANDOM_CHAR_SET[] =
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+
 #define Q_FROM_UTFCODE(Name)                                                                       \
     QString::fromRawData(Name##_UTFCODE, sizeof(Name##_UTFCODE) / sizeof(QChar))
+
+static QString makeRandomString(int length) {
+    QString res;
+    int len = qstrlen(RANDOM_CHAR_SET);
+    int idx;
+    for (int i = 0; i < length; ++i) {
+        idx = QRandomGenerator::global()->bounded(len);
+        QChar ch = RANDOM_CHAR_SET[idx];
+        res.append(ch);
+    }
+    return res;
+}
 
 Q_SINGLETON_DECLARE(DataManager)
 
@@ -363,4 +379,10 @@ QString DataManager::fileManagerName() const {
 #else
     return = tr("File Manager");
 #endif
+}
+
+QString DataManager::allocGlobalTempDirName() const {
+    Q_D(const DataManager);
+    QString dirname = QString("Temporary_%1").arg(makeRandomString(8));
+    return d->appTempPath + Slash + "global" + Slash + dirname;
 }

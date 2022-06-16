@@ -22,16 +22,24 @@ bool EventManager::load() {
 
 bool EventManager::open(const QString &filename) {
     QVogenFile file(filename);
-
-    file.setTempDir("E:/temp");
-    if (!file.load()){
+    if (!file.load()) {
         return false;
     }
-
     return true;
 }
 
 bool EventManager::import(const QString &filename) {
+    Q_D(EventManager);
+    FileParser parser(d->w);
+    CommonScore notes;
+    if (parser.parseFile(filename, notes)) {
+        //        addUntitledTab(notes);
+        return true;
+    }
+    return false;
+}
+
+bool EventManager::append(const QString &filename) {
     Q_D(EventManager);
     FileParser parser(d->w);
     CommonScore notes;

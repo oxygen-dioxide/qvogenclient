@@ -185,6 +185,8 @@ add_files(INCLUDE_PATHS
     Staging/Application
     Staging/Application/Managers
     Staging/Backend/Basic
+    Staging/Backend/Project
+    Staging/Backend/Utils
     Staging/Main
     Staging/Main/Managers
     Staging/Main/Tabs
@@ -195,10 +197,10 @@ add_files(INCLUDE_PATHS
     Vendor/Backend
     Vendor/Backend/Basic
     Vendor/Backend/Import
-    Vendor/Backend/Project
     Vendor/Backend/Utils
     Vendor/LowLevel
     Vendor/LowLevel/CommonTune
+    Vendor/LowLevel/Utils
     )
 
 foreach (Path ${INCLUDE_PATHS})

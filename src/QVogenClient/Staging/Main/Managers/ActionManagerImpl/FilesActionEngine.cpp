@@ -49,6 +49,13 @@ void FilesActionEngine::q_actionTriggered(QAction *action) {
             if (!path.isEmpty()) {
                 d->eventMgr->import(path);
             }
+        } else if (action == d->file_appendFile) {
+            QString path =
+                qData->openFile(tr("Append"), qData->getFileFilter(DataManager::AppendFile),
+                                FLAG_APPEND, d->window());
+            if (!path.isEmpty()) {
+                d->eventMgr->import(path);
+            }
         }
     } else if (menu == d->helpMenu) {
         if (action == d->help_aboutApp) {

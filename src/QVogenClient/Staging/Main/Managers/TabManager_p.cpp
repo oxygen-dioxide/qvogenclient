@@ -37,5 +37,8 @@ int TabManagerPrivate::tabCount() const {
 }
 
 bool TabManagerPrivate::tryCloseTab(int index) {
-    return false;
+    auto tab = tabAt(index);
+    w->tabWidget()->removeTab(index);
+    tab->deleteLater();
+    return true;
 }

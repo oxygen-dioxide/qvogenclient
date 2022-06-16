@@ -7,6 +7,8 @@
 #include "DataManager.h"
 #include "SystemHelper.h"
 
+#include "EventManager.h"
+
 #include "CMenu.h"
 
 #include <QApplication>
@@ -39,6 +41,48 @@ bool TabManager::load() {
     return true;
 }
 
+bool TabManager::closeOthers(int index) {
+    Q_D(TabManager);
+    bool res = true;
+    for (int i = d->tabCount() - 1; i >= 0; --i) {
+        if (i == index) {
+            continue;
+        }
+        if (!d->tryCloseTab(i)) {
+            res = false;
+            break;
+        }
+    }
+    return res;
+}
+
+bool TabManager::closeSaved() {
+    Q_D(TabManager);
+    bool res = true;
+    for (int i = d->tabCount() - 1; i >= 0; --i) {
+        if (d->tabAt(i)->isEdited()) {
+            continue;
+        }
+        if (!d->tryCloseTab(i)) {
+            res = false;
+            break;
+        }
+    }
+    return res;
+}
+
+bool TabManager::closeAll() {
+    Q_D(TabManager);
+    bool res = true;
+    for (int i = d->tabCount() - 1; i >= 0; --i) {
+        if (!d->tryCloseTab(i)) {
+            res = false;
+            break;
+        }
+    }
+    return res;
+}
+
 TabManager::TabManager(TabManagerPrivate &d, MainWindow *parent) : CentralManager(d, parent) {
     d.init();
 }
@@ -63,6 +107,7 @@ bool TabManager::eventFilter(QObject *obj, QEvent *event) {
             break;
         }
         case QEvent::Close: {
+            event->setAccepted(closeAll());
             break;
         }
         default:
@@ -99,7 +144,6 @@ void TabManager::_q_tabBarClicked(Qt::MouseButton button, int index) {
         QAction closeOthersAction(tr("Close Others"), &menu);
         QAction closeSavedAction(tr("Close Saved"), &menu);
         QAction closeAllAction(tr("Close All"), &menu);
-        QAction newWinAction(tr("Open in new window(&E)"), &menu);
         QAction revealAction(&menu);
 
         menu.addAction(&closeAction);
@@ -107,10 +151,6 @@ void TabManager::_q_tabBarClicked(Qt::MouseButton button, int index) {
         menu.addAction(&closeSavedAction);
         menu.addAction(&closeAllAction);
 
-        if (d->tabCount() > 1) {
-            menu.addSeparator();
-            menu.addAction(&newWinAction);
-        }
         if ((tab->type() & CentralTab::Document) && Sys::isFileExist(tab->filename())) {
             revealAction.setText(tr("Show in %1(&S)").arg(qData->fileManagerName()));
             menu.addSeparator();
@@ -127,40 +167,11 @@ void TabManager::_q_tabBarClicked(Qt::MouseButton button, int index) {
         if (action == &closeAction) {
             d->tryCloseTab(index);
         } else if (action == &closeOthersAction) {
-            for (int i = d->tabCount() - 1; i >= 0; --i) {
-                if (i == index) {
-                    continue;
-                }
-                if (!d->tryCloseTab(i)) {
-                    break;
-                }
-            }
+            closeOthers(index);
         } else if (action == &closeSavedAction) {
-            for (int i = d->tabCount() - 1; i >= 0; --i) {
-                if (d->tabAt(i)->isEdited()) {
-                    continue;
-                }
-                if (!d->tryCloseTab(i)) {
-                    break;
-                }
-            }
+            closeSaved();
         } else if (action == &closeAllAction) {
-            for (int i = d->tabCount() - 1; i >= 0; --i) {
-                if (!d->tryCloseTab(i)) {
-                    break;
-                }
-            }
-        } else if (action == &newWinAction) {
-            //            CentralTab *tab = tabAt(index);
-            //            tabs->removeTab(index);
-            //            MainWindow *w = new MainWindow({tab});
-            //            if (!isMaximized()) {
-            //                w->resize(size());
-            //            } else {
-            //                w->resize(QApplication::desktop()->size() * 2.0 / 3.0);
-            //            }
-            //            w->centralize();
-            //            w->showForward();
+            closeAll();
         } else if (action == &revealAction) {
             Sys::reveal(d->tabAt(index)->filename());
         }
