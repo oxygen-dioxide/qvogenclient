@@ -25,6 +25,11 @@ bool EventManager::open(const QString &filename) {
     if (!file.load()) {
         return false;
     }
+
+    for (const auto &u : file.utterances) {
+        qDebug() << u.name << u.notes.count();
+    }
+
     return true;
 }
 

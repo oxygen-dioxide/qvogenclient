@@ -28,6 +28,13 @@ set(ONNX_RUNTIME_BIN)
 set(SOURCE_FILES)
 set(RESOURCE_FILES)
 
+# Temp Vars
+set(RES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Res)
+
+set(VOGEN_MODEL_DIR Models)
+set(VOGEN_ROM_DIR Romanization)
+set(VOGEN_DICTS_DIR RomDicts)
+
 # Find ONNX Runtime Library
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     set(ONNX_RUNTIME_DIR "${CMAKE_CURRENT_SOURCE_DIR}/${ONNX_RUNTIME_DIRNAME_WINDOWS}")
@@ -38,7 +45,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Windows")
         "${ONNX_RUNTIME_DIR}/lib/*.pdb")
 
     # Add RC File
-    list(APPEND RESOURCE_FILES win32/res.rc)
+    list(APPEND RESOURCE_FILES ${RES_DIR}/win32/res.rc)
 elseif(CMAKE_SYSTEM_NAME MATCHES "Linux")
     set(ONNX_RUNTIME_DIR "${CMAKE_CURRENT_SOURCE_DIR}/${ONNX_RUNTIME_DIRNAME_LINUX}")
 elseif(APPLE)
@@ -47,14 +54,19 @@ else()
     message(FATAL_ERROR "Unsupported System !!!")
 endif()
 
+# Add World
+add_subdirectory(World)
+
 # Add Sources
-file(GLOB SOURCE_FILES main.cpp)
+file(GLOB SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 
 # Add Executable
 add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${RESOURCE_FILES})
 
 # Link Libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE ${ONNX_RUNTIME_LIB})
+
+target_link_libraries(${PROJECT_NAME} PRIVATE world::tool)
 
 # Include Directories
 target_include_directories(${PROJECT_NAME} PRIVATE "${ONNX_RUNTIME_DIR}/include")
@@ -65,3 +77,25 @@ foreach(BIN_FILE ${ONNX_RUNTIME_BIN})
         POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy "${BIN_FILE}" "$<TARGET_FILE_DIR:${PROJECT_NAME}>")
 endforeach()
+
+# Copy Resources
+if(NOT IS_DIRECTORY ${APP_RESOURCES_DIR}/${VOGEN_MODEL_DIR})
+    execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${RES_DIR}/${VOGEN_MODEL_DIR}
+        ${APP_RESOURCES_DIR}/${VOGEN_MODEL_DIR}
+    )
+endif()
+
+if(NOT IS_DIRECTORY ${APP_RESOURCES_DIR}/${VOGEN_ROM_DIR})
+    execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${RES_DIR}/${VOGEN_ROM_DIR}
+        ${APP_RESOURCES_DIR}/${VOGEN_ROM_DIR}
+    )
+endif()
+
+if(NOT IS_DIRECTORY ${APP_RESOURCES_DIR}/${VOGEN_DICTS_DIR})
+    execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${RES_DIR}/${VOGEN_DICTS_DIR}
+        ${APP_RESOURCES_DIR}/${VOGEN_DICTS_DIR}
+    )
+endif()

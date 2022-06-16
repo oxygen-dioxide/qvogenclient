@@ -41,27 +41,46 @@ For detailed information, see [Build Instructions](./docs/build-insturctions.md)
 + Home: https://www.qt.io/
 + License: LGPL v3
 + Owner: Qt Company
++ Usage: Build QVogenClient interface
 
 #### Frameless Helper
 + Source: https://github.com/wangwenx190/framelesshelper
 + License: MIT License
 + Owner: Yuhang Zhao
++ Usage: Create frameless window for QVogenClient
 
 #### QMidi
 + Source: https://github.com/waddlesplash/QMidi
 + License: MIT License
 + Owner: Augustin Cavalier
++ Usage: Parse midi file for QVogenClient
 
 #### QuaZip
 + Source: https://github.com/stachenov/quazip
 + License: LGPL v2.1
 + Owner: Sergey A. Tachenov
++ Usage: Parse ZIP format files for QVogenClient
+
+#### Zlib
++ Home: http://www.zlib.net/
++ License: zlib License
++ Owner: Jean-loup Gailly and Mark Adler
++ Usage: For QuaZip to call
+
+#### World
++ Source: https://github.com/mmorise/World
++ License: Modified-BSD license
++ Owner: mmorise
++ Usage: RenderHost uses it to synthesize audio
 
 #### Microsoft ONNX Runtime
 
 + Source: https://github.com/microsoft/onnxruntime
 + License: MIt License
 + Owner: Microsoft
++ Usage: RenderHost uses it to deal with AI model
+
+All libraries and their source code are unmodified and are called as dynamic links.
 
 ## Libraries built for QSynthesis
 

@@ -40,8 +40,6 @@ QVogenFile::~QVogenFile() {
 
 bool QVogenFile::loadCore(bool *valid) {
     bool alloc = false;
-    bool res = false;
-
     TempDirGuard guard;
 
     if (m_tempDir.isEmpty()) {
@@ -53,7 +51,7 @@ bool QVogenFile::loadCore(bool *valid) {
         }
     }
 
-    res = CompressedFile::loadCore(valid);
+    bool res = CompressedFile::loadCore(valid);
     if (!res) {
         if (alloc) {
             m_tempDir.clear();
