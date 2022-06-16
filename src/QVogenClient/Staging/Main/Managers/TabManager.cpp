@@ -62,6 +62,9 @@ bool TabManager::eventFilter(QObject *obj, QEvent *event) {
             }
             break;
         }
+        case QEvent::Close: {
+            break;
+        }
         default:
             break;
         }

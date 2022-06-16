@@ -1,6 +1,14 @@
 # Build Instructions
 
-## Preparation
+## Dependencies
+
+### ONNX Runtime 
+
+Download latest release and extract to `RenderHost` directory, change `CMakeLists.txt` if necessary.
+
+Official Page: https://github.com/microsoft/onnxruntime
+
+## Platform
 
 ### Windows
 
@@ -16,17 +24,20 @@ To be implemented...
 
 You need to install these packages to get the required C/C++ header files.
 
-##### Midi
++ Midi
+````
+sudo apt-get install libasound2-dev
+````
 
-    sudo apt-get install libasound2-dev
++ OpenGL
+````
+sudo apt-get install mesa-common-dev
+````
 
-##### OpenGL
-
-    sudo apt-get install mesa-common-dev
-
-##### X11
-
-    sudo apt install libqt5x11extras5-dev
++ X11
+````
+sudo apt install libqt5x11extras5-dev
+````
 
 #### Local input method
 
@@ -35,5 +46,3 @@ Qt doesn't work well with input programs, you may need to move some shared libra
 ## Build from source
 
 There's no other libraries you need to compile in advance.
-
-You can compile the source code without any further compiling preparation and it should successfully build the executable file with a few minite. 

@@ -15,7 +15,7 @@ public:
     void setMenuBar(QMenuBar *menuBar);
     QMenuBar *menuBar() const;
 
-    void centralize(double r);
+    void resizeByDesktop(double r, bool centralize = false);
 
 protected:
     CWindowBarV2 *m_titleBar;

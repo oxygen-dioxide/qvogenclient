@@ -47,18 +47,21 @@ QMenuBar *BasicWindow::menuBar() const {
     return m_titleBar->menuBar();
 }
 
-void BasicWindow::centralize(double r) {
+void BasicWindow::resizeByDesktop(double r, bool centralize) {
     QWidget *desktop = qApp->desktop();
     if (parentWidget()) {
         desktop = parentWidget();
     }
     int dw = desktop->width();
     int dh = desktop->height();
-
     QSize size = this->size();
     if (r > 0 && r <= 1) {
         size = QSize(dw * r, dh * r);
     }
-    setGeometry(desktop->x() + (dw - size.width()) / 2, desktop->y() + (dh - size.height()) / 2,
-                size.width(), size.height());
+    if (centralize) {
+        setGeometry(desktop->x() + (dw - size.width()) / 2, desktop->y() + (dh - size.height()) / 2,
+                    size.width(), size.height());
+    } else {
+        setGeometry(x(), y(), size.width(), size.height());
+    }
 }

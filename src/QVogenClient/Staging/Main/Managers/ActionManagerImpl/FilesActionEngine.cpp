@@ -7,6 +7,8 @@
 #include "DataManager.h"
 #include "FileParser.h"
 
+#include "WindowManager.h"
+
 static const char FLAG_OPEN[] = "%PROJ%";
 static const char FLAG_OPEN_FOLDER[] = "%DIR%";
 static const char FLAG_SAVE[] = "%SAVE%";
@@ -30,7 +32,10 @@ void FilesActionEngine::q_actionTriggered(QAction *action) {
 
     Q_D(FilesActionEngine);
     if (menu == d->fileMenu) {
-        if (action == d->file_openFile) {
+        if (action == d->file_newFile) {
+        } else if (action == d->file_newWindow) {
+            qWindows->newWindow();
+        } else if (action == d->file_openFile) {
             QString path =
                 qData->openFile(tr("Open"), qData->getFileFilter(DataManager::ProjectFiles),
                                 FLAG_OPEN, d->window());

@@ -36,7 +36,6 @@ public:
     QAction *file_newFile;
     QAction *file_newWindow;
     QAction *file_openFile;
-    QAction *file_openFolder;
     QAction *file_saveFile;
     QAction *file_saveAs;
     QAction *file_saveAll;

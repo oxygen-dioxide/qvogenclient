@@ -40,5 +40,8 @@ add_subdirectory(QMidi)
 
 add_subdirectory(QuaZip)
 
+# Modules
+add_subdirectory(RenderHost)
+
 # Application
 add_subdirectory(QVogenClient)

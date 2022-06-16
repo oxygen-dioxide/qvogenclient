@@ -42,7 +42,6 @@ void FilesActionEnginePrivate::setup() {
     file_newFile = new QAction();
     file_newWindow = new QAction();
     file_openFile = new QAction();
-    file_openFolder = new QAction();
     file_saveFile = new QAction();
     file_saveAs = new QAction();
     file_saveAll = new QAction();
@@ -180,7 +179,7 @@ void FilesActionEnginePrivate::setup() {
     fileMenu->addAction(file_newWindow);
     fileMenu->addSeparator();
     fileMenu->addAction(file_openFile);
-    fileMenu->addAction(file_openFolder);
+    fileMenu->addMenu(recentMenu);
     fileMenu->addSeparator();
     fileMenu->addAction(file_saveFile);
     fileMenu->addAction(file_saveAs);
@@ -232,7 +231,7 @@ void FilesActionEnginePrivate::setup() {
     panelsMenu->addAction(panels_lyricsPanel);
     panelsMenu->addAction(panels_statePanel);
 
-    // quantizationMenu
+    // Play
 
     playheadMenu->addAction(playhead_normal);
     playheadMenu->addAction(playhead_center);
@@ -320,8 +319,7 @@ void FilesActionEnginePrivate::reloadStrings() {
 
     file_newFile->setText(QObject::tr("New File"));
     file_newWindow->setText(QObject::tr("New Window"));
-    file_openFile->setText(QObject::tr("Open File..."));
-    file_openFolder->setText(QObject::tr("Open Folder..."));
+    file_openFile->setText(QObject::tr("Open..."));
     file_saveFile->setText(QObject::tr("Save"));
     file_saveAs->setText(QObject::tr("Save As..."));
     file_saveAll->setText(QObject::tr("Save All"));

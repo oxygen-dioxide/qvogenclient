@@ -305,7 +305,7 @@ void QScrollableTabBar::timerEvent(QTimerEvent *event) {
 bool QScrollableTabBar::eventFilter(QObject *obj, QEvent *event) {
     Q_D(QScrollableTabBar);
 
-    if (strcmp(obj->metaObject()->className(), "QScrollableTabBarTab") == 0) {
+    if (qstrcmp(obj->metaObject()->className(), "QScrollableTabBarTab") == 0) {
         auto tab = qobject_cast<QScrollableTabBarTab *>(obj);
         switch (event->type()) {
         case QEvent::MouseButtonPress: {

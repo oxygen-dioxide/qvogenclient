@@ -218,8 +218,8 @@ protected:                                                                      
         static QWidget *ptr = nullptr;                                                             \
         if (!ptr) {                                                                                \
             ptr = parentWidget();                                                                  \
-            while (ptr && strcmp(ptr->metaObject()->className(),                                   \
-                                 ParentClass::staticMetaObject.className())) {                     \
+            while (ptr && qstrcmp(ptr->metaObject()->className(),                                  \
+                                  ParentClass::staticMetaObject.className())) {                    \
                 ptr = ptr->parentWidget();                                                         \
             }                                                                                      \
         }                                                                                          \

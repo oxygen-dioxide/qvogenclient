@@ -1,8 +1,22 @@
 # QVogenClient
 
+---
+
 ## Intro
 
 Vogen editor using **QSynthesis** framework.
+
+![Display](./docs/images/vogen-plus.png)
+
+## Supported Platforms
+
++ Microsoft Windows
++ Apple MacOS
++ Linux
+
+### Rendering
+
+GPU rendering is avaliable only on Windows and Linux.
 
 ## Build from source
 
@@ -10,11 +24,12 @@ The whole QSynthesis source code is written in C++ with Qt library. In order to 
 
 ### Requirements
 
-| Component  | Requirement | Detailed |
-| :----:     | :----:      | :----:   |
-| Qt         | >=5.15    | Core, Gui, Svg, Network, Multimedia    |
-| Compiler      | >=C++17       | MSVC 2019, MinGW 0.8.1, GCC, Clang   |
-| CMake      |  >=3.5      | >=3.20 is recommended  |
+| Component    | Requirement | Detailed |
+| :----:       | :----:      | :----:   |
+| Qt           | >=5.15      | Core, Gui, Svg, Network, Multimedia    |
+| ONNX Runtime | >=1.11.1    | / |
+| Compiler     | >=C++17     | MSVC 2019, MinGW 0.8.1, GCC, Clang   |
+| CMake        | >=3.17      | >=3.20 is recommended  |
 
 On Windows, compiling with Microsoft Visual C++ is strongly recommended.
 
@@ -41,6 +56,12 @@ For detailed information, see [Build Instructions](./docs/build-insturctions.md)
 + Source: https://github.com/stachenov/quazip
 + License: LGPL v2.1
 + Owner: Sergey A. Tachenov
+
+#### Microsoft ONNX Runtime
+
++ Source: https://github.com/microsoft/onnxruntime
++ License: MIt License
++ Owner: Microsoft
 
 ## Libraries built for QSynthesis
 
