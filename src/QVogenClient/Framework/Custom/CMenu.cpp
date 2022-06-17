@@ -4,6 +4,7 @@
 #include <private/qmenu_p.h>
 
 #include <QDebug>
+#include <QFontMetrics>
 
 CMenu::CMenu(QWidget *parent) : QMenu(parent) {
     // Initialize Font
@@ -11,6 +12,8 @@ CMenu::CMenu(QWidget *parent) : QMenu(parent) {
     QS_REMOVE_TAB_FOCUS(this)
 #endif
     setFont(qApp->font());
+
+    m_subIconMargins = QSize(0, 0);
 }
 
 CMenu::CMenu(const QString &title, QWidget *parent) : CMenu(parent) {
@@ -19,6 +22,36 @@ CMenu::CMenu(const QString &title, QWidget *parent) : CMenu(parent) {
 }
 
 CMenu::~CMenu() {
+}
+
+QSvgUri CMenu::subIcon() const {
+    return m_subIcon;
+}
+
+void CMenu::setSubIcon(const QSvgUri &icon) {
+    m_subIcon = icon;
+    update();
+    emit styleChanged();
+}
+
+QSvgUri CMenu::subIconHover() const {
+    return m_subIconHover;
+}
+
+void CMenu::setSubIconHover(const QSvgUri &icon) {
+    m_subIconHover = icon;
+    update();
+    emit styleChanged();
+}
+
+QSize CMenu::subIconMargins() const {
+    return m_subIconMargins;
+}
+
+void CMenu::setSubIconMargins(const QSize &margins) {
+    m_subIconMargins = margins;
+    update();
+    emit styleChanged();
 }
 
 void CMenu::paintEvent(QPaintEvent *event) {
@@ -34,6 +67,7 @@ void CMenu::paintEvent(QPaintEvent *event) {
     menuOpt.checkType = QStyleOptionMenuItem::NotCheckable;
     menuOpt.maxIconWidth = 0;
     menuOpt.tabWidth = 0;
+
     style()->drawPrimitive(QStyle::PE_PanelMenu, &menuOpt, &p, this);
 
     // calculate the scroll up / down rect
@@ -103,6 +137,23 @@ void CMenu::paintEvent(QPaintEvent *event) {
         initStyleOption(&opt, action);
         opt.rect = actionRect;
         style()->drawControl(QStyle::CE_MenuItem, &opt, &p, this);
+
+        // p.setPen(Qt::red);
+        // p.setBrush(Qt::transparent);
+        // p.drawRect(opt.rect);
+
+        // Draw Right Arrow
+        if (action->menu()) {
+            QIcon subIcon =
+                (opt.state & QStyle::State_Selected) ? m_subIconHover.toIcon() : m_subIcon.toIcon();
+            if (!subIcon.isNull()) {
+                int a = actionRect.height();
+                QRect iconRegion(actionRect.right() - a, actionRect.top(), a, a);
+                QRect iconRect = iconRegion.adjusted(m_subIconMargins.width(), m_subIconMargins.height(),
+                                                     -m_subIconMargins.width(), -m_subIconMargins.height());
+                p.drawPixmap(iconRect, subIcon.pixmap(iconRect.size()));
+            }
+        }
     }
 
     emptyArea -= QRegion(scrollUpTearOffRect);
@@ -146,12 +197,21 @@ void CMenu::paintEvent(QPaintEvent *event) {
     menuOpt.checkType = QStyleOptionMenuItem::NotCheckable;
     menuOpt.rect = rect();
     menuOpt.menuRect = rect();
+
     style()->drawControl(QStyle::CE_MenuEmptyArea, &menuOpt, &p, this);
 }
 
 void CMenu::initStyleOption(QStyleOptionMenuItem *option, const QAction *action) const {
     if (!option || !action)
         return;
+
+    bool mouseDown;
+    // Avoid using QMenuPrivate::mouseDown
+    {
+        QStyleOptionMenuItem testOption;
+        QMenu::initStyleOption(&testOption, action);
+        mouseDown = testOption.state & QStyle::State_Sunken;
+    }
 
     auto d = reinterpret_cast<QMenuPrivate *>(d_ptr.data());
 
@@ -170,8 +230,8 @@ void CMenu::initStyleOption(QStyleOptionMenuItem *option, const QAction *action)
     option->fontMetrics = QFontMetrics(option->font);
 
     if (d->currentAction && d->currentAction == action && !d->currentAction->isSeparator()) {
-        option->state |= QStyle::State_Selected |
-                         (QMenuPrivate::mouseDown ? QStyle::State_Sunken : QStyle::State_None);
+        option->state |=
+            QStyle::State_Selected | (mouseDown ? QStyle::State_Sunken : QStyle::State_None);
     }
 
     option->menuHasCheckableItems = d->hasCheckableItems;
@@ -183,29 +243,36 @@ void CMenu::initStyleOption(QStyleOptionMenuItem *option, const QAction *action)
                                 : QStyleOptionMenuItem::NonExclusive;
         option->checked = action->isChecked();
     }
-    if (action->menu())
-        // option->menuItemType = QStyleOptionMenuItem::SubMenu;
+    if (action->menu()) {
+        // option->menuItemType = QStyleOptionMenuItem::SubMenu; Ignore Right Arrow
         option->menuItemType = QStyleOptionMenuItem::Normal;
-    else if (action->isSeparator())
+    } else if (action->isSeparator()) {
         option->menuItemType = QStyleOptionMenuItem::Separator;
-    else if (d->defaultAction == action)
+    } else if (d->defaultAction == action) {
         option->menuItemType = QStyleOptionMenuItem::DefaultItem;
-    else
+    } else {
         option->menuItemType = QStyleOptionMenuItem::Normal;
-    if (action->isIconVisibleInMenu())
+    }
+    if (action->isIconVisibleInMenu()) {
         option->icon = action->icon();
+    }
 
     QString textAndAccel = action->text();
+    int tabWidth = d->tabWidth;
+
 #ifndef QT_NO_SHORTCUT
     if ((action->isShortcutVisibleInContextMenu() || !d->isContextMenu()) &&
         textAndAccel.indexOf(QLatin1Char('\t')) == -1) {
         QKeySequence seq = action->shortcut();
-        if (!seq.isEmpty())
-            textAndAccel += QLatin1Char('\t') + seq.toString(QKeySequence::NativeText);
+        if (!seq.isEmpty()) {
+            QString seqText = seq.toString(QKeySequence::NativeText);
+            textAndAccel += QLatin1Char('\t') + seqText;
+            tabWidth = QFontMetrics(this->font()).horizontalAdvance(seqText);
+        }
     }
 #endif
     option->text = textAndAccel;
-    option->tabWidth = d->tabWidth;
+    option->tabWidth = tabWidth;
     option->maxIconWidth = d->maxIconWidth;
     option->menuRect = rect();
 }

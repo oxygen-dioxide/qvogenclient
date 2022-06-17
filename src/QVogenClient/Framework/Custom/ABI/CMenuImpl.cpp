@@ -13,8 +13,6 @@
 #include <private/qpushbutton_p.h>
 #include <qpa/qplatformtheme.h>
 
-QMenu *QMenuPrivate::mouseDown = nullptr;
-
 bool appUseFullScreenForPopup() {
     auto theme = QGuiApplicationPrivate::platformTheme();
     return theme && theme->themeHint(QPlatformTheme::UseFullScreenForPopupMenu).toBool();

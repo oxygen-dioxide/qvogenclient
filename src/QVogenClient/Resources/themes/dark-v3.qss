@@ -107,6 +107,9 @@ CWindowBarV2>CMenuBar::item:selected {
 /* Old Menu */
 
 CMenu {
+    qproperty-subIcon: svg(":/svg/menu/arrow-right-s-line.svg", #CCCCCC);
+    qproperty-subIconHover: svg(":/svg/menu/arrow-right-s-line.svg", #CCCCCC);
+    qproperty-subIconMargins: 5px 5px;
     padding: 5px 5px;
     background: #252526;
     border: 1px solid transparent;
@@ -146,13 +149,6 @@ CMenu::indicator:unchecked {
 
 CMenu::indicator:checked {
     image: url(:/svg/menu/dark/checked-line.svg);
-}
-
-CMenu::right-arrow {
-    /* image: url(:/svg/menu/dark/arrow-right-s-line.svg); */
-    width: 20px;
-    height: 20px;
-    padding: 0 5px;
 }
 
 
