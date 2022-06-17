@@ -1,11 +1,11 @@
 #ifndef VOGENPANEL_H
 #define VOGENPANEL_H
 
-#include "../../CentralTabContent.h"
+#include "../../CentralPanel.h"
 
 class VogenTab;
 
-class VogenPanel : public CentralTabContent {
+class VogenPanel : public CentralPanel {
     Q_OBJECT
 public:
     explicit VogenPanel(VogenTab *tab, QWidget *parent = nullptr);

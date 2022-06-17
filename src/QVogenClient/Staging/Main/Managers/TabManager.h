@@ -3,6 +3,8 @@
 
 #include "../CentralManager.h"
 
+#include "Types/Actions.h"
+
 class MainWindow;
 class TabManagerPrivate;
 
@@ -23,12 +25,16 @@ public:
 public:
     VogenTab *addProject(const QString &filename);
 
+    CentralTab *currentTab() const;
+
     bool closeTab(int index);
     bool closeTab(CentralTab *tab);
 
     bool closeOthers(int index);
     bool closeSaved();
     bool closeAll();
+
+    void triggerCurrent(ActionImpl::Action action);
 
 protected:
     TabManager(TabManagerPrivate &d, MainWindow *parent = nullptr);

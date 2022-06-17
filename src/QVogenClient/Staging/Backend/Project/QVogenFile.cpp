@@ -51,6 +51,7 @@ bool QVogenFile::loadCore(bool *valid) {
         }
     }
 
+    // Extract
     bool res = CompressedFile::loadCore(valid);
     if (!res) {
         if (alloc) {
@@ -61,7 +62,7 @@ bool QVogenFile::loadCore(bool *valid) {
 
     // Read chart.json
     QFile file(m_tempDir + "/chart.json");
-    if (!file.open(QIODevice::ReadOnly)) {
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         return false;
     }
     QByteArray bytes = file.readAll();
@@ -103,7 +104,7 @@ bool QVogenFile::loadCore(bool *valid) {
     {
         bool failed = false;
         QStringList pair = timeSig.split('/');
-        if (pair.size() == 2) {
+        if (pair.size() != 2) {
             failed = true;
         }
         if (!failed) {
@@ -163,7 +164,82 @@ out:
 }
 
 bool QVogenFile::saveCore() {
-    return true;
+    bool alloc = false;
+    TempDirGuard guard;
+
+    if (m_tempDir.isEmpty()) {
+        alloc = true;
+        guard.create();
+        m_tempDir = guard.path();
+        if (m_tempDir.isEmpty()) {
+            return false;
+        }
+    }
+
+    // Read chart.json
+    QFile file(m_tempDir + "/chart.json");
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        if (alloc) {
+            m_tempDir.clear();
+        }
+        return false;
+    }
+
+    QJsonArray utterances;
+    for (auto it = this->utterances.begin(); it != this->utterances.end(); ++it) {
+        const auto &utterance = *it;
+
+        QJsonArray notes;
+        for (auto it2 = utterance.notes.begin(); it2 != utterance.notes.end(); ++it2) {
+            // Marshall Note
+            const auto &note = *it2;
+            auto obj = QJsonObject({
+                {KEY_NAME_NOTE_PITCH, note.pitch},
+                {KEY_NAME_NOTE_LYRIC, note.lyric},
+                {KEY_NAME_NOTE_ROM, note.rom},
+                {KEY_NAME_NOTE_START, note.start},
+                {KEY_NAME_NOTE_DURATION, note.duration},
+            });
+            notes.append(obj);
+        }
+
+        // Marshall Utterance
+        auto obj = QJsonObject({
+            {KEY_NAME_UTTERANCE_NAME, utterance.name},
+            {KEY_NAME_UTTERANCE_SINGER, utterance.name},
+            {KEY_NAME_UTTERANCE_ROM_SCHEME, utterance.romScheme},
+            {KEY_NAME_UTTERANCE_NOTES, notes},
+        });
+        utterances.append(obj);
+    }
+
+    // Marshall Time Sig
+    QString timeSig = QString::asprintf("%d/%d", beat.x(), beat.y());
+
+    // Marshall Document
+    QJsonObject objDoc = QJsonObject({
+        {KEY_NAME_TIME_SIG, timeSig},
+        {KEY_NAME_BPM, tempo},
+        {KEY_NAME_ACCOM_OFFSET, accomOffset},
+        {KEY_NAME_UTTERANCES, utterances},
+    });
+
+    QJsonDocument doc;
+    doc.setObject(objDoc);
+
+    // write chart.json
+    file.write(doc.toJson());
+    file.close();
+
+    // Compress
+    bool res = CompressedFile::saveCore();
+
+    // Over
+    if (alloc) {
+        m_tempDir.clear();
+    }
+
+    return res;
 }
 
 void QVogenFile::resetCore() {

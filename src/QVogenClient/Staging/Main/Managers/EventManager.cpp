@@ -1,14 +1,23 @@
 #include "EventManager.h"
 #include "EventManager_p.h"
 
+#include "CentralTab.h"
 #include "MainWindow.h"
 
 #include "CommonScore.h"
-
 #include "FileParser.h"
 #include "QVogenFile.h"
 
 #include "TabManager.h"
+
+#include "DataManager.h"
+#include "WindowManager.h"
+
+static const char FLAG_OPEN[] = "%PROJ%";
+// static const char FLAG_OPEN_FOLDER[] = "%DIR%";
+static const char FLAG_SAVE[] = "%SAVE%";
+static const char FLAG_IMPORT[] = "%IMPORT%";
+static const char FLAG_APPEND[] = "%APPEND%";
 
 #include <QEvent>
 
@@ -22,31 +31,60 @@ bool EventManager::load() {
     return true;
 }
 
-bool EventManager::open(const QString &filename) {
-    Q_D(EventManager);
-    return d->w->tabMgr()->addProject(filename);
+bool EventManager::newFile() {
+    return true;
 }
 
-bool EventManager::import(const QString &filename) {
+bool EventManager::openFile(const QString &filename) {
     Q_D(EventManager);
-    FileParser parser(d->w);
-    CommonScore notes;
-    if (parser.parseFile(filename, notes)) {
-        //        addUntitledTab(notes);
-        return true;
+    QStringList paths;
+    if (!filename.isEmpty()) {
+        paths.append(filename);
+    } else {
+        paths = qData->openFiles(tr("Open"), qData->getFileFilter(DataManager::ProjectFiles),
+                                 FLAG_OPEN, d->w);
+    }
+    bool res = false;
+    for (auto it = paths.begin(); it != paths.end(); ++it) {
+        res |= d->w->tabMgr()->addProject(*it) != nullptr;
+    }
+    return res;
+}
+
+bool EventManager::importFile(const QString &filename) {
+    Q_D(EventManager);
+    QString path;
+    if (!filename.isEmpty()) {
+        path = filename;
+    } else {
+        path = qData->openFile(tr("Import"), qData->getFileFilter(DataManager::ImportFile),
+                               FLAG_IMPORT, d->w);
+    }
+    if (!path.isEmpty()) {
     }
     return false;
 }
 
-bool EventManager::append(const QString &filename) {
+bool EventManager::appendFile(const QString &filename) {
     Q_D(EventManager);
-    FileParser parser(d->w);
-    CommonScore notes;
-    if (parser.parseFile(filename, notes)) {
-        //        addUntitledTab(notes);
-        return true;
+    QString path;
+    if (!filename.isEmpty()) {
+        path = filename;
+    } else {
+        path = qData->openFile(tr("Append"), qData->getFileFilter(DataManager::AppendFile),
+                               FLAG_APPEND, d->w);
+    }
+    if (!path.isEmpty()) {
     }
     return false;
+}
+
+bool EventManager::saveAsFile(CentralTab *tab) {
+    Q_D(EventManager);
+    QString path =
+        qData->saveFile(tr("Save As"), tab->filename(),
+                        qData->getFileFilter(DataManager::ProjectFiles), FLAG_SAVE, d->w);
+    return tab->saveAs(path);
 }
 
 EventManager::EventManager(EventManagerPrivate &d, MainWindow *parent) : CentralManager(d, parent) {

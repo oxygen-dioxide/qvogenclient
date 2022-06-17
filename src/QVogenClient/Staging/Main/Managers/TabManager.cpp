@@ -1,20 +1,22 @@
 #include "TabManager.h"
 #include "TabManager_p.h"
 
+#include "CMenu.h"
 #include "MainWindow.h"
 #include "VogenTab.h"
 
 #include "DataManager.h"
+#include "Logs/CRecordHolder.h"
 #include "SystemHelper.h"
+#include "WindowManager.h"
 
 #include "EventManager.h"
 
-#include "Logs/CRecordHolder.h"
-
-#include "CMenu.h"
-
 #include <QApplication>
 #include <QEvent>
+#include <QMessageBox>
+
+using namespace ActionImpl;
 
 TabManager::TabManager(MainWindow *parent) : TabManager(*new TabManagerPrivate(), parent) {
 }
@@ -59,6 +61,11 @@ VogenTab *TabManager::addProject(const QString &filename) {
     }
 
     return tab;
+}
+
+CentralTab *TabManager::currentTab() const {
+    Q_D(const TabManager);
+    return qobject_cast<CentralTab *>(d->w->tabWidget()->currentWidget());
 }
 
 bool TabManager::closeTab(int index) {
@@ -115,6 +122,53 @@ bool TabManager::closeAll() {
         }
     }
     return res;
+}
+
+void TabManager::triggerCurrent(ActionImpl::Action action) {
+    Q_D(TabManager);
+    auto tab = currentTab();
+    switch (action) {
+    case File_New: {
+        break;
+    }
+    case File_NewWindow: {
+        qWindows->newWindow();
+        break;
+    }
+    case File_Open: {
+        d->w->eventMgr()->openFile();
+        break;
+    }
+    case File_Import: {
+        d->w->eventMgr()->importFile();
+        break;
+    }
+    case File_Append: {
+        d->w->eventMgr()->appendFile();
+        break;
+    }
+    case File_Save: {
+        bool saveAs = false;
+        if (tab->type() & CentralTab::Document) {
+            auto docTab = qobject_cast<DocumentTab *>(tab);
+            if (docTab->isUntitled() || docTab->isDeleted()) {
+                saveAs = true;
+            }
+        }
+        saveAs ? d->w->eventMgr()->saveAsFile(tab) : tab->save();
+        break;
+    }
+    case File_SaveAs: {
+        d->w->eventMgr()->saveAsFile(tab);
+        break;
+    }
+    case Help_AboutQt: {
+        QMessageBox::aboutQt(d->w, tr("About %1").arg("Qt"));
+        break;
+    }
+    default:
+        break;
+    }
 }
 
 TabManager::TabManager(TabManagerPrivate &d, MainWindow *parent) : CentralManager(d, parent) {

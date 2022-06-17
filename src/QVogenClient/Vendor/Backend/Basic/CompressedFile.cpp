@@ -33,6 +33,9 @@ bool CompressedFile::loadCore(bool *valid) {
 
     timer.start();
     files = JlCompress::extractDir(m_filename, m_tempDir);
+    if (files.isEmpty()) {
+        return false;
+    }
 
     qDebug() << "Files count:" << files.size();
     qDebug() << "Extract time:" << timer.elapsed() << "ms";
@@ -41,6 +44,20 @@ bool CompressedFile::loadCore(bool *valid) {
 }
 
 bool CompressedFile::saveCore() {
+    if (!Sys::isDirExist(m_tempDir)) {
+        return false;
+    }
+
+    QElapsedTimer timer;
+
+    timer.start();
+    bool res = JlCompress::compressDir(m_filename, m_tempDir);
+    if (!res) {
+        return false;
+    }
+
+    qDebug() << "Compress time:" << timer.elapsed() << "ms";
+
     return true;
 }
 

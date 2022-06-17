@@ -6,6 +6,7 @@
 class FilesActionEnginePrivate;
 
 class FilesActionEngine : public ActionManagerEngine {
+    Q_OBJECT
     Q_DECLARE_PRIVATE(FilesActionEngine)
 public:
     explicit FilesActionEngine(QObject *parent = nullptr);

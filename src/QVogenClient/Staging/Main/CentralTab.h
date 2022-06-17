@@ -52,7 +52,7 @@ protected:
 public:
     virtual bool load();
     virtual bool save();
-    virtual bool saveAs();
+    virtual bool saveAs(const QString &filename);
     virtual bool restore();
 
     virtual void undo();

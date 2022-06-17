@@ -60,7 +60,8 @@ bool CentralTab::save() {
     return false;
 }
 
-bool CentralTab::saveAs() {
+bool CentralTab::saveAs(const QString &filename) {
+    Q_UNUSED(filename)
     return false;
 }
 

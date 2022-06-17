@@ -5,6 +5,8 @@
 
 #include "FilesActionEngine.h"
 
+#include "Types/Actions.h"
+
 class FilesActionEnginePrivate : public ActionManagerEnginePrivate {
     Q_DECLARE_PUBLIC(FilesActionEngine)
 public:
@@ -17,7 +19,10 @@ public:
     void reloadStrings() override;
     void reloadShortcuts() override;
 
+    QAction *NewAction(ActionImpl::Action a);
     void registerHandler(QMenu *menu);
+
+    QMap<QAction *, ActionImpl::Action> map;
 
     QMenu *fileMenu;
     QMenu *editMenu;
@@ -45,8 +50,8 @@ public:
     QAction *file_closeFile;
     QAction *file_closeWindow;
 
-    QAction *export_exportSelection;
-    QAction *export_exportTrack;
+    QAction *file_exportSelection;
+    QAction *file_exportTrack;
 
     QAction *preference_settings;
     QAction *preference_keyShortcuts;
@@ -60,18 +65,13 @@ public:
     QAction *edit_undo;
     QAction *edit_redo;
 
-    QAction *edit_copy;
     QAction *edit_cut;
+    QAction *edit_copy;
     QAction *edit_paste;
-
-    QAction *edit_pasteMode1;
-    QAction *edit_pasteMode2;
-    QAction *edit_pasteEnv;
-    QAction *edit_pasteProps;
+    QAction *edit_pastePitch;
 
     QAction *edit_remove;
-
-    QAction *edit_removePoints;
+    QAction *edit_removePitch;
 
     QAction *edit_selectAll;
     QAction *edit_deselect;

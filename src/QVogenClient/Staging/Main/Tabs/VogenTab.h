@@ -22,6 +22,7 @@ protected:
 public:
     bool load() override;
     bool save() override;
+    bool saveAs(const QString &filename) override;
 
     void makeUntitled(const QString &name = QString());
 

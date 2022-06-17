@@ -7,6 +7,9 @@ FilesActionEnginePrivate::FilesActionEnginePrivate() {
 }
 
 FilesActionEnginePrivate::~FilesActionEnginePrivate() {
+    for (auto it = map.begin(); it != map.end(); ++it) {
+        delete it.key();
+    }
 }
 
 void FilesActionEnginePrivate::init() {
@@ -39,25 +42,25 @@ void FilesActionEnginePrivate::setup() {
     registerHandler(exportMenu);
     registerHandler(preferencesMenu);
 
-    file_newFile = new QAction();
-    file_newWindow = new QAction();
-    file_openFile = new QAction();
-    file_saveFile = new QAction();
-    file_saveAs = new QAction();
-    file_saveAll = new QAction();
-    file_importFile = new QAction();
-    file_appendFile = new QAction();
-    file_fileSettings = new QAction();
-    file_closeFile = new QAction();
-    file_closeWindow = new QAction();
+    file_newFile = NewAction(ActionImpl::File_New);
+    file_newWindow = NewAction(ActionImpl::File_NewWindow);
+    file_openFile = NewAction(ActionImpl::File_Open);
+    file_saveFile = NewAction(ActionImpl::File_Save);
+    file_saveAs = NewAction(ActionImpl::File_SaveAs);
+    file_saveAll = NewAction(ActionImpl::File_SaveAll);
+    file_importFile = NewAction(ActionImpl::File_Import);
+    file_appendFile = NewAction(ActionImpl::File_Append);
+    file_fileSettings = NewAction(ActionImpl::File_FileSettings);
+    file_closeFile = NewAction(ActionImpl::File_Close);
+    file_closeWindow = NewAction(ActionImpl::File_CloseWindow);
 
-    export_exportSelection = new QAction();
-    export_exportTrack = new QAction();
+    file_exportSelection = NewAction(ActionImpl::File_ExportSelection);
+    file_exportTrack = NewAction(ActionImpl::File_ExportTrack);
 
-    preference_settings = new QAction();
-    preference_keyShortcuts = new QAction();
-    preference_themes = new QAction();
-    preference_languages = new QAction();
+    preference_settings = NewAction(ActionImpl::File_Settings);
+    preference_keyShortcuts = NewAction(ActionImpl::File_KeyboardShortcuts);
+    preference_themes = NewAction(ActionImpl::File_ColorThemes);
+    preference_languages = NewAction(ActionImpl::File_Languages);
 
     // Edit
     pasteMenu = new CMenu();
@@ -66,24 +69,19 @@ void FilesActionEnginePrivate::setup() {
     registerHandler(pasteMenu);
     registerHandler(removeMenu);
 
-    edit_undo = new QAction();
-    edit_redo = new QAction();
+    edit_undo = NewAction(ActionImpl::Edit_Undo);
+    edit_redo = NewAction(ActionImpl::Edit_Redo);
 
-    edit_copy = new QAction();
-    edit_cut = new QAction();
-    edit_paste = new QAction();
+    edit_cut = NewAction(ActionImpl::Edit_Cut);
+    edit_copy = NewAction(ActionImpl::Edit_Copy);
+    edit_paste = NewAction(ActionImpl::Edit_Paste);
+    edit_pastePitch = NewAction(ActionImpl::Edit_PastePitch);
 
-    edit_pasteMode1 = new QAction();
-    edit_pasteMode2 = new QAction();
-    edit_pasteEnv = new QAction();
-    edit_pasteProps = new QAction();
+    edit_remove = NewAction(ActionImpl::Edit_Remove);
+    edit_removePitch = NewAction(ActionImpl::Edit_RemovePitch);
 
-    edit_remove = new QAction();
-
-    edit_removePoints = new QAction();
-
-    edit_selectAll = new QAction();
-    edit_deselect = new QAction();
+    edit_selectAll = NewAction(ActionImpl::Edit_SelectAll);
+    edit_deselect = NewAction(ActionImpl::Edit_Deselect);
 
     // View
     appearanceMenu = new CMenu();
@@ -100,11 +98,11 @@ void FilesActionEnginePrivate::setup() {
     registerHandler(displayMenu);
     registerHandler(cursorMenu);
 
-    appearance_toolBar = new QAction();
-    appearance_navBar = new QAction();
-    appearance_statusBar = new QAction();
-    appearance_panelBars = new QAction();
-    appearance_menuBar = new QAction();
+    appearance_toolBar = NewAction(ActionImpl::View_Appearance_ToolBar);
+    appearance_navBar = NewAction(ActionImpl::View_Appearance_NavigationBar);
+    appearance_statusBar = NewAction(ActionImpl::View_Appearance_StatusBar);
+    appearance_panelBars = NewAction(ActionImpl::View_Appearance_ToolWindowsBar);
+    appearance_menuBar = NewAction(ActionImpl::View_Appearance_MenuBar);
 
     panels_notePanel = new QAction();
     panels_ctrlPanel = new QAction();
@@ -131,34 +129,34 @@ void FilesActionEnginePrivate::setup() {
     registerHandler(buildInMenu);
     registerHandler(pluginsMenu);
 
-    modify_insertLyrics = new QAction();
-    modify_findReplace = new QAction();
-    modify_transpose = new QAction();
-    modify_octaveUp = new QAction();
-    modify_octaveDown = new QAction();
+    modify_insertLyrics = NewAction(ActionImpl::Modify_InsertLyrics);
+    modify_findReplace = NewAction(ActionImpl::Modify_FindReplace);
+    modify_transpose = NewAction(ActionImpl::Modify_Transpose);
+    modify_octaveUp = NewAction(ActionImpl::Modify_OctaveUp);
+    modify_octaveDown = NewAction(ActionImpl::Modify_OctaveDown);
 
     // Play
-    play_play = new QAction();
-    play_stop = new QAction();
-    play_replay = new QAction();
-    play_moveStart = new QAction();
-    play_moveEnd = new QAction();
-    play_removeCache = new QAction();
-    play_exportAudio = new QAction();
+    play_play = NewAction(ActionImpl::Playback_Play);
+    play_stop = NewAction(ActionImpl::Playback_Stop);
+    play_replay = NewAction(ActionImpl::Playback_Replay);
+    play_moveStart = NewAction(ActionImpl::Playback_MoveStart);
+    play_moveEnd = NewAction(ActionImpl::Playback_MoveEnd);
+    play_removeCache = NewAction(ActionImpl::Playback_RemoveCache);
+    play_exportAudio = NewAction(ActionImpl::Playback_ExportRecent);
 
     // Help
-    help_welcome = new QAction();
-    help_showActions = new QAction();
-    help_voiceManager = new QAction();
-    help_instructions = new QAction();
-    help_checkUpdate = new QAction();
-    help_aboutApp = new QAction();
-    help_aboutQt = new QAction();
+    help_welcome = NewAction(ActionImpl::Help_Welcome);
+    help_showActions = NewAction(ActionImpl::Help_ShowActions);
+    help_voiceManager = NewAction(ActionImpl::Help_VoiceManager);
+    help_instructions = NewAction(ActionImpl::Help_Instructions);
+    help_checkUpdate = NewAction(ActionImpl::Help_CheckUpdate);
+    help_aboutApp = NewAction(ActionImpl::Help_AboutApplication);
+    help_aboutQt = NewAction(ActionImpl::Help_AboutQt);
 
     // ----------------- Setup -----------------
     // File
-    exportMenu->addAction(export_exportSelection);
-    exportMenu->addAction(export_exportTrack);
+    exportMenu->addAction(file_exportSelection);
+    exportMenu->addAction(file_exportTrack);
 
     preferencesMenu->addAction(preference_settings);
     preferencesMenu->addAction(preference_keyShortcuts);
@@ -186,18 +184,14 @@ void FilesActionEnginePrivate::setup() {
     fileMenu->addAction(file_closeWindow);
 
     // Edit
-    pasteMenu->addAction(edit_pasteMode1);
-    pasteMenu->addAction(edit_pasteMode2);
-    pasteMenu->addAction(edit_pasteEnv);
-    pasteMenu->addAction(edit_pasteProps);
-
-    removeMenu->addAction(edit_removePoints);
+    pasteMenu->addAction(edit_pastePitch);
+    removeMenu->addAction(edit_removePitch);
 
     editMenu->addAction(edit_undo);
     editMenu->addAction(edit_redo);
     editMenu->addSeparator();
-    editMenu->addAction(edit_copy);
     editMenu->addAction(edit_cut);
+    editMenu->addAction(edit_copy);
     editMenu->addAction(edit_paste);
     editMenu->addMenu(pasteMenu);
     editMenu->addSeparator();
@@ -222,7 +216,6 @@ void FilesActionEnginePrivate::setup() {
     panelsMenu->addAction(panels_statePanel);
 
     // Play
-
     playheadMenu->addAction(playhead_normal);
     playheadMenu->addAction(playhead_center);
 
@@ -312,8 +305,8 @@ void FilesActionEnginePrivate::reloadStrings() {
     file_closeFile->setText(QObject::tr("Close File"));
     file_closeWindow->setText(QObject::tr("Close Window"));
 
-    export_exportSelection->setText(QObject::tr("Export Selection..."));
-    export_exportTrack->setText(QObject::tr("Export Track..."));
+    file_exportSelection->setText(QObject::tr("Export Selection..."));
+    file_exportTrack->setText(QObject::tr("Export Track..."));
 
     preference_settings->setText(QObject::tr("Settings"));
     preference_keyShortcuts->setText(QObject::tr("Keyboard Shortcuts"));
@@ -321,24 +314,19 @@ void FilesActionEnginePrivate::reloadStrings() {
     preference_languages->setText(QObject::tr("Multilingual"));
 
     // Edit
-    pasteMenu->setTitle(QObject::tr("More paste options"));
-    removeMenu->setTitle(QObject::tr("More remove options"));
+    pasteMenu->setTitle(QObject::tr("More Paste Options"));
+    removeMenu->setTitle(QObject::tr("More Remove Options"));
 
     edit_undo->setText(QObject::tr("Undo"));
     edit_redo->setText(QObject::tr("Redo"));
 
-    edit_copy->setText(QObject::tr("Copy"));
     edit_cut->setText(QObject::tr("Cut"));
+    edit_copy->setText(QObject::tr("Copy"));
     edit_paste->setText(QObject::tr("Paste"));
-
-    edit_pasteMode1->setText(QObject::tr("Paste Mode1"));
-    edit_pasteMode2->setText(QObject::tr("Paste Mode2"));
-    edit_pasteEnv->setText(QObject::tr("Paste Envelope"));
-    edit_pasteProps->setText(QObject::tr("Paste Properties"));
+    edit_pastePitch->setText(QObject::tr("Paste Pitch"));
 
     edit_remove->setText(QObject::tr("Remove"));
-
-    edit_removePoints->setText(QObject::tr("Remove Points"));
+    edit_removePitch->setText(QObject::tr("Remove Points"));
 
     edit_selectAll->setText(QObject::tr("Select All"));
     edit_deselect->setText(QObject::tr("Deselect"));
@@ -458,6 +446,12 @@ void FilesActionEnginePrivate::reloadShortcuts() {
 
     // Help
     help_showActions->setShortcut(QKeySequence("Ctrl+Shift+A"));
+}
+
+QAction *FilesActionEnginePrivate::NewAction(ActionImpl::Action a) {
+    auto action = new QAction();
+    map.insert(action, a);
+    return action;
 }
 
 void FilesActionEnginePrivate::registerHandler(QMenu *menu) {

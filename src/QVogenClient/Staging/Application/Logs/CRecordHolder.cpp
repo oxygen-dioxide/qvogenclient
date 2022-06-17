@@ -199,8 +199,6 @@ bool CRecordHolder::load() {
     return true;
 }
 
-#define OBJ QJsonObject
-
 bool CRecordHolder::save() {
     QFile file(m_filename);
     if (!file.open(QFile::WriteOnly | QIODevice::Text)) {
@@ -220,6 +218,7 @@ bool CRecordHolder::save() {
     ls = Math::batchReplaceByVal(Math::batchFilterByVal(temp.lastOpenPaths, Sys::isDirExist),
                                  QDir::toNativeSeparators);
 
+#define OBJ QJsonObject
     QJsonObject objDoc(
         {{SECTION_NAME_GUI,
           OBJ({{KEY_NAME_MAINWINDOW, OBJ({{KEY_NAME_MAINWINDOW_X, rect.x()},
@@ -260,6 +259,7 @@ bool CRecordHolder::save() {
                                    {SECTION_NAME_WAVTOOL, QJsonArray::fromStringList(ws)},
                                    {SECTION_NAME_RESAMPLER, QJsonArray::fromStringList(rs)},
                                    {SECTION_NAME_LAST_OPEN, QJsonFormatter::mapToObject(ls)}})}});
+#undef OBJ
 
     QJsonDocument doc;
     doc.setObject(objDoc);

@@ -3,6 +3,7 @@
 
 #include "../CentralManager.h"
 
+class CentralTab;
 class MainWindow;
 class EventManagerPrivate;
 
@@ -17,9 +18,11 @@ public:
     bool load() override;
 
 public:
-    bool open(const QString &filename);
-    bool import(const QString &filename);
-    bool append(const QString &filename);
+    bool newFile();
+    bool openFile(const QString &filename = QString());
+    bool importFile(const QString &filename = QString());
+    bool appendFile(const QString &filename = QString());
+    bool saveAsFile(CentralTab *tab);
 
 protected:
     EventManager(EventManagerPrivate &d, MainWindow *parent = nullptr);

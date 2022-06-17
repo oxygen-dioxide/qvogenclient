@@ -17,15 +17,6 @@ public:
 
     void reloadStrings();
 
-    enum MainMenuType {
-        File,
-        Edit,
-        View,
-        Modify,
-        Playback,
-        Help,
-    };
-
 public:
     bool load() override;
 

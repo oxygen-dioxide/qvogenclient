@@ -29,21 +29,9 @@ VogenTab::VogenTab(VogenTabPrivate &d, QWidget *parent) : DocumentTab(d, parent)
 bool VogenTab::load() {
     Q_D(VogenTab);
 
-    // Check file permissions
-    QFileInfo info(d->filename);
-    if (!info.isFile()) {
-        Q_ERROR(this, qData->errorTitle(), tr("File does not exist."));
-        return false;
-    }
-    if (!info.isWritable() || !info.isReadable()) {
-        Q_ERROR(this, qData->errorTitle(), tr("No permission to read or write file!"));
-        return false;
-    }
-
     // Open file
-    auto &file = d->vog;
-    file.setFilename(info.absoluteFilePath());
-    bool res = file.load();
+    d->vog.setFilename(d->filename);
+    bool res = d->vog.load();
 
     if (!res) {
         Q_ERROR(this, qData->errorTitle(), tr("Failed to open file!"));
@@ -56,11 +44,32 @@ bool VogenTab::load() {
 bool VogenTab::save() {
     Q_D(VogenTab);
 
-    bool res = true;
+    bool res = d->vog.save();
     if (!res) {
         Q_ERROR(this, qData->errorTitle(), tr("Failed to save file!"));
         return false;
     }
+
+    return true;
+}
+
+bool VogenTab::saveAs(const QString &filename) {
+    Q_D(VogenTab);
+
+    QVogenFile file(filename);
+
+    file.projectName = d->vog.projectName;
+    file.tempo = d->vog.tempo;
+    file.beat = d->vog.beat;
+    file.accomOffset = d->vog.accomOffset;
+    file.utterances = d->vog.utterances;
+
+    if (!file.save()) {
+        Q_ERROR(this, qData->errorTitle(), tr("Failed to save file!"));
+        return false;
+    }
+
+    d->vog = std::move(file);
 
     return true;
 }
