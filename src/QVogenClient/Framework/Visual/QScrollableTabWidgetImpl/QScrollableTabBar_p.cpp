@@ -27,6 +27,8 @@ void QScrollableTabBarPrivate::init() {
     Q_Q(QScrollableTabBar);
     q->setAttribute(Qt::WA_StyledBackground);
 
+    autoHide = false;
+
     tabs = nullptr;
 
     current = nullptr;
@@ -185,5 +187,14 @@ void QScrollableTabBarPrivate::autoScrollToCurrent() const {
         scrollBar->setValue(tab->x());
     } else if (tab->x() + tab->width() + entity->x() > q->width()) {
         scrollBar->setValue(tab->x() + tab->width() - q->width());
+    }
+}
+
+void QScrollableTabBarPrivate::updateVisibility() {
+    Q_Q(QScrollableTabBar);
+    if (autoHide && q->count() == 0) {
+        q->hide();
+    } else {
+        q->show();
     }
 }

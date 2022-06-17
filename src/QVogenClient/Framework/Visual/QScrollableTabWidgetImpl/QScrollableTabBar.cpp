@@ -42,6 +42,7 @@ int QScrollableTabBar::insertTab(int index, const QIcon &icon, const QString &te
     if (count() == 1) {
         setCurrentIndex(0);
     }
+    d->updateVisibility();
     return res;
 }
 
@@ -88,6 +89,7 @@ void QScrollableTabBar::removeTab(int index) {
         d->previous = nullptr;
     }
     tabRemoved(index);
+    d->updateVisibility();
 }
 
 void QScrollableTabBar::moveTab(int from, int to) {
@@ -419,6 +421,17 @@ void QScrollableTabBar::setScrollOpacity(double opacity) {
     Q_D(QScrollableTabBar);
     d->opacityEffect->setOpacity(opacity);
     emit styleChanged();
+}
+
+bool QScrollableTabBar::autoHide() const {
+    Q_D(const QScrollableTabBar);
+    return d->autoHide;
+}
+
+void QScrollableTabBar::setAutoHide(bool autoHide) {
+    Q_D(QScrollableTabBar);
+    d->autoHide = autoHide;
+    d->updateVisibility();
 }
 
 QScrollBar *QScrollableTabBar::scrollBar() const {

@@ -6,8 +6,10 @@
 
 #include <QApplication>
 #include <QHoverEvent>
+#include <QStackedLayout>
 
-CentralTabWidget::CentralTabWidget(QWidget *parent) : CentralTabWidget(*new CentralTabWidgetPrivate(), parent) {
+CentralTabWidget::CentralTabWidget(QWidget *parent)
+    : CentralTabWidget(*new CentralTabWidgetPrivate(), parent) {
 }
 
 CentralTabWidget::~CentralTabWidget() {
@@ -19,6 +21,12 @@ void CentralTabWidget::invalidateHover() const {
 }
 
 void CentralTabWidget::tabInserted(int index) {
+    Q_D(CentralTabWidget);
+    if (!d->stack->isVisible()) {
+        d->stack->setVisible(true);
+        d->placeholderWidget->setVisible(false);
+    }
+
     auto button = new CPushButton();
     button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     button->setCheckable(true);
@@ -36,6 +44,18 @@ void CentralTabWidget::tabInserted(int index) {
             emit currentTabTextChanged(tab->title());
         }
     }
+}
+
+void CentralTabWidget::tabRemoved(int index) {
+    Q_UNUSED(index);
+
+    if (count() != 0) {
+        return;
+    }
+
+    Q_D(CentralTabWidget);
+    d->stack->setVisible(false);
+    d->placeholderWidget->setVisible(true);
 }
 
 void CentralTabWidget::tabSelected(int index, int orgIndex) {
@@ -72,6 +92,7 @@ void CentralTabWidget::_q_tabIconChanged(const QIcon &icon) {
     }
 }
 
-CentralTabWidget::CentralTabWidget(CentralTabWidgetPrivate &d, QWidget *parent) : QScrollableTabWidget(d, parent) {
+CentralTabWidget::CentralTabWidget(CentralTabWidgetPrivate &d, QWidget *parent)
+    : QScrollableTabWidget(d, parent) {
     d.init();
 }

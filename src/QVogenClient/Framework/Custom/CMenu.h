@@ -10,8 +10,9 @@ public:
     explicit CMenu(const QString &title, QWidget *parent = nullptr);
     ~CMenu();
 
-private:
-    void init();
+protected:
+    void paintEvent(QPaintEvent *event) override;
+    void initStyleOption(QStyleOptionMenuItem *option, const QAction *action) const;
 
 signals:
 };

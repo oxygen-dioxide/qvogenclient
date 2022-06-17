@@ -12,6 +12,10 @@ public:
     ~CentralTabWidgetPrivate();
 
     void init();
+
+    QWidget *placeholderWidget;
+
+    QWidget *createPlaceholderWidget() const;
 };
 
 #endif // CENTRALTABWIDGETPRIVATE_H

@@ -19,6 +19,7 @@ public:
 
 protected:
     void tabInserted(int index) override;
+    void tabRemoved(int index) override;
     void tabSelected(int index, int orgIndex) override;
 
     void showEvent(QShowEvent *event) override;

@@ -149,7 +149,7 @@ CMenu::indicator:checked {
 }
 
 CMenu::right-arrow {
-    image: url(:/svg/menu/dark/arrow-right-s-line.svg);
+    /* image: url(:/svg/menu/dark/arrow-right-s-line.svg); */
     width: 20px;
     height: 20px;
     padding: 0 5px;
@@ -157,6 +157,16 @@ CMenu::right-arrow {
 
 
 /* QScrollableTabWidget */
+
+CentralTabWidget>QWidget#placeholder-widget {}
+
+CentralTabWidget>QWidget#placeholder-widget>FullIconButton#icon-button {
+    qproperty-iconUp: svg(":/svg/app/logo-custom.svg", #151515);
+    qproperty-iconMargin: 30px 30px;
+    max-width: 420px;
+    max-height: 420px;
+    background-color: transparent;
+}
 
 QScrollableTabBar {
     background-color: #252526;

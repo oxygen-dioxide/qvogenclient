@@ -37,7 +37,12 @@ public:
 
     void autoScrollToCurrent() const;
 
+    void updateVisibility();
+
     QScrollableTabBar *q_ptr;
+
+    // Properties
+    bool autoHide;
 
     QScrollableTabWidget *tabs;
 

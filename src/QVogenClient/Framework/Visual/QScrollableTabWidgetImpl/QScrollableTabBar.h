@@ -92,6 +92,9 @@ public:
     double scrollOpacity() const;
     void setScrollOpacity(double opacity);
 
+    bool autoHide() const;
+    void setAutoHide(bool autoHide);
+
     QScrollBar *scrollBar() const;
 
     int currentDraggedIndex();

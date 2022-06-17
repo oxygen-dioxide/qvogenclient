@@ -124,5 +124,6 @@
         <file>svg/voice-dir-panel/light/arrow-right-s-line.svg</file>
         <file>themes/dark-v3.qss</file>
         <file>svg/app/logo.svg</file>
+        <file>svg/app/logo-custom.svg</file>
     </qresource>
 </RCC>
