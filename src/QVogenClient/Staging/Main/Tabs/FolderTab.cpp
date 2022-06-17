@@ -26,3 +26,13 @@ void FolderTab::setUnreachable(bool unreachable) {
     Q_D(FolderTab);
     d->unreachable = unreachable;
 }
+
+void FolderTab::setEdited(bool edited) {
+    CentralTab::setEdited(edited);
+    updateTabName();
+}
+
+void FolderTab::filenameSet(const QString &filename) {
+    CentralTab::filenameSet(filename);
+    updateTabName();
+}

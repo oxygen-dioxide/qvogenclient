@@ -109,8 +109,6 @@ public:
     QAction *cursor_free;
 
     // Modify
-    QMenu *envelopeMenu;
-
     QMenu *buildInMenu; // *
     QMenu *pluginsMenu; // *
 
@@ -119,14 +117,6 @@ public:
     QAction *modify_transpose;
     QAction *modify_octaveUp;
     QAction *modify_octaveDown;
-    QAction *modify_removeRest;
-    QAction *modify_insertRest;
-
-    QAction *envelope_p2p3Fade;
-    QAction *envelope_p1p4Fade;
-    QAction *envelope_resetEnv;
-
-    QAction *modify_lyricConfig;
 
     // Play
     QAction *play_play;
@@ -140,6 +130,7 @@ public:
     // Help
     QAction *help_welcome;
     QAction *help_showActions;
+    QAction *help_voiceManager;
     QAction *help_instructions;
     QAction *help_checkUpdate;
     QAction *help_aboutApp;

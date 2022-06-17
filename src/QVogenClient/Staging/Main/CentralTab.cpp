@@ -50,7 +50,6 @@ void CentralTab::setEdited(bool edited) {
 
 void CentralTab::filenameSet(const QString &filename) {
     Q_UNUSED(filename)
-    updateTabName();
 }
 
 bool CentralTab::load() {

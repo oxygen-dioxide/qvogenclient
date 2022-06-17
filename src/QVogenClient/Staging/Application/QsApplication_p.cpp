@@ -7,7 +7,10 @@
 #include <QScreen>
 #include <QTextCodec>
 
+#include "Namespace.h"
 #include "SystemHelper.h"
+
+#include "Types/Events.h"
 
 QsApplicationPrivate::QsApplicationPrivate() {
 }
@@ -17,6 +20,11 @@ QsApplicationPrivate::~QsApplicationPrivate() {
 
 void QsApplicationPrivate::init() {
     Q_Q(QsApplication);
+
+    q->setApplicationName(Qs::AppName);
+    q->setApplicationVersion(Qs::Version);
+
+    QEventImpl::Register();
 
     initLocale();
     initFonts();

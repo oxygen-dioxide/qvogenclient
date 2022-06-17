@@ -8,6 +8,8 @@
 #include "FileParser.h"
 #include "QVogenFile.h"
 
+#include "TabManager.h"
+
 #include <QEvent>
 
 EventManager::EventManager(MainWindow *parent) : EventManager(*new EventManagerPrivate(), parent) {
@@ -21,16 +23,8 @@ bool EventManager::load() {
 }
 
 bool EventManager::open(const QString &filename) {
-    QVogenFile file(filename);
-    if (!file.load()) {
-        return false;
-    }
-
-    for (const auto &u : file.utterances) {
-        qDebug() << u.name << u.notes.count();
-    }
-
-    return true;
+    Q_D(EventManager);
+    return d->w->tabMgr()->addProject(filename);
 }
 
 bool EventManager::import(const QString &filename) {

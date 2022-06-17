@@ -13,6 +13,8 @@ public:
 
     void init();
 
+    void updateVisibility();
+
     QWidget *placeholderWidget;
 
     QWidget *createPlaceholderWidget() const;

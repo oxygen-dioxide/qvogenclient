@@ -49,6 +49,7 @@ void QScrollableTabBarPrivate::init() {
 
     scrollBar = new QScrollBar(Qt::Horizontal, q);
     scrollBar->setObjectName("scroll-bar");
+    scrollBar->setContextMenuPolicy(Qt::NoContextMenu);
 
     scrollBar->installEventFilter(q);
 

@@ -15,7 +15,7 @@
 MainWindow::MainWindow(QWidget *parent) : BasicWindow(parent) {
     setAcceptDrops(true);
 
-    m_layout = new QVBoxLayout();
+    m_layout = new QGridLayout();
     m_layout->setMargin(0);
     m_layout->setSpacing(0);
 
@@ -23,11 +23,18 @@ MainWindow::MainWindow(QWidget *parent) : BasicWindow(parent) {
     m_widget->setAttribute(Qt::WA_StyledBackground);
     m_widget->setLayout(m_layout);
 
+    m_tools = new CentralToolBar();
+    m_nav = new CentralNavBar();
     m_tabs = new CentralTabWidget();
     m_frame = new CCoupleTabFrame();
 
-    m_layout->addWidget(m_tabs->moveOutTabBarWidget());
-    m_layout->addWidget(m_frame);
+    int row = 1;
+    auto tabBar = m_tabs->moveOutTabBarWidget();
+
+    m_layout->addWidget(tabBar, 0, 0, 1, 2);
+    m_layout->addWidget(m_tools, row, 0, 1, 1);
+    m_layout->addWidget(m_nav, row, 1, 1, 1);
+    m_layout->addWidget(m_frame, row + 1, 0, 1, 2);
 
     m_frame->setWidget(m_tabs);
     this->setCentralWidget(m_widget);
@@ -49,6 +56,14 @@ MainWindow::~MainWindow() {
 void MainWindow::reloadStrings() {
     m_titleBar->reloadStrings();
     m_actionMgr->reloadStrings();
+}
+
+CentralToolBar *MainWindow::toolBar() const {
+    return m_tools;
+}
+
+CentralNavBar *MainWindow::navBar() const {
+    return m_nav;
 }
 
 CentralTabWidget *MainWindow::tabWidget() const {

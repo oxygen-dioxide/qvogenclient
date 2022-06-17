@@ -35,4 +35,15 @@ void DocumentTab::setUntitled(bool untitled) {
 void DocumentTab::setDeleted(bool deleted) {
     Q_D(DocumentTab);
     d->deleted = deleted;
+    updateTabName();
+}
+
+void DocumentTab::setEdited(bool edited) {
+    CentralTab::setEdited(edited);
+    updateTabName();
+}
+
+void DocumentTab::filenameSet(const QString &filename) {
+    CentralTab::filenameSet(filename);
+    updateTabName();
 }

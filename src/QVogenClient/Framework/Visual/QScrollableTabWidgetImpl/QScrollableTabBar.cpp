@@ -88,8 +88,8 @@ void QScrollableTabBar::removeTab(int index) {
     if (d->previous == tab) {
         d->previous = nullptr;
     }
-    tabRemoved(index);
     d->updateVisibility();
+    tabRemoved(index);
 }
 
 void QScrollableTabBar::moveTab(int from, int to) {
@@ -214,8 +214,7 @@ QSize QScrollableTabBar::sizeHint() const {
 }
 
 QSize QScrollableTabBar::minimumSizeHint() const {
-    Q_D(const QScrollableTabBar);
-    return QSize(QWidget::minimumSizeHint().width(), d->entity->minimumSizeHint().height());
+    return this->sizeHint();
 }
 
 QSize QScrollableTabBar::iconSize(int index) const {
@@ -272,6 +271,7 @@ void QScrollableTabBar::resizeEvent(QResizeEvent *event) {
     if (event->oldSize().width() != event->size().width() && d->scrollBar->isVisible()) {
         d->lastResized = QTime::currentTime();
     }
+
     QFrame::resizeEvent(event);
 }
 
@@ -343,9 +343,10 @@ bool QScrollableTabBar::eventFilter(QObject *obj, QEvent *event) {
         }
     } else if (obj == d->scrollBar) {
         switch (event->type()) {
-        case QEvent::Show:
+        case QEvent::Show: {
             d->layoutScroll();
             break;
+        }
         case QEvent::Resize: {
             if (d->scrollBar->isVisible()) {
                 d->layoutScroll();
@@ -358,7 +359,11 @@ bool QScrollableTabBar::eventFilter(QObject *obj, QEvent *event) {
     } else if (obj == d->entity) {
         switch (event->type()) {
         case QEvent::Resize: {
+            auto e = static_cast<QResizeEvent *>(event);
             d->updateScroll();
+            if (e->oldSize().height() != e->size().height()) {
+                updateGeometry();
+            }
             break;
         }
         case QEvent::LayoutRequest: {

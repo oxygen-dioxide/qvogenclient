@@ -3,7 +3,8 @@
 
 #include "../CentralManager_p.h"
 
-#include "CentralTab.h"
+#include "VogenTab.h"
+
 #include "TabManager.h"
 
 class MainWindow;
@@ -16,11 +17,22 @@ public:
 
     void init();
 
+    // Info
     CentralTab *currentTab() const;
     CentralTab *tabAt(int index) const;
     int tabCount() const;
 
+    // State
+    void reloadWindowTitle(const QString &title);
+
+    // Close
     bool tryCloseTab(int index);
+
+    // Create
+    VogenTab *createProjectTab(const QString &filename);
+
+    static void findExistingTab(CentralTab::Type type, QPair<MainWindow *, int> *res,
+                                const QString &filename = QString());
 };
 
 #endif // TABMANAGERPRIVATE_H

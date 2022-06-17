@@ -1,6 +1,7 @@
 #include "CMenu.h"
 #include "CApplication.h"
 
+#include <private/qkeysequence_p.h>
 #include <private/qmenu_p.h>
 
 #include <QDebug>
@@ -149,8 +150,9 @@ void CMenu::paintEvent(QPaintEvent *event) {
             if (!subIcon.isNull()) {
                 int a = actionRect.height();
                 QRect iconRegion(actionRect.right() - a, actionRect.top(), a, a);
-                QRect iconRect = iconRegion.adjusted(m_subIconMargins.width(), m_subIconMargins.height(),
-                                                     -m_subIconMargins.width(), -m_subIconMargins.height());
+                QRect iconRect =
+                    iconRegion.adjusted(m_subIconMargins.width(), m_subIconMargins.height(),
+                                        -m_subIconMargins.width(), -m_subIconMargins.height());
                 p.drawPixmap(iconRect, subIcon.pixmap(iconRect.size()));
             }
         }
@@ -266,8 +268,9 @@ void CMenu::initStyleOption(QStyleOptionMenuItem *option, const QAction *action)
         QKeySequence seq = action->shortcut();
         if (!seq.isEmpty()) {
             QString seqText = seq.toString(QKeySequence::NativeText);
+            seqText.replace(", ", " ");
             textAndAccel += QLatin1Char('\t') + seqText;
-            tabWidth = QFontMetrics(this->font()).horizontalAdvance(seqText);
+            tabWidth = QFontMetrics(font()).horizontalAdvance(seqText);
         }
     }
 #endif

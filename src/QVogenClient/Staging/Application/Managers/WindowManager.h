@@ -20,6 +20,8 @@ public:
 public:
     MainWindow *newWindow();
 
+    QList<MainWindow *> windows() const;
+
 protected:
     WindowManager(WindowManagerPrivate &d, QObject *parent = nullptr);
 

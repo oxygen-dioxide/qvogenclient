@@ -176,6 +176,7 @@ void QScrollableTabWidget::setTabBar(QScrollableTabBar *tabBar) {
     }
 
     d->tabBar = tabBar;
+    tabBar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     tabBar->show();
     setFocusProxy(tabBar);
 

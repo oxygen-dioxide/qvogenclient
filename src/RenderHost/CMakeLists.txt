@@ -25,31 +25,52 @@ set(ONNX_RUNTIME_DIR)
 set(ONNX_RUNTIME_LIB)
 set(ONNX_RUNTIME_BIN)
 
+set(QT_LIBS)
 set(SOURCE_FILES)
 set(RESOURCE_FILES)
 
-# Temp Vars
+# Current Project Directories
 set(RES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Res)
+set(LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Lib)
 
 set(VOGEN_MODEL_DIR Models)
 set(VOGEN_ROM_DIR Romanization)
 set(VOGEN_DICTS_DIR RomDicts)
 
+# Macros
+macro(add_recursively List)
+    set(TEMP_LIST)
+    file(GLOB_RECURSE TEMP_LIST ${ARGN})
+    foreach (Item ${TEMP_LIST})
+        list(APPEND ${List} ${Item})
+    endforeach ()
+    set(TEMP_LIST)
+endmacro()
+
+macro(find_qt_module Module)
+    find_package(QT NAMES Qt6 Qt5 COMPONENTS ${Module} REQUIRED)
+    find_package(Qt${QT_VERSION_MAJOR} COMPONENTS ${Module} REQUIRED)
+endmacro()
+
+macro(add_qt_module List Module)
+    find_qt_module(${Module})
+    list(APPEND ${List} Qt${QT_VERSION_MAJOR}::${Module})
+endmacro()
+
 # Find ONNX Runtime Library
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
-    set(ONNX_RUNTIME_DIR "${CMAKE_CURRENT_SOURCE_DIR}/${ONNX_RUNTIME_DIRNAME_WINDOWS}")
-    file(GLOB ONNX_RUNTIME_LIB
-        "${ONNX_RUNTIME_DIR}/lib/*.lib")
-    file(GLOB ONNX_RUNTIME_BIN
-        "${ONNX_RUNTIME_DIR}/lib/*.dll"
-        "${ONNX_RUNTIME_DIR}/lib/*.pdb")
+    set(ONNX_RUNTIME_DIR ${LIB_DIR}/${ONNX_RUNTIME_DIRNAME_WINDOWS})
+
+    # Add Lib Files
+    file(GLOB ONNX_RUNTIME_LIB "${ONNX_RUNTIME_DIR}/lib/*.lib")
+    file(GLOB ONNX_RUNTIME_BIN "${ONNX_RUNTIME_DIR}/lib/*.dll" "${ONNX_RUNTIME_DIR}/lib/*.pdb")
 
     # Add RC File
     list(APPEND RESOURCE_FILES ${RES_DIR}/win32/res.rc)
 elseif(CMAKE_SYSTEM_NAME MATCHES "Linux")
-    set(ONNX_RUNTIME_DIR "${CMAKE_CURRENT_SOURCE_DIR}/${ONNX_RUNTIME_DIRNAME_LINUX}")
+    set(ONNX_RUNTIME_DIR ${LIB_DIR}/${ONNX_RUNTIME_DIRNAME_LINUX})
 elseif(APPLE)
-    set(ONNX_RUNTIME_DIR "${CMAKE_CURRENT_SOURCE_DIR}/${ONNX_RUNTIME_DIRNAME_MACOSX}")
+    set(ONNX_RUNTIME_DIR ${LIB_DIR}/${ONNX_RUNTIME_DIRNAME_MACOSX})
 else()
     message(FATAL_ERROR "Unsupported System !!!")
 endif()
@@ -58,12 +79,18 @@ endif()
 add_subdirectory(World)
 
 # Add Sources
+add_qt_module(QT_LIBS Core)
+
 file(GLOB SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
+add_recursively(SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/Meta/*.h"
+                             "${CMAKE_CURRENT_SOURCE_DIR}/Meta/*.cpp")
 
 # Add Executable
 add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${RESOURCE_FILES})
 
 # Link Libraries
+target_link_libraries(${PROJECT_NAME} PRIVATE ${QT_LIBS})
+
 target_link_libraries(${PROJECT_NAME} PRIVATE ${ONNX_RUNTIME_LIB})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE world::tool)

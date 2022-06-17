@@ -25,6 +25,9 @@ protected:
     virtual void setUntitled(bool untitled);
     virtual void setDeleted(bool deleted);
 
+    void setEdited(bool edited) override;
+    void filenameSet(const QString &filename) override;
+
 signals:
 };
 

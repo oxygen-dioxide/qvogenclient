@@ -6,6 +6,89 @@ QWidget {
 }
 
 
+/* CScrollBar */
+
+CScrollArea {
+    border: none;
+    background-color: transparent;
+}
+
+CGraphicsView {
+    border: none;
+    background-color: transparent;
+}
+
+CScrollBar {
+    background: transparent;
+    margin: 0;
+}
+
+CScrollBar:vertical {
+    width: 15px;
+}
+
+CScrollBar:horizontal {
+    height: 15px;
+}
+
+CScrollBar::handle:vertical {
+    min-height: 40px;
+}
+
+CScrollBar::handle:horizontal {
+    min-width: 40px;
+}
+
+CScrollBar::handle {
+    background: rgba(255, 255, 255, 0.3);
+    border: 0px;
+    /* margin: 4px 4px 4px 4px; */
+}
+
+CScrollBar::handle:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+
+/* CScrollBar::handle:pressed {
+    background: rgba(0, 0, 0, 18%);
+} */
+
+CScrollBar::sub-page {
+    background: transparent;
+}
+
+CScrollBar::add-page {
+    background: transparent;
+}
+
+CScrollBar::up-arrow {
+    background: transparent;
+}
+
+CScrollBar::down-arrow {
+    background: transparent;
+}
+
+CScrollBar::left-arrow {
+    background: transparent;
+}
+
+CScrollBar::right-arrow {
+    background: transparent;
+}
+
+CScrollBar::sub-line {
+    background: transparent;
+    width: 0px;
+}
+
+CScrollBar::add-line {
+    background: transparent;
+    width: 0px;
+}
+
+
 /* Window */
 
 TestWindow,
@@ -108,10 +191,10 @@ CWindowBarV2>CMenuBar::item:selected {
 
 CMenu {
     qproperty-subIcon: svg(":/svg/menu/arrow-right-s-line.svg", #CCCCCC);
-    qproperty-subIconHover: svg(":/svg/menu/arrow-right-s-line.svg", #CCCCCC);
+    qproperty-subIconHover: svg(":/svg/menu/arrow-right-s-line.svg", white);
     qproperty-subIconMargins: 5px 5px;
     padding: 5px 5px;
-    background: #252526;
+    background: #303030;
     border: 1px solid transparent;
 }
 
@@ -320,6 +403,86 @@ CCoupleTabBarCard {
 
 /* CentralTab */
 
-DocumentTab {
-    qproperty-icon: url(":/svg/image/folder-icon.svg");
+VogenTab {
+    qproperty-icon: url(:/svg/tab-icon/dark/itunes-note-brands.svg);
+}
+
+
+/* PianoArea */
+
+TPianoArea {
+    fix-width: 125px;
+    background-color: #333333;
+}
+
+TPianoArea>QLabel[type=standard] {
+    color: #333333;
+}
+
+TPianoArea>QLabel[type=realtime] {
+    color: black;
+    background-color: transparent;
+}
+
+TPianoArea>QLabel[type=realtime][black=true] {
+    color: white;
+}
+
+TPianoArea>TPianoKey {
+    border: none;
+    /* border-bottom-right-radius: 3px;
+    border-top-right-radius: 3px; */
+    /* top right bottom left */
+    margin: 1px 2px 1px 0;
+}
+
+TPianoArea>TPianoKey[color=white] {
+    background-color: lightgrey;
+}
+
+TPianoArea>TPianoKey[color=white]:hover {
+    background-color: #EFEFEF;
+}
+
+TPianoArea>TPianoKey[color=black] {
+    background-color: black;
+}
+
+TPianoArea>TPianoKey[color=black]:hover {
+    background-color: #535353;
+}
+
+
+/* SectionsArea */
+
+TSectionsArea {
+    fix-height: 30px;
+}
+
+
+/* TPianoPanel*/
+
+TPianoPanel {
+    /* SectionsArea */
+    qproperty-styleDataS: qvariants(1, /* lineWidth */
+    0.5, /* shortRatio */
+    0.3, /* numberRatio */
+    qcolors(/*colors*/
+    #666666, /* line */
+    #999999, /* number */
+    #999999, /* beat */
+    rgb(255, 129, 150), /* globalTempo */
+    #CCCCCC, /* tempo */
+    ));
+    /* NotesArea */
+    qproperty-styleDataN: qvariants(1, /* lineWidth */
+    qcolors(/*colors*/
+    #232323, /* back dark*/
+    #2D2D2D, /* back light*/
+    #191919, /* level */
+    #101010, /* pitch */
+    #101010, /* section */
+    #161616, /* quarter */
+    #1C1C1C, /* time */
+    ));
 }

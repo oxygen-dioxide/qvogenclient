@@ -125,12 +125,9 @@ void FilesActionEnginePrivate::setup() {
     cursor_free = new QAction();
 
     // Modify
-    envelopeMenu = new CMenu();
-
     buildInMenu = new CMenu(); // *
     pluginsMenu = new CMenu(); // *
 
-    registerHandler(envelopeMenu);
     registerHandler(buildInMenu);
     registerHandler(pluginsMenu);
 
@@ -139,14 +136,6 @@ void FilesActionEnginePrivate::setup() {
     modify_transpose = new QAction();
     modify_octaveUp = new QAction();
     modify_octaveDown = new QAction();
-    modify_removeRest = new QAction();
-    modify_insertRest = new QAction();
-
-    envelope_p2p3Fade = new QAction();
-    envelope_p1p4Fade = new QAction();
-    envelope_resetEnv = new QAction();
-
-    modify_lyricConfig = new QAction();
 
     // Play
     play_play = new QAction();
@@ -160,6 +149,7 @@ void FilesActionEnginePrivate::setup() {
     // Help
     help_welcome = new QAction();
     help_showActions = new QAction();
+    help_voiceManager = new QAction();
     help_instructions = new QAction();
     help_checkUpdate = new QAction();
     help_aboutApp = new QAction();
@@ -254,10 +244,6 @@ void FilesActionEnginePrivate::setup() {
     viewMenu->addMenu(cursorMenu);
 
     // Modify
-    envelopeMenu->addAction(envelope_p2p3Fade);
-    envelopeMenu->addAction(envelope_p1p4Fade);
-    envelopeMenu->addAction(envelope_resetEnv);
-
     modifyMenu->addAction(modify_insertLyrics);
     modifyMenu->addAction(modify_findReplace);
     modifyMenu->addSeparator();
@@ -265,15 +251,10 @@ void FilesActionEnginePrivate::setup() {
     modifyMenu->addAction(modify_octaveUp);
     modifyMenu->addAction(modify_octaveDown);
     modifyMenu->addSeparator();
-    modifyMenu->addAction(modify_removeRest);
-    modifyMenu->addAction(modify_insertRest);
-    modifyMenu->addSeparator();
-    modifyMenu->addMenu(envelopeMenu);
     modifyMenu->addSeparator();
     modifyMenu->addMenu(buildInMenu);
     modifyMenu->addMenu(pluginsMenu);
     modifyMenu->addSeparator();
-    modifyMenu->addAction(modify_lyricConfig);
 
     // Play
     playMenu->addAction(play_play);
@@ -289,8 +270,10 @@ void FilesActionEnginePrivate::setup() {
     // Help
     helpMenu->addAction(help_welcome);
     helpMenu->addAction(help_showActions);
-    helpMenu->addAction(help_instructions);
     helpMenu->addSeparator();
+    helpMenu->addAction(help_voiceManager);
+    helpMenu->addSeparator();
+    helpMenu->addAction(help_instructions);
     helpMenu->addAction(help_checkUpdate);
     helpMenu->addSeparator();
     helpMenu->addAction(help_aboutApp);
@@ -393,8 +376,6 @@ void FilesActionEnginePrivate::reloadStrings() {
     cursor_free->setText(QObject::tr("Freehand Mode"));
 
     // Modify
-    envelopeMenu->setTitle(QObject::tr("Envelope"));
-
     buildInMenu->setTitle(QObject::tr("Build-in Tools")); // *
     pluginsMenu->setTitle(QObject::tr("Plugins"));        // *
 
@@ -403,14 +384,6 @@ void FilesActionEnginePrivate::reloadStrings() {
     modify_transpose->setText(QObject::tr("Transpose..."));
     modify_octaveUp->setText(QObject::tr("Shift Up by an Octave"));
     modify_octaveDown->setText(QObject::tr("Shift Down by an Octave"));
-    modify_removeRest->setText(QObject::tr("Remove Rests..."));
-    modify_insertRest->setText(QObject::tr("Insert Rests"));
-
-    envelope_p2p3Fade->setText(QObject::tr("Envelope Crossfade(p2p3)"));
-    envelope_p1p4Fade->setText(QObject::tr("Envelope Crossfade(p1p4)"));
-    envelope_resetEnv->setText(QObject::tr("Reset"));
-
-    modify_lyricConfig->setText(QObject::tr("Lyric Configure"));
 
     // Play
     play_play->setText(QObject::tr("Play"));
@@ -424,6 +397,7 @@ void FilesActionEnginePrivate::reloadStrings() {
     // Help
     help_welcome->setText(QObject::tr("Welcome"));
     help_showActions->setText(QObject::tr("Show All Actions"));
+    help_voiceManager->setText(QObject::tr("Voice Database Manager"));
     help_instructions->setText(QObject::tr("Instructions"));
     help_checkUpdate->setText(QObject::tr("Check Update"));
     help_aboutApp->setText(QObject::tr("About %1").arg(qData->appName()));
@@ -475,8 +449,6 @@ void FilesActionEnginePrivate::reloadShortcuts() {
     // Modify
     modify_insertLyrics->setShortcut(QKeySequence("Ctrl+Shift+L"));
     modify_findReplace->setShortcut(QKeySequence("Ctrl+F"));
-    modify_insertRest->setShortcut(QKeySequence("Ctrl+R"));
-    modify_lyricConfig->setShortcut(QKeySequence("Ctrl+G"));
 
     // Play
     play_play->setShortcut(QKeySequence("Space"));

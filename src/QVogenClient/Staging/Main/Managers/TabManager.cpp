@@ -1,13 +1,15 @@
 #include "TabManager.h"
 #include "TabManager_p.h"
 
-#include "DocumentTab.h"
 #include "MainWindow.h"
+#include "VogenTab.h"
 
 #include "DataManager.h"
 #include "SystemHelper.h"
 
 #include "EventManager.h"
+
+#include "Logs/CRecordHolder.h"
 
 #include "CMenu.h"
 
@@ -22,23 +24,55 @@ TabManager::~TabManager() {
 
 bool TabManager::load() {
     Q_D(TabManager);
+    d->reloadWindowTitle(QString());
+    return true;
+}
 
+VogenTab *TabManager::addProject(const QString &filename) {
+    Q_D(TabManager);
+
+    QPair<MainWindow *, int> res;
+    d->findExistingTab(CentralTab::Tuning, &res, filename);
+
+    // Find Existing
+    int j = res.second;
+    if (j >= 0) {
+        auto w = res.first;
+        auto tabs = w->tabWidget();
+        tabs->setCurrentIndex(j);
+        // w->showForward();
+        return qobject_cast<VogenTab *>(tabs->currentWidget());
+    }
+
+    // Add new
     auto tabs = d->w->tabWidget();
 
-    auto tab1 = new DocumentTab();
-    tab1->setFilename("1.vog");
+    auto tab = d->createProjectTab(filename);
+    tabs->setCurrentWidget(tab);
 
-    auto tab2 = new DocumentTab();
-    tab2->setFilename("888.vog");
+    if (!tab->load()) {
+        closeTab(tab);
+        qRecord->commitRecent(CRecordHolder::Project, CRecordHolder::Remove, filename);
+        return nullptr;
+    } else {
+        qRecord->commitRecent(CRecordHolder::Project, CRecordHolder::Advance, filename);
+    }
 
-    auto tab3 = new DocumentTab();
-    tab3->setFilename("doaz.vog");
+    return tab;
+}
 
-    tabs->addTab(tab1, QString());
-    tabs->addTab(tab2, QString());
-    tabs->addTab(tab3, QString());
+bool TabManager::closeTab(int index) {
+    Q_D(TabManager);
+    return d->tryCloseTab(index);
+}
 
-    return true;
+bool TabManager::closeTab(CentralTab *tab) {
+    Q_D(TabManager);
+    int index = d->w->tabWidget()->indexOf(tab);
+    if (index < 0) {
+        return false;
+    }
+    return closeTab(index);
 }
 
 bool TabManager::closeOthers(int index) {
@@ -123,11 +157,13 @@ void TabManager::_q_tabCloseRequested(int index) {
 }
 
 void TabManager::_q_tabIndexChanged(int index, int orgIndex) {
+    Q_UNUSED(index)
+    Q_UNUSED(orgIndex)
 }
 
 void TabManager::_q_tabTitleChanged(const QString &title) {
     Q_D(TabManager);
-    d->w->setWindowTitle(QString("%1 - %2").arg(title, qData->windowTitle()));
+    d->reloadWindowTitle(title);
 }
 
 void TabManager::_q_tabBarClicked(Qt::MouseButton button, int index) {

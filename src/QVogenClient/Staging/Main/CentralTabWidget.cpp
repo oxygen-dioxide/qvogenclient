@@ -22,10 +22,7 @@ void CentralTabWidget::invalidateHover() const {
 
 void CentralTabWidget::tabInserted(int index) {
     Q_D(CentralTabWidget);
-    if (!d->stack->isVisible()) {
-        d->stack->setVisible(true);
-        d->placeholderWidget->setVisible(false);
-    }
+    d->updateVisibility();
 
     auto button = new CPushButton();
     button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -48,14 +45,11 @@ void CentralTabWidget::tabInserted(int index) {
 
 void CentralTabWidget::tabRemoved(int index) {
     Q_UNUSED(index);
-
-    if (count() != 0) {
-        return;
-    }
-
     Q_D(CentralTabWidget);
-    d->stack->setVisible(false);
-    d->placeholderWidget->setVisible(true);
+    d->updateVisibility();
+    if (count() == 0) {
+        emit currentTabTextChanged(QString());
+    }
 }
 
 void CentralTabWidget::tabSelected(int index, int orgIndex) {

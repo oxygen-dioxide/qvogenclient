@@ -13,9 +13,19 @@ void CentralTabWidgetPrivate::init() {
 
     // Insert placeholder widget
     placeholderWidget = createPlaceholderWidget();
-
     mainLayout->addWidget(placeholderWidget);
-    placeholderWidget->hide();
+
+    updateVisibility();
+}
+
+void CentralTabWidgetPrivate::updateVisibility() {
+    if (stack->count() == 0) {
+        stack->setVisible(false);
+        placeholderWidget->setVisible(true);
+    } else {
+        stack->setVisible(true);
+        placeholderWidget->setVisible(false);
+    }
 }
 
 QWidget *CentralTabWidgetPrivate::createPlaceholderWidget() const {

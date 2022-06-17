@@ -23,6 +23,9 @@ public:
 protected:
     virtual void setUnreachable(bool unreachable);
 
+    void setEdited(bool edited) override;
+    void filenameSet(const QString &filename) override;
+
 signals:
 };
 

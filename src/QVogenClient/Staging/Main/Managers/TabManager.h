@@ -6,6 +6,9 @@
 class MainWindow;
 class TabManagerPrivate;
 
+class CentralTab;
+class VogenTab;
+
 class TabManager : public CentralManager {
     Q_OBJECT
     Q_DECLARE_PRIVATE(TabManager)
@@ -15,6 +18,13 @@ public:
 
 public:
     bool load() override;
+
+    // API
+public:
+    VogenTab *addProject(const QString &filename);
+
+    bool closeTab(int index);
+    bool closeTab(CentralTab *tab);
 
     bool closeOthers(int index);
     bool closeSaved();

@@ -4,9 +4,11 @@
 #include "BasicWindow.h"
 
 #include "CCoupleTabFrame.h"
+#include "CentralNavBar.h"
 #include "CentralTabWidget.h"
+#include "CentralToolBar.h"
 
-#include <QVBoxLayout>
+#include <QGridLayout>
 
 class TabManager;
 class EventManager;
@@ -21,6 +23,8 @@ public:
     void reloadStrings();
 
 public:
+    CentralToolBar *toolBar() const;
+    CentralNavBar *navBar() const;
     CentralTabWidget *tabWidget() const;
     CCoupleTabFrame *frame() const;
 
@@ -31,9 +35,12 @@ public:
 protected:
     // UI
     QWidget *m_widget;
-    QVBoxLayout *m_layout;
+    QGridLayout *m_layout;
 
+    CentralToolBar *m_tools;
+    CentralNavBar *m_nav;
     CentralTabWidget *m_tabs;
+
     CCoupleTabFrame *m_frame;
 
     // Managers

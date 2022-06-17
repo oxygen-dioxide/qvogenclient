@@ -8,6 +8,16 @@ public:
     CompressedFile();
     ~CompressedFile();
 
+    enum FileStat {
+        NoError,
+        FileNotExist,
+        FileNotReadable,
+        FileNotWritable,
+        ExtractFailed,
+        MissingComponent,
+        InvalidComponent,
+    };
+
 public:
     QString tempDir() const;
     void setTempDir(const QString &tempDir);

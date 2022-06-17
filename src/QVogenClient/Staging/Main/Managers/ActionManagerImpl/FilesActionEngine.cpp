@@ -10,7 +10,7 @@
 #include "WindowManager.h"
 
 static const char FLAG_OPEN[] = "%PROJ%";
-//static const char FLAG_OPEN_FOLDER[] = "%DIR%";
+// static const char FLAG_OPEN_FOLDER[] = "%DIR%";
 static const char FLAG_SAVE[] = "%SAVE%";
 static const char FLAG_IMPORT[] = "%IMPORT%";
 static const char FLAG_APPEND[] = "%APPEND%";
@@ -36,11 +36,11 @@ void FilesActionEngine::q_actionTriggered(QAction *action) {
         } else if (action == d->file_newWindow) {
             qWindows->newWindow();
         } else if (action == d->file_openFile) {
-            QString path =
-                qData->openFile(tr("Open"), qData->getFileFilter(DataManager::ProjectFiles),
-                                FLAG_OPEN, d->window());
-            if (!path.isEmpty()) {
-                d->eventMgr->open(path);
+            QStringList paths =
+                qData->openFiles(tr("Open"), qData->getFileFilter(DataManager::ProjectFiles),
+                                 FLAG_OPEN, d->window());
+            for (auto it = paths.begin(); it != paths.end(); ++it) {
+                d->eventMgr->open(*it);
             }
         } else if (action == d->file_importFile) {
             QString path =

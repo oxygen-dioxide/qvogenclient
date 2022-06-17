@@ -44,6 +44,11 @@ MainWindow *WindowManager::newWindow() {
     return w;
 }
 
+QList<MainWindow *> WindowManager::windows() const {
+    Q_D(const WindowManager);
+    return d->windows.values();
+}
+
 WindowManager::WindowManager(WindowManagerPrivate &d, QObject *parent) : BaseManager(d, parent) {
     construct();
 
