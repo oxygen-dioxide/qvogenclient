@@ -1,6 +1,8 @@
 #include "EventManager.h"
 #include "EventManager_p.h"
 
+#include "SystemHelper.h"
+
 #include "CentralTab.h"
 #include "MainWindow.h"
 
@@ -14,12 +16,15 @@
 #include "WindowManager.h"
 
 static const char FLAG_OPEN[] = "%PROJ%";
-// static const char FLAG_OPEN_FOLDER[] = "%DIR%";
+static const char FLAG_OPEN_FOLDER[] = "%DIR%";
 static const char FLAG_SAVE[] = "%SAVE%";
 static const char FLAG_IMPORT[] = "%IMPORT%";
 static const char FLAG_APPEND[] = "%APPEND%";
 
+#include <QDragEnterEvent>
+#include <QDropEvent>
 #include <QEvent>
+#include <QMimeData>
 
 EventManager::EventManager(MainWindow *parent) : EventManager(*new EventManagerPrivate(), parent) {
 }
@@ -97,8 +102,75 @@ bool EventManager::eventFilter(QObject *obj, QEvent *event) {
     if (obj == window) {
         switch (event->type()) {
         // Proxy Drag And Drop Events To Tabs
-        case QEvent::DragEnter:
+        case QEvent::DragEnter: {
+            auto e = static_cast<QDragEnterEvent *>(event);
+            const QMimeData *mime = e->mimeData();
+            if (mime->hasUrls()) {
+                auto urls = mime->urls();
+                QStringList filenames;
+                for (auto it = urls.begin(); it != urls.end(); ++it) {
+                    if (it->isLocalFile()) {
+                        filenames.append(Sys::removeTailSlashes(it->toLocalFile()));
+                    }
+                }
+                bool hasImport = false;
+                if (filenames.size() == 1) {
+                    QString filename = filenames.front();
+                    QString suffix = QFileInfo(filename).suffix();
+                    if (FileParser::isSuffixParsable(suffix)) {
+                        hasImport = true;
+                    }
+                }
+                bool ok = true;
+                if (!hasImport) {
+                    for (const auto &filename : filenames) {
+                        QString suffix = QFileInfo(filename).suffix();
+                        if (suffix.compare("vog", Qt::CaseInsensitive) != 0) {
+                            ok = false;
+                            break;
+                        }
+                    }
+                }
+                if (ok) {
+                    e->acceptProposedAction();
+                }
+            }
+            if (e->isAccepted()) {
+                return true;
+            }
+            break;
+        }
         case QEvent::Drop: {
+            auto e = static_cast<QDropEvent *>(event);
+            const QMimeData *mime = e->mimeData();
+            if (mime->hasUrls()) {
+                auto urls = mime->urls();
+                QStringList filenames;
+                for (auto it = urls.begin(); it != urls.end(); ++it) {
+                    if (it->isLocalFile()) {
+                        filenames.append(Sys::removeTailSlashes(it->toLocalFile()));
+                    }
+                }
+                // if only one file is dragged in, an import operation will be attempted
+                bool hasImport = false;
+                if (filenames.size() == 1) {
+                    QString filename = filenames.front();
+                    QString suffix = QFileInfo(filename).suffix();
+                    if (FileParser::isSuffixParsable(suffix)) {
+                        importFile(filename);
+                        hasImport = true;
+                    }
+                }
+                if (!hasImport) {
+                    for (const auto &filename : filenames) {
+                        openFile(filename);
+                    }
+                }
+                e->acceptProposedAction();
+            }
+            if (e->isAccepted()) {
+                return true;
+            }
             break;
         }
         default:

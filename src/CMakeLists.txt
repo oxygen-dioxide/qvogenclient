@@ -47,6 +47,8 @@ add_subdirectory(FramelessHelper)
 
 add_subdirectory(QMidi)
 
+add_subdirectory(QUtauStd)
+
 add_subdirectory(QuaZip)
 
 # Modules

@@ -9,7 +9,7 @@
 bool FileParser::parseMidiFile(const QString &filename, CommonScore &oNotes) {
     QMidiFile midi;
     if (!midi.load(filename)) {
-        QMessageBox::warning(Q_W(parent()), qData->mainTitle(), tr("Unable to read MIDI file!"));
+        QMessageBox::warning(Q_W(parent()), qData->mainTitle(), tr("Failed to read MIDI file!"));
         return 0;
     }
 

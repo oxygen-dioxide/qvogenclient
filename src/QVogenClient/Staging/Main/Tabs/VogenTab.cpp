@@ -6,6 +6,7 @@
 #include "Macros.h"
 #include "QVogenFile.h"
 
+#include <QDir>
 #include <QFileInfo>
 #include <QMessageBox>
 
@@ -34,7 +35,8 @@ bool VogenTab::load() {
     bool res = d->vog.load();
 
     if (!res) {
-        Q_ERROR(this, qData->errorTitle(), tr("Failed to open file!"));
+        Q_ERROR(this, qData->errorTitle(),
+                tr("Failed to open file \"%1\"!").arg(QDir::toNativeSeparators(d->filename)));
         return false;
     }
 
@@ -70,6 +72,9 @@ bool VogenTab::saveAs(const QString &filename) {
     }
 
     d->vog = std::move(file);
+
+    // Update
+    setFilename(filename);
 
     return true;
 }

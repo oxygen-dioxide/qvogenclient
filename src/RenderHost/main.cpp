@@ -4,10 +4,12 @@
 
 #include "Meta/Help.h"
 
+#define APP_NAME "RenderHost"
+
 int main(int argc, char *argv[]) {
     QCoreApplication app(argc, argv);
 
-    app.setApplicationName("RenderHost");
+    app.setApplicationName(APP_NAME);
     app.setApplicationVersion(APP_VERSION);
 
     // Parse CommandLine

@@ -145,6 +145,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE FramelessHelper::Widgets)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE QMidi)
 
+target_link_libraries(${PROJECT_NAME} PRIVATE QUtauStd)
+
 target_link_libraries(${PROJECT_NAME} PRIVATE QuaZip::QuaZip)
 
 # Link Qt libraries
