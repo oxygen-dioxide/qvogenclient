@@ -37,8 +37,8 @@ bool CompressedFile::loadCore(bool *valid) {
         return false;
     }
 
-    qDebug() << "Files count:" << files.size();
-    qDebug() << "Extract time:" << timer.elapsed() << "ms";
+    qDebug() << "[ZIP] Files count:" << files.size();
+    qDebug() << "[ZIP] Extract time:" << timer.elapsed() << "ms";
 
     return true;
 }
@@ -56,7 +56,7 @@ bool CompressedFile::saveCore() {
         return false;
     }
 
-    qDebug() << "Compress time:" << timer.elapsed() << "ms";
+    qDebug() << "[ZIP] Compress time:" << timer.elapsed() << "ms";
 
     return true;
 }

@@ -85,22 +85,23 @@ namespace ActionImpl {
     enum State {
         NoFlag = 0x0,
 
-        DocumentFlag = 0x1,
-        TypeMask = DocumentFlag,
+        TabFlag = 0x1,
+        DocumentFlag = TabFlag * 2,
+        TypeMask = TabFlag | DocumentFlag,
 
         EditedFlag = 0x100,
         UntitledFlag = EditedFlag * 2,
         DeletedFlag = UntitledFlag * 2,
 
-        FileMask = DocumentFlag & EditedFlag & UntitledFlag & DeletedFlag,
+        FileMask = DocumentFlag | EditedFlag | UntitledFlag | DeletedFlag,
 
         UndoFlag = 0x1000,
         RedoFlag = UndoFlag * 2,
-        EditMask = UndoFlag & RedoFlag,
+        EditMask = UndoFlag | RedoFlag,
 
         SelectionFlag = 0x1000,
         SelectNoteFlag = SelectionFlag * 2,
-        SelectMask = SelectionFlag & SelectNoteFlag,
+        SelectMask = SelectionFlag | SelectNoteFlag,
     };
 
     Q_DECLARE_FLAGS(States, State);

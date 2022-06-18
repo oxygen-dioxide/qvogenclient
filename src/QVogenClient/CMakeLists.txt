@@ -186,9 +186,9 @@ add_files(INCLUDE_PATHS
     Staging/Backend/Basic
     Staging/Backend/Project
     Staging/Backend/Utils
-    Staging/Main
-    Staging/Main/Managers
-    Staging/Main/Tabs
+    Staging/Window
+    Staging/Window/Managers
+    Staging/Window/Tabs
     Staging/Frontend/Basic
     Vendor/Frontend
     Vendor/Frontend/Utils

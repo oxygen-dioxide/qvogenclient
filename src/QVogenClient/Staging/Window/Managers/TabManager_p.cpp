@@ -53,6 +53,9 @@ void TabManagerPrivate::reloadActionStates(ActionImpl::StateTypes st) {
     auto tab = currentTab();
 
     states &= ~ActionImpl::TypeMask;
+    if (tab) {
+        states |= ActionImpl::TabFlag;
+    }
 
     if (st & ActionImpl::FileState) {
         states &= ~ActionImpl::FileMask;

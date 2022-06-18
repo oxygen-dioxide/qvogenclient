@@ -1,15 +1,14 @@
 #include "../FileParser.h"
 #include "QMidiFile.h"
 
-#include "DataManager.h"
-
 #include "CommonScore.h"
 #include "CommonTuneStd.h"
 
 bool FileParser::parseMidiFile(const QString &filename, CommonScore &oNotes) {
     QMidiFile midi;
     if (!midi.load(filename)) {
-        QMessageBox::warning(Q_W(parent()), qData->mainTitle(), tr("Failed to read MIDI file!"));
+        QMessageBox::warning(qobject_cast<QWidget *>(parent()), m_title,
+                             tr("Failed to read MIDI file!"));
         return 0;
     }
 

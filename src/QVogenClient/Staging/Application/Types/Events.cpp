@@ -15,3 +15,16 @@ void QEventImpl::Register() {
     QEvent::registerEventType(MenuUpdateRequest);
     QEvent::registerEventType(SceneRectChange);
 }
+
+QEventImpl::SceneRectChangeEvent::SceneRectChangeEvent(const QPair<QSize, int> &cur,
+                                                       const QPair<QSize, int> &org)
+    : QResizeEvent(cur.first, org.first), sec(cur.second), oldSec(org.second) {
+    this->t = static_cast<QEvent::Type>(SceneRectChange);
+}
+
+QEventImpl::SceneRectChangeEvent::~SceneRectChangeEvent() {
+}
+
+bool QEventImpl::SceneRectChangeEvent::sizeChanged() const {
+    return s != olds;
+}

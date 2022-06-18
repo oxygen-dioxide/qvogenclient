@@ -77,8 +77,32 @@ public:
     StyleData styleData() const;
     void setStyleData(const StyleData &data);
 
+protected:
+    TNTransformCtl *m_transCtl;
+    TNSelectCtl *m_selectCtl;
+
+    TNPlayheadCtl *m_playCtl;
+    TNSpriteCtl *m_spriteCtl;
+    TNScreenCtl *m_screenCtl;
+
+    TNNotesCtl *m_notesCtl;
+
+    TNotesScroll *m_view;
+    TNotesArea::StyleData m_styleData;
+
+    TNotesArea::DrawMode m_drawMode;
+    TNotesArea::AddPointMode m_pointMode;
+
+    bool m_moving;
+    QPair<QSize, int> m_oldSizes;
+
+    void adjustBackground();
+
+    // ----------------------------------------  Transform  ----------------------------------------
+public:
     int sectionCount() const;
     void setSectionCount(int sectionCount);
+    void setSectionCountHint(int totalLength);
 
     int currentWidth() const;
     void setCurrentWidth(int currentWidth);
@@ -96,40 +120,27 @@ public:
 
     double zeroLine() const;
 
+    // ----------------------------------------  Props  ----------------------------------------
+public:
     DrawMode drawMode() const;
     void setDrawMode(DrawMode drawMode);
 
     AddPointMode pointMode() const;
     void setPointMode(const AddPointMode &pointMode);
 
-protected:
-    TNTransformCtl *m_transCtl;
-    TNSelectCtl *m_selectCtl;
-
-    TNPlayheadCtl *m_playCtl;
-    TNSpriteCtl *m_spriteCtl;
-    TNScreenCtl *m_screenCtl;
-
-    TNNotesCtl *m_notesCtl;
-
-    TNotesScroll *m_view;
-    TNotesArea::StyleData m_styleData;
-
-    TNotesArea::DrawMode m_drawMode;
-    TNotesArea::AddPointMode m_pointMode;
-
-    void adjustBackground();
-
+    // ----------------------------------------  Assist  ----------------------------------------
 public:
-    // ========================================  Elements ========================================
+    QPointF convertValueToPosition(int tick, int noteNum) const;
+    QRectF convertValueToGeometry(int tick, int noteNum, int length) const;
+
+    QPair<int, int> convertPositionToValue(QPointF pos) const;
+    double convertWidthToLength(int width) const;
 
     // ----------------------------------------  Select  ----------------------------------------
-
-    bool m_moving;
-
 public:
     bool isSelecting() const;
-
+    bool mouseMoving() const;
+    bool visionMoving() const;
     bool scrollZoomAllowed() const;
 
     // ----------------------------------------  Sprite  ----------------------------------------
@@ -145,11 +156,11 @@ public:
     double spriteAlpha() const;
     void setSpriteAlpha(double spriteAlpha);
 
+    // ----------------------------------------  Notes  ----------------------------------------
 public:
-    // ----------------------------------------  Events  ----------------------------------------
-    bool mouseMoving() const;
+    void setNotesFromCommon(const QList<CommonNote> &notes);
 
-    bool visionMoving() const;
+    // ----------------------------------------  Events  ----------------------------------------
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;

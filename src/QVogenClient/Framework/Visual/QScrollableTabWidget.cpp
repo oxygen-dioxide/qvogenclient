@@ -296,11 +296,11 @@ void QScrollableTabWidget::moveInTabBarWidget() {
 
 void QScrollableTabWidget::_q_showTab(int index, int orgIndex) {
     Q_D(QScrollableTabWidget);
-    if (index < d->stack->count() && index >= 0) {
+    if (index >= 0 && index < d->stack->count()) {
         d->stack->setCurrentIndex(index);
         tabSelected(index, orgIndex);
-        emit currentChanged(index, orgIndex);
     }
+    emit currentChanged(index, orgIndex);
 }
 
 void QScrollableTabWidget::_q_removeTab(int index) {

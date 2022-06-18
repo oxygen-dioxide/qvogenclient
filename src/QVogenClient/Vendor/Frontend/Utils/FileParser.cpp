@@ -3,6 +3,8 @@
 
 #include "CommonScore.h"
 
+#include <QApplication>
+
 const char mid_suffix[] = "mid";
 const char ust_suffix[] = "ust";
 const char svp_suffix[] = "svp";
@@ -11,7 +13,10 @@ const char vsqx_suffix[] = "vsqx";
 const char vsq_suffix[] = "vsq";
 const char ustx_suffix[] = "ustx";
 
-FileParser::FileParser(QWidget *parent) : QObject(parent) {
+FileParser::FileParser(QWidget *parent) : FileParser(qApp->applicationName(), parent) {
+}
+
+FileParser::FileParser(const QString &title, QWidget *parent) : QObject(parent), m_title(title) {
 }
 
 FileParser::~FileParser() {

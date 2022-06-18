@@ -40,6 +40,15 @@ bool VogenTab::load() {
         return false;
     }
 
+    QList<CommonNote> notes;
+    for (const auto &uttrance : d->vog.utterances) {
+        for (const auto &note : uttrance.notes) {
+            CommonNote p(note.start, note.duration, note.pitch, note.rom, d->vog.tempo);
+            notes.append(std::move(p));
+        }
+    }
+    d->piano->notesArea()->setNotesFromCommon(notes);
+
     return true;
 }
 

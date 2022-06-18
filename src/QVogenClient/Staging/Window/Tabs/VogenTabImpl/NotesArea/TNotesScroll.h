@@ -44,6 +44,8 @@ public:
 protected:
     ControlData m_controlData;
 
+    bool event(QEvent *event) override;
+
     void wheelEvent(QWheelEvent *event) override;
     void scrollContentsBy(int dx, int dy) override;
 

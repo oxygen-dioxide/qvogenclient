@@ -15,12 +15,14 @@ void FilesActionEngine::updateStates(ActionImpl::StateTypes st) {
     Q_D(FilesActionEngine);
 
     auto states = d->tabMgr->actionStates();
+
     if (st & ActionImpl::FileState) {
         d->file_saveFile->setEnabled(states & ActionImpl::EditedFlag);
         d->file_saveAs->setEnabled(states & ActionImpl::DocumentFlag);
         d->file_appendFile->setEnabled(states & ActionImpl::DocumentFlag);
         d->file_fileSettings->setEnabled(states & ActionImpl::DocumentFlag);
         d->exportMenu->setEnabled(states & ActionImpl::DocumentFlag);
+        d->file_closeFile->setEnabled(states & ActionImpl::TabFlag);
     }
 
     if (st & ActionImpl::EditState) {
@@ -31,8 +33,11 @@ void FilesActionEngine::updateStates(ActionImpl::StateTypes st) {
     if (st & ActionImpl::SelectState) {
         d->edit_cut->setEnabled(states & ActionImpl::SelectionFlag);
         d->edit_copy->setEnabled(states & ActionImpl::SelectionFlag);
+        d->edit_paste->setEnabled(states & ActionImpl::DocumentFlag);
+        d->pasteMenu->setEnabled(states & ActionImpl::DocumentFlag);
         d->edit_remove->setEnabled(states & ActionImpl::SelectionFlag);
         d->removeMenu->setEnabled(states & ActionImpl::SelectionFlag);
+        d->edit_selectAll->setEnabled(states & ActionImpl::DocumentFlag);
         d->edit_deselect->setEnabled(states & ActionImpl::SelectionFlag);
     }
 }

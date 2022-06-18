@@ -31,6 +31,7 @@ TNotesArea::TNotesArea(TNotesAreaPrivate &d, TNotesScroll *parent)
     d.init();
 
     m_moving = false;
+    m_oldSizes = qMakePair(QSize(32, 32), 1);
 
     m_drawMode = PlainSelect;
     m_pointMode = SingleClick;
@@ -75,6 +76,10 @@ int TNotesArea::sectionCount() const {
 
 void TNotesArea::setSectionCount(int sectionCount) {
     m_transCtl->setSectionCount(sectionCount);
+}
+
+void TNotesArea::setSectionCountHint(int totalLength) {
+    m_transCtl->setSectionCountHint(totalLength);
 }
 
 int TNotesArea::currentWidth() const {
@@ -131,6 +136,42 @@ TNotesArea::AddPointMode TNotesArea::pointMode() const {
 
 void TNotesArea::setPointMode(const AddPointMode &pointMode) {
     m_pointMode = pointMode;
+}
+
+QPointF TNotesArea::convertValueToPosition(int tick, int noteNum) const {
+    int curWidth = currentWidth();
+    int curHeight = currentHeight();
+
+    double toX = double(tick) / 480 * curWidth + zeroLine(); // -1 section is the leftmost
+    double toY = curHeight * (107 - noteNum);
+
+    return QPointF(toX, toY);
+}
+
+QRectF TNotesArea::convertValueToGeometry(int tick, int noteNum, int length) const {
+    int curWidth = currentWidth();
+    int curHeight = currentHeight();
+
+    QPointF p = convertValueToPosition(tick, noteNum);
+    double toW = double(length) / 480 * double(curWidth);
+    double toH = curHeight;
+
+    return QRectF(p.x(), p.y(), toW, toH);
+}
+
+QPair<int, int> TNotesArea::convertPositionToValue(QPointF pos) const {
+    int curWidth = currentWidth();
+    int curHeight = currentHeight();
+
+    int tick = (pos.x() - zeroLine()) / curWidth * 480;
+    int noteNum = 107 - pos.y() / curHeight;
+
+    return qMakePair(tick, noteNum);
+}
+
+double TNotesArea::convertWidthToLength(int width) const {
+    int curWidth = currentWidth();
+    return double(width) / curWidth * 480;
 }
 
 void TNotesArea::adjustBackground() {
@@ -191,10 +232,18 @@ void TNotesArea::adjustBackground() {
     setBackgroundBrush(pixmap);
 }
 
+bool TNotesArea::isSelecting() const {
+    return m_selectCtl->isSelecting();
+}
+
 bool TNotesArea::mouseMoving() const {
     return m_moving;
 }
 
 bool TNotesArea::visionMoving() const {
     return m_transCtl->scrollDrag() || m_transCtl->zoomDrag();
+}
+
+bool TNotesArea::scrollZoomAllowed() const {
+    return !isSelecting() && !visionMoving();
 }

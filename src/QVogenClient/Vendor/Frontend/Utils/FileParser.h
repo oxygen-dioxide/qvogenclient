@@ -10,6 +10,7 @@ class FileParser : public QObject {
     Q_OBJECT
 public:
     explicit FileParser(QWidget *parent = nullptr);
+    FileParser(const QString &title, QWidget *parent = nullptr);
     ~FileParser();
 
     bool parseFile(const QString &filename, CommonScore &notes);
@@ -28,6 +29,9 @@ protected:
 
 public:
     static bool isSuffixParsable(const QString &suffix);
+
+protected:
+    QString m_title;
 
 signals:
 };

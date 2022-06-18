@@ -28,3 +28,7 @@ double TNotesArea::spriteAlpha() const {
 void TNotesArea::setSpriteAlpha(double spriteAlpha) {
     m_spriteCtl->setSpriteAlpha(spriteAlpha);
 }
+
+void TNotesArea::setNotesFromCommon(const QList<CommonNote> &notes) {
+    m_notesCtl->setNotesFromCommon(notes);
+}

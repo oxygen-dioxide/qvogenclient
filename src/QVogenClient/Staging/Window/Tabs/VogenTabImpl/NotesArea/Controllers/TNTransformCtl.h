@@ -14,6 +14,7 @@ public:
 
     int sectionCount() const;
     void setSectionCount(int sectionCount);
+    void setSectionCountHint(int totalLength);
 
     int currentWidth() const;
     void setCurrentWidth(int currentWidth);

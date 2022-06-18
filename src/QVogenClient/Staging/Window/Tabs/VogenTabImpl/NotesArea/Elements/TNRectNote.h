@@ -9,10 +9,17 @@ public:
     explicit TNRectNote(TNotesArea *area, QGraphicsItem *parent = nullptr);
     ~TNRectNote();
 
-private:
-    void init();
+public:
+    int start;
+    int length;
+    int tone;
+    QString lyric;
 
-protected:
+    void layoutRequestEvent(QEvent *event) override;
+
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+               QWidget *widget = nullptr) override;
+
 signals:
 };
 

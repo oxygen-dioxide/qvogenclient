@@ -21,6 +21,10 @@ public:
 protected:
     TNotesArea *m_area;
 
+    virtual void layoutRequestEvent(QEvent *event);
+
+    bool event(QEvent *event) override;
+
 signals:
 };
 

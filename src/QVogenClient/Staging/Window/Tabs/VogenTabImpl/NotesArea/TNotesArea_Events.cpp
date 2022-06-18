@@ -41,9 +41,14 @@ void TNotesArea::focusOutEvent(QFocusEvent *event) {
 
 void TNotesArea::_q_sceneRectChanged(const QRectF &rect) {
     Q_UNUSED(rect)
-    QEvent e(static_cast<QEvent::Type>(QEventImpl::SceneRectChange));
+
+    auto curSizes = qMakePair(QSize(currentWidth(), currentHeight()), sectionCount());
+    auto oldSizes = this->m_oldSizes;
+
+    m_oldSizes = curSizes;
+
+    QEventImpl::SceneRectChangeEvent e(curSizes, oldSizes);
     QApplication::sendEvent(this, &e);
 
     adjustBackground();
 }
-

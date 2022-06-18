@@ -58,9 +58,14 @@ void QScrollableTabBar::removeTab(int index) {
     tab->deleteLater();
     delete item;
 
+    if (d->previous == tab) {
+        d->previous = nullptr;
+    }
+
+    int cnt = count();
+
     if (d->current == tab) {
         d->current = nullptr;
-        int cnt = count();
         switch (d->selectionBehaviorOnRemove) {
         case QTabBar::SelectPreviousTab:
             if (d->previous) {
@@ -85,10 +90,12 @@ void QScrollableTabBar::removeTab(int index) {
         }
         }
     }
-    if (d->previous == tab) {
-        d->previous = nullptr;
-    }
     d->updateVisibility();
+
+    if (cnt == 0) {
+        emit currentChanged(-1, index);
+    }
+
     tabRemoved(index);
 }
 

@@ -5,6 +5,9 @@
 #include <QApplication>
 #include <QGraphicsSceneMouseEvent>
 
+#define SECTION_MIN 40
+#define SECTION_UNIT 20
+
 TNTransformCtl::TNTransformCtl(TNotesArea *parent) : TNController(parent) {
 }
 
@@ -12,7 +15,7 @@ TNTransformCtl::~TNTransformCtl() {
 }
 
 void TNTransformCtl::install() {
-    m_sectionCount = 40;
+    m_sectionCount = SECTION_MIN;
     m_currentWidth = 60;
     m_currentHeight = 30;
     m_currentQuantize = 4;
@@ -34,6 +37,15 @@ int TNTransformCtl::sectionCount() const {
 void TNTransformCtl::setSectionCount(int sectionCount) {
     m_sectionCount = sectionCount;
     adjustSize();
+}
+
+void TNTransformCtl::setSectionCountHint(int totalLength) {
+    int sections = totalLength / 480 / 4;
+    int count = int((sections + (SECTION_UNIT * 1.5)) / SECTION_UNIT) * SECTION_UNIT;
+
+    count = qMax(count, SECTION_MIN);
+
+    setSectionCount(count);
 }
 
 int TNTransformCtl::currentWidth() const {

@@ -19,6 +19,7 @@ TNotesScroll::ControlData::ControlData() {
 }
 
 TNotesScroll::TNotesScroll(QWidget *parent) : CGraphicsView(parent) {
+    setRenderHint(QPainter::Antialiasing);
     setAcceptDrops(false);
 }
 
@@ -35,6 +36,21 @@ void TNotesScroll::setControlData(const ControlData &data) {
 
 TNotesArea *TNotesScroll::area() const {
     return qobject_cast<TNotesArea *>(scene());
+}
+
+bool TNotesScroll::event(QEvent *event) {
+    //    switch (event->type()) {
+    //    case QEvent::FontChange: {
+    //        auto area = this->area();
+    //        if (area) {
+    //            area->setFont(this->font());
+    //        }
+    //        break;
+    //    }
+    //    default:
+    //        break;
+    //    }
+    return CGraphicsView::event(event);
 }
 
 void TNotesScroll::wheelEvent(QWheelEvent *event) {
