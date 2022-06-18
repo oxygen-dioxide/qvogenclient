@@ -36,6 +36,7 @@ TNotesArea::TNotesArea(TNotesAreaPrivate &d, TNotesScroll *parent)
     m_drawMode = PlainSelect;
     m_pointMode = SingleClick;
 
+    m_priorCtl = new TNPriorCtl(this);
     m_transCtl = new TNTransformCtl(this);
     m_selectCtl = new TNSelectCtl(this);
     m_playCtl = new TNPlayheadCtl(this);
@@ -43,12 +44,19 @@ TNotesArea::TNotesArea(TNotesAreaPrivate &d, TNotesScroll *parent)
     m_screenCtl = new TNScreenCtl(this);
     m_notesCtl = new TNNotesCtl(this);
 
-    m_transCtl->install();
-    m_selectCtl->install();
-    m_playCtl->install();
-    m_spriteCtl->install();
-    m_screenCtl->install();
     m_notesCtl->install();
+
+    m_screenCtl->install();
+
+    m_spriteCtl->install();
+
+    m_playCtl->install();
+
+    m_selectCtl->install();
+
+    m_transCtl->install();
+
+    m_priorCtl->install();
 
     connect(this, &QGraphicsScene::sceneRectChanged, this, &TNotesArea::_q_sceneRectChanged);
 }
@@ -246,4 +254,8 @@ bool TNotesArea::visionMoving() const {
 
 bool TNotesArea::scrollZoomAllowed() const {
     return !isSelecting() && !visionMoving();
+}
+
+QGraphicsItem *TNotesArea::itemUnderMouse() const {
+    return m_priorCtl->itemUnderMouse();
 }

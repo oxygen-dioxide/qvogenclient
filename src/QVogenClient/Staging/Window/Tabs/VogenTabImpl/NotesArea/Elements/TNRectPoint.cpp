@@ -1,12 +1,8 @@
 #include "TNRectPoint.h"
 #include "../TNotesArea.h"
 
-TNRectPoint::TNRectPoint(TNotesArea *area, QGraphicsItem *parent) : TNRectObject(area, parent) {
-    init();
+TNRectPoint::TNRectPoint(TNotesArea *area, QGraphicsItem *parent) : TNRectSelectable(area, parent) {
 }
 
 TNRectPoint::~TNRectPoint() {
-}
-
-void TNRectPoint::init() {
 }

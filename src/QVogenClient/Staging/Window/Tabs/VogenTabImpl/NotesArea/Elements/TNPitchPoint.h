@@ -9,7 +9,6 @@ public:
     explicit TNPitchPoint(TNotesArea *area, QGraphicsItem *parent = nullptr);
     ~TNPitchPoint();
 
-protected:
 signals:
 };
 

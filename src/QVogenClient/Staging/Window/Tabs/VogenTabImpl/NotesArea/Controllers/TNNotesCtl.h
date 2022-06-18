@@ -22,12 +22,25 @@ public:
     const QList<TNRectNote *> &notes() const;
 
 public:
+    struct NoteComparator_Start {
+        bool operator()(TNRectNote *p1, const TNRectNote *p2) const;
+    };
+    struct NoteComparator_End {
+        bool operator()(TNRectNote *p1, const TNRectNote *p2) const;
+    };
+
+    void selectAll();
+    void deselect();
 
 protected:
     QList<TNRectNote *> m_notes;
+    QNavigatableList<TNRectNote *, NoteComparator_Start> m_selection;
 
     TNRectNote *createNote();
     void adjustGeometries();
+
+    void selectOne(TNRectNote *p);
+    void deselectOne(TNRectNote *p);
 
     bool eventFilter(QObject *obj, QEvent *event) override;
 
@@ -38,13 +51,6 @@ protected:
 
     int startTick() const;
     int totalLength() const;
-
-    struct NoteComparator_Start {
-        bool operator()(TNRectNote *p1, const TNRectNote *p2) const;
-    };
-    struct NoteComparator_End {
-        bool operator()(TNRectNote *p1, const TNRectNote *p2) const;
-    };
 
     QNavigatableList<TNRectNote *, NoteComparator_Start> m_startRef;
     QNavigatableList<TNRectNote *, NoteComparator_End> m_endRef;

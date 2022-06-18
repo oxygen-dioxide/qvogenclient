@@ -10,6 +10,7 @@
 
 #include "Controllers/TNNotesCtl.h"
 #include "Controllers/TNPlayheadCtl.h"
+#include "Controllers/TNPriorCtl.h"
 #include "Controllers/TNScreenCtl.h"
 #include "Controllers/TNSelectCtl.h"
 #include "Controllers/TNSpriteCtl.h"
@@ -78,6 +79,8 @@ public:
     void setStyleData(const StyleData &data);
 
 protected:
+    TNPriorCtl *m_priorCtl;
+
     TNTransformCtl *m_transCtl;
     TNSelectCtl *m_selectCtl;
 
@@ -142,6 +145,8 @@ public:
     bool mouseMoving() const;
     bool visionMoving() const;
     bool scrollZoomAllowed() const;
+
+    QGraphicsItem *itemUnderMouse() const;
 
     // ----------------------------------------  Sprite  ----------------------------------------
 public:

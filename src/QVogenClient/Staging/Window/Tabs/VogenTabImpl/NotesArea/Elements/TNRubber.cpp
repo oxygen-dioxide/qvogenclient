@@ -8,8 +8,7 @@
 #include "../TNotesArea.h"
 #include "../TNotesScroll.h"
 
-TNRubber::TNRubber(TNotesArea *area, QGraphicsItem *parent)
-    : QObject(area), QGraphicsRectItem(parent), m_area(area) {
+TNRubber::TNRubber(TNotesArea *area, QGraphicsItem *parent) : TNRectObject(area, parent) {
     init();
 }
 
@@ -61,7 +60,7 @@ void TNRubber::start(bool continuous) {
 
 void TNRubber::stop(QRectF *region) {
     if (region) {
-        *region = this->rect();
+        *region = QRectF(this->pos(), this->rect().size());
     }
 
     setStartPos(QPointF(0, 0));

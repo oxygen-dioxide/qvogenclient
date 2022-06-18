@@ -5,9 +5,11 @@
 
 #include "QRectStyle.h"
 
+#include "TNRectObject.h"
+
 class TNotesArea;
 
-class TNRubber : public QObject, public QGraphicsRectItem {
+class TNRubber : public TNRectObject {
     Q_OBJECT
 public:
     explicit TNRubber(TNotesArea *area, QGraphicsItem *parent = nullptr);
@@ -29,8 +31,6 @@ public:
     void stop(QRectF *region = nullptr);
 
 protected:
-    TNotesArea *m_area;
-
     QRectStyle m_rectStyle;
 
     QPointF m_start;
@@ -51,7 +51,6 @@ public:
                QWidget *widget = nullptr) override;
 
 protected:
-
     void focusInEvent(QFocusEvent *event) override;
     void focusOutEvent(QFocusEvent *event) override;
 

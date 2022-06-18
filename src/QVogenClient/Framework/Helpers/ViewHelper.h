@@ -18,6 +18,8 @@ namespace View {
 
     bool rectHitTest(const QRect &rect1, const QRect &rect2);
 
+    bool rectHitTest(const QRectF &rect1, const QRectF &rect2);
+
     void waitToShow(QWidget *w);
 
 } // namespace View

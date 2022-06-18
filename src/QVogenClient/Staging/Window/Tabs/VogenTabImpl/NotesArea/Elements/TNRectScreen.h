@@ -4,6 +4,7 @@
 #include "TNRectObject.h"
 
 class TNRectScreen : public TNRectObject {
+    Q_OBJECT
 public:
     explicit TNRectScreen(TNotesArea *area, QGraphicsItem *parent = nullptr);
     ~TNRectScreen();

@@ -114,6 +114,10 @@ bool View::widgetHitTest(QWidget *w1, QWidget *w2) {
 }
 
 bool View::rectHitTest(const QRect &rect1, const QRect &rect2) {
+    return rectHitTest(QRectF(rect1), QRectF(rect2));
+}
+
+bool View::rectHitTest(const QRectF &rect1, const QRectF &rect2) {
     if (rect1.x() + rect1.width() > rect2.x() && rect2.x() + rect2.width() > rect1.x() &&
         rect1.y() + rect1.height() > rect2.y() && rect2.y() + rect2.height() > rect1.y()) {
         return true;

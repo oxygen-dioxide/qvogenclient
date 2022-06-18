@@ -37,7 +37,6 @@ void TNPlayheadCtl::updatePlayhead() {
 bool TNPlayheadCtl::eventFilter(QObject *obj, QEvent *event) {
     if (obj == a) {
         switch (event->type()) {
-
         case QEvent::GraphicsSceneMove:
         case QEvent::GraphicsSceneResize:
         case QEventImpl::SceneRectChange:

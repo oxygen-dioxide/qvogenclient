@@ -1,9 +1,9 @@
 #ifndef TNRECTNOTE_H
 #define TNRECTNOTE_H
 
-#include "TNRectObject.h"
+#include "TNRectSelectable.h"
 
-class TNRectNote : public TNRectObject {
+class TNRectNote : public TNRectSelectable {
     Q_OBJECT
 public:
     explicit TNRectNote(TNotesArea *area, QGraphicsItem *parent = nullptr);
@@ -15,7 +15,22 @@ public:
     int tone;
     QString lyric;
 
+    Behavior mousePressBehavior() const;
+
+protected:
+    bool m_movable;
+    bool m_stretch;
+
+    void setStretch(bool stretch);
+
     void layoutRequestEvent(QEvent *event) override;
+
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
+    void hoverMoveEvent(QGraphicsSceneHoverEvent *event) override;
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
+
+public:
+    int type() const override;
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget = nullptr) override;

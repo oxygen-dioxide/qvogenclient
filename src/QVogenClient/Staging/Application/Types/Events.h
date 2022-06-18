@@ -9,6 +9,8 @@ namespace QEventImpl {
 
         SceneRectChange,
 
+        SceneRubberSelect,
+
         // LayoutRequest
     };
 
@@ -41,6 +43,20 @@ namespace QEventImpl {
 
     protected:
         int sec, oldSec;
+    };
+
+    // Scene Rubber Band Select
+    class SceneRubberSelectEvent : public QEvent {
+    public:
+        SceneRubberSelectEvent(const QRectF &rect);
+        ~SceneRubberSelectEvent();
+
+        inline const QRectF &rect() const {
+            return r;
+        }
+
+    protected:
+        QRectF r;
     };
 
     void Register();

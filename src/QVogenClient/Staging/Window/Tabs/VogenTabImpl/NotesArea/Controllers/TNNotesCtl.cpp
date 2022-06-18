@@ -4,6 +4,9 @@
 #include "../TNotesScroll.h"
 
 #include "Types/Events.h"
+#include "Types/Graphics.h"
+
+#include "ViewHelper.h"
 
 #include <QApplication>
 
@@ -39,6 +42,22 @@ const QList<TNRectNote *> &TNNotesCtl::notes() const {
     return m_notes;
 }
 
+void TNNotesCtl::selectAll() {
+    for (auto it = m_notes.begin(); it != m_notes.end(); ++it) {
+        const auto &note = *it;
+        if (!note->isSelected()) {
+            selectOne(note);
+        }
+    }
+}
+
+void TNNotesCtl::deselect() {
+    for (auto it = m_selection.begin(); it != m_selection.end(); ++it) {
+        (*it)->setSelected(false);
+    }
+    m_selection.clear();
+}
+
 TNRectNote *TNNotesCtl::createNote() {
     auto p = new TNRectNote(a);
     a->addItem(p);
@@ -53,14 +72,91 @@ void TNNotesCtl::adjustGeometries() {
     }
 }
 
+void TNNotesCtl::selectOne(TNRectNote *p) {
+    p->setSelected(true);
+    m_selection.insert(p);
+}
+
+void TNNotesCtl::deselectOne(TNRectNote *p) {
+    p->setSelected(false);
+    m_selection.remove(p);
+}
+
 bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
     if (obj == a) {
         switch (event->type()) {
+
+        // Mouse Press Event
+        case QEvent::GraphicsSceneMousePress: {
+            auto item = a->itemUnderMouse();
+            auto modifiers = qApp->keyboardModifiers();
+            const auto &data = a->view()->controlData();
+            if (item && item->type() == GraphicsImpl::NoteItem) {
+                auto noteItem = static_cast<TNRectNote *>(item);
+                TNRectSelectable::Behavior res = noteItem->mousePressBehavior();
+                switch (res) {
+                case TNRectSelectable::SelectOne: {
+                    selectOne(noteItem);
+                    break;
+                }
+                case TNRectSelectable::SelectOnly: {
+                    deselect();
+                    selectOne(noteItem);
+                    break;
+                }
+                case TNRectSelectable::SelectContinuously: {
+                    if (m_selection.isEmpty()) {
+                        selectOne(noteItem);
+                    } else {
+                    }
+                    break;
+                }
+                case TNRectSelectable::DeselectOne: {
+                    deselectOne(noteItem);
+                    break;
+                }
+                case TNRectSelectable::IndependentStretch: {
+                    break;
+                }
+                case TNRectSelectable::RelativeStretch: {
+                    break;
+                }
+                case TNRectSelectable::AbsoluteStretch: {
+                    break;
+                }
+                default:
+                    break;
+                }
+            } else if (modifiers != data.selectS) {
+                deselect();
+            }
+            break;
+        }
+
+        case QEvent::GraphicsSceneMouseMove: {
+            break;
+        }
+
+        case QEvent::GraphicsSceneMouseRelease: {
+            break;
+        }
 
         case QEventImpl::SceneRectChange: {
             auto e = static_cast<QEventImpl::SceneRectChangeEvent *>(event);
             if (e->sizeChanged()) {
                 adjustGeometries();
+            }
+            break;
+        }
+
+        case QEventImpl::SceneRubberSelect: {
+            auto e = static_cast<QEventImpl::SceneRubberSelectEvent *>(event);
+            for (auto it = m_notes.begin(); it != m_notes.end(); ++it) {
+                const auto &note = *it;
+                if (!note->isSelected() &&
+                    View::rectHitTest(QRectF(note->pos(), note->rect().size()), e->rect())) {
+                    selectOne(note);
+                }
             }
             break;
         }

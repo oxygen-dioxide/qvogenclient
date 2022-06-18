@@ -16,6 +16,9 @@ TNotesScroll::ControlData::ControlData() {
     dragS = Qt::ControlModifier;
     dragM = Qt::ControlModifier | Qt::ShiftModifier;
     dragZ = Qt::ControlModifier | Qt::AltModifier;
+
+    stretchR = Qt::ControlModifier;
+    stretchA = Qt::ControlModifier | Qt::ShiftModifier;
 }
 
 TNotesScroll::TNotesScroll(QWidget *parent) : CGraphicsView(parent) {

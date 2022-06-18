@@ -31,6 +31,9 @@ public:
         Qt::KeyboardModifiers dragM; // drag move
         Qt::KeyboardModifiers dragZ; // drag zoom
 
+        Qt::KeyboardModifiers stretchR; // stretch relatively
+        Qt::KeyboardModifiers stretchA; // stretch absolutely
+
         ControlData();
     };
 

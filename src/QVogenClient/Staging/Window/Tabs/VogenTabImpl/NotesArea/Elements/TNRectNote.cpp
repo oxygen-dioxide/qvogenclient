@@ -1,13 +1,65 @@
 #include "TNRectNote.h"
 #include "../TNotesArea.h"
+#include "../TNotesScroll.h"
+#include "Types/Graphics.h"
 
+#include <QApplication>
 #include <QDebug>
 #include <QPainter>
 
-TNRectNote::TNRectNote(TNotesArea *area, QGraphicsItem *parent) : TNRectObject(area, parent) {
+TNRectNote::TNRectNote(TNotesArea *area, QGraphicsItem *parent) : TNRectSelectable(area, parent) {
+    m_movable = true;
+    m_stretch = false;
 }
 
 TNRectNote::~TNRectNote() {
+}
+
+TNRectSelectable::Behavior TNRectNote::mousePressBehavior() const {
+    Qt::KeyboardModifiers modifiers = qApp->keyboardModifiers();
+    const auto &data = m_area->view()->controlData();
+    Behavior res = NoBehavior;
+
+    // Stretch
+    if (m_movable) {
+        if (m_stretch) {
+            // Before stretching
+            if (modifiers == data.stretchR) {
+                res = RelativeStretch;
+            } else if (modifiers == data.stretchA) {
+                res = AbsoluteStretch;
+            } else {
+                res = IndependentStretch;
+            }
+            return res;
+        }
+    }
+    bool selected = isSelected();
+    // Shift
+    if (modifiers == data.selectC) {
+        res = SelectContinuously;
+        return res;
+    }
+
+    // Ctrl
+    if (modifiers == data.selectS) {
+        // Add or Remove
+        if (selected) {
+            res = DeselectOne;
+        } else {
+            res = SelectOne;
+        }
+    } else {
+        if (!selected) {
+            res = SelectOnly;
+        }
+    }
+    return res;
+}
+
+void TNRectNote::setStretch(bool stretch) {
+    m_stretch = stretch;
+    setCursor(stretch ? Qt::SizeHorCursor : Qt::ArrowCursor);
 }
 
 void TNRectNote::layoutRequestEvent(QEvent *event) {
@@ -20,8 +72,24 @@ void TNRectNote::layoutRequestEvent(QEvent *event) {
     update();
 }
 
+void TNRectNote::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
+    TNRectSelectable::hoverEnterEvent(event);
+}
+
+void TNRectNote::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
+    TNRectSelectable::hoverMoveEvent(event);
+}
+
+void TNRectNote::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
+    TNRectSelectable::hoverLeaveEvent(event);
+}
+
+int TNRectNote::type() const {
+    return GraphicsImpl::NoteItem;
+}
+
 void TNRectNote::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-//    qDebug() << option << widget;
+    //    qDebug() << option << widget;
 
     QRectF rect = this->rect();
     bool selected = isSelected();
@@ -33,7 +101,7 @@ void TNRectNote::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     border = border > 6 ? 6 : border;
 
     QColor lineColor = 0x78AD35;
-    QColor fillColor = 0x78AD35;
+    QColor fillColor = 0xB0E56D;
 
     QRectF originRect(padding, padding, rect.width() - 2 * padding, rect.height() - 2 * padding);
     QRectF entityRect(originRect);

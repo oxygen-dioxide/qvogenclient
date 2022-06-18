@@ -11,11 +11,6 @@ int QEventImpl::MenuUpdateRequestEvent::menuIndex() const {
     return m_menuIndex;
 }
 
-void QEventImpl::Register() {
-    QEvent::registerEventType(MenuUpdateRequest);
-    QEvent::registerEventType(SceneRectChange);
-}
-
 QEventImpl::SceneRectChangeEvent::SceneRectChangeEvent(const QPair<QSize, int> &cur,
                                                        const QPair<QSize, int> &org)
     : QResizeEvent(cur.first, org.first), sec(cur.second), oldSec(org.second) {
@@ -28,3 +23,17 @@ QEventImpl::SceneRectChangeEvent::~SceneRectChangeEvent() {
 bool QEventImpl::SceneRectChangeEvent::sizeChanged() const {
     return s != olds;
 }
+
+QEventImpl::SceneRubberSelectEvent::SceneRubberSelectEvent(const QRectF &rect)
+    : QEvent(static_cast<QEvent::Type>(SceneRubberSelect)), r(rect) {
+}
+
+QEventImpl::SceneRubberSelectEvent::~SceneRubberSelectEvent() {
+}
+
+void QEventImpl::Register() {
+    QEvent::registerEventType(MenuUpdateRequest);
+    QEvent::registerEventType(SceneRectChange);
+    QEvent::registerEventType(SceneRubberSelect);
+}
+

@@ -1,18 +1,14 @@
 #ifndef TNRECTPOINT_H
 #define TNRECTPOINT_H
 
-#include "TNRectObject.h"
+#include "TNRectSelectable.h"
 
-class TNRectPoint : public TNRectObject {
+class TNRectPoint : public TNRectSelectable {
     Q_OBJECT
 public:
     explicit TNRectPoint(TNotesArea *area, QGraphicsItem *parent = nullptr);
     ~TNRectPoint();
 
-private:
-    void init();
-
-protected:
 signals:
 };
 

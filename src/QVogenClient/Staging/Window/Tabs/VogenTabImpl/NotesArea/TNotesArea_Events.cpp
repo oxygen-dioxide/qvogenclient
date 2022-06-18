@@ -14,15 +14,18 @@ void TNotesArea::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 void TNotesArea::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
-    // First movement after move
-    if (!m_moving) {
-        CGraphicsScene::mouseMoveEvent(event);
-        m_moving = true;
+    // Ensure event triggered by real mouse moving
+    if (event->buttons()) {
+        // First movement after move
+        if (!m_moving) {
+            CGraphicsScene::mouseMoveEvent(event);
+            m_moving = true;
 
-        QApplication::sendEvent(this, event);
-    } else {
-        CGraphicsScene::mouseMoveEvent(event);
+            QApplication::sendEvent(this, event);
+            return;
+        }
     }
+    CGraphicsScene::mouseMoveEvent(event);
 }
 
 void TNotesArea::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
