@@ -7,6 +7,8 @@
 #include "EventManager.h"
 #include "TabManager.h"
 
+#include "Types/Events.h"
+
 #include <QApplication>
 #include <QDebug>
 #include <QFile>
@@ -48,6 +50,13 @@ MainWindow::MainWindow(QWidget *parent) : BasicWindow(parent) {
     m_actionMgr->load();
 
     Q_TR_NOTIFY(MainWindow)
+
+    // Initialize
+    {
+        // Update All Menus
+        QEventImpl::MenuUpdateRequestEvent e(ActionImpl::StateMask);
+        QApplication::sendEvent(this, &e);
+    }
 }
 
 MainWindow::~MainWindow() {

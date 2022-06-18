@@ -1,7 +1,7 @@
 #ifndef TPIANOPANEL_H
 #define TPIANOPANEL_H
 
-#include "VogenPanel.h"
+#include "TVogenPanel.h"
 
 #include "NotesArea/TNotesArea.h"
 #include "NotesArea/TNotesScroll.h"
@@ -13,7 +13,7 @@
 
 #include <QGridLayout>
 
-class TPianoPanel : public VogenPanel {
+class TPianoPanel : public TVogenPanel {
     Q_OBJECT
     Q_PROPERTY(QTypeList styleDataN READ styleDataN WRITE setStyleDataN NOTIFY styleDataChanged)
     Q_PROPERTY(QTypeList styleDataS READ styleDataS WRITE setStyleDataS NOTIFY styleDataChanged)

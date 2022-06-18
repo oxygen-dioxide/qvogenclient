@@ -89,6 +89,9 @@ bool EventManager::saveAsFile(CentralTab *tab) {
     QString path =
         qData->saveFile(tr("Save As"), tab->filename(),
                         qData->getFileFilter(DataManager::ProjectFiles), FLAG_SAVE, d->w);
+    if (path.isEmpty()) {
+        return false;
+    }
     return tab->saveAs(path);
 }
 

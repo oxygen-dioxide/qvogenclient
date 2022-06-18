@@ -1,12 +1,14 @@
 ﻿#include "SequenceTextFile.h"
-#include "SystemHelper.h"
-#include "TextHelper.h"
+#include "UtaProjectText.h"
 
-#include <cstring>
+#include <QFile>
+#include <QTextCodec>
 
 using namespace Utau;
 
-const char COMMA = ',';
+static const char COMMA = ',';
+
+#define STRLEN(s) int(qstrlen(s))
 
 SequenceTextFile::SequenceTextFile() {
 }
@@ -168,8 +170,8 @@ void SequenceTextFile::reset() {
 bool SequenceTextFile::parseSectionName(const QString &str, QString &name) {
     if (str.startsWith(SECTION_BEGIN_MARK) && str.endsWith(SECTION_END_MARK)) {
         name =
-            str.mid(int(strlen(SECTION_BEGIN_MARK)),
-                    str.size() - int(strlen(SECTION_BEGIN_MARK)) - int(strlen(SECTION_END_MARK)));
+            str.mid(STRLEN(SECTION_BEGIN_MARK),
+                    str.size() - STRLEN(SECTION_BEGIN_MARK) - STRLEN(SECTION_END_MARK));
         return true;
     } else {
         return false;
@@ -302,7 +304,7 @@ bool SequenceTextFile::parseSectionVersion(const QStringList &sectionList,
             continue;
         }
         if (line.indexOf(UST_VERSION_PREFIX_NOSPACE) == 0) {
-            version.version = line.mid(int(strlen(UST_VERSION_PREFIX_NOSPACE))).simplified();
+            version.version = line.mid(STRLEN(UST_VERSION_PREFIX_NOSPACE)).simplified();
             flag = true;
         }
     }

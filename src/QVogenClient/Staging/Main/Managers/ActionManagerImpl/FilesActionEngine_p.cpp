@@ -3,6 +3,35 @@
 #include "CMenu.h"
 #include "DataManager.h"
 
+#include "Logs/CRecordHolder.h"
+
+struct ActionData {
+    enum ActionRole {
+        Null,
+        OpenFile,
+        OpenDir,
+        MoreFiles,
+        MoreDirs,
+        Clear,
+    };
+    ActionRole type;
+    QString data;
+    ActionData() = default;
+    ActionData(ActionRole type) : type(type) {
+    }
+    ActionData(ActionRole type, const QString &data) : type(type), data(data) {
+    }
+    QVariant toVariant() const {
+        QVariant var;
+        var.setValue(*this);
+        return var;
+    }
+    static ActionData fromVariant(const QVariant &var) {
+        return var.value<ActionData>();
+    }
+};
+Q_DECLARE_METATYPE(ActionData)
+
 FilesActionEnginePrivate::FilesActionEnginePrivate() {
 }
 
@@ -167,13 +196,13 @@ void FilesActionEnginePrivate::setup() {
     fileMenu->addAction(file_newWindow);
     fileMenu->addSeparator();
     fileMenu->addAction(file_openFile);
+    fileMenu->addAction(file_importFile);
     fileMenu->addMenu(recentMenu);
     fileMenu->addSeparator();
     fileMenu->addAction(file_saveFile);
     fileMenu->addAction(file_saveAs);
     fileMenu->addAction(file_saveAll);
     fileMenu->addSeparator();
-    fileMenu->addAction(file_importFile);
     fileMenu->addAction(file_appendFile);
     fileMenu->addMenu(exportMenu);
     fileMenu->addSeparator();
@@ -278,6 +307,11 @@ void FilesActionEnginePrivate::setup() {
     menuBar->addMenu(modifyMenu);
     menuBar->addMenu(playMenu);
     menuBar->addMenu(helpMenu);
+
+    // Signals
+    Q_Q(FilesActionEngine);
+    q->connect(qRecord, &CRecordHolder::recentCommited, q, &FilesActionEngine::_q_recentCommited);
+    reloadRecentActions();
 }
 
 void FilesActionEnginePrivate::reloadStrings() {
@@ -299,8 +333,8 @@ void FilesActionEnginePrivate::reloadStrings() {
     file_saveFile->setText(QObject::tr("Save"));
     file_saveAs->setText(QObject::tr("Save As..."));
     file_saveAll->setText(QObject::tr("Save All"));
-    file_importFile->setText(QObject::tr("Import"));
-    file_appendFile->setText(QObject::tr("Append"));
+    file_importFile->setText(QObject::tr("Import..."));
+    file_appendFile->setText(QObject::tr("Append..."));
     file_fileSettings->setText(QObject::tr("File Settings"));
     file_closeFile->setText(QObject::tr("Close File"));
     file_closeWindow->setText(QObject::tr("Close Window"));
@@ -456,5 +490,108 @@ QAction *FilesActionEnginePrivate::NewAction(ActionImpl::Action a) {
 
 void FilesActionEnginePrivate::registerHandler(QMenu *menu) {
     Q_Q(FilesActionEngine);
-    q->connect(menu, &QMenu::triggered, q, &FilesActionEngine::q_actionTriggered);
+    q->connect(menu, &QMenu::triggered, q, &FilesActionEngine::_q_actionTriggered);
+}
+
+void FilesActionEnginePrivate::reloadRecentActions() {
+    QStringList projects = qRecordCData.projects.valid();
+
+    // Remove all Actions
+    recentMenu->clear();
+
+    QVector<QAction *> vogFiles;
+
+    int fileActions = 0;
+    for (auto it = projects.begin(); it != projects.end(); ++it) {
+        if (fileActions == 10) {
+            break;
+        }
+        QString name = *it;
+        auto action = new QAction(QDir::toNativeSeparators(name), recentMenu);
+        action->setData(ActionData(ActionData::OpenFile, name).toVariant());
+        vogFiles.append(action);
+        fileActions++;
+    }
+
+    int i;
+    for (i = 0; i < vogFiles.size(); ++i) {
+        auto action = vogFiles.at(i);
+        recentMenu->addAction(action);
+    }
+    if (i > 0) {
+        recentMenu->addSeparator();
+    }
+
+    if (vogFiles.isEmpty()) {
+        QAction *emptyAction = new QAction(recentMenu);
+        emptyAction->setData(ActionData(ActionData::Null).toVariant());
+        recentMenu->addAction(emptyAction);
+    } else {
+        bool more = false;
+        if (fileActions < projects.size()) {
+            QAction *moreAction = new QAction(recentMenu);
+            moreAction->setData(ActionData(ActionData::MoreFiles).toVariant());
+            recentMenu->addAction(moreAction);
+            more = true;
+        }
+        if (more) {
+            recentMenu->addSeparator();
+        }
+        QAction *clearRecentAction = new QAction(recentMenu);
+        clearRecentAction->setData(ActionData(ActionData::Clear).toVariant());
+        recentMenu->addAction(clearRecentAction);
+    }
+
+    reloadRecentActionStrings();
+}
+
+void FilesActionEnginePrivate::reloadRecentActionStrings() {
+    const auto &actions = recentMenu->actions();
+    for (auto it = actions.begin(); it != actions.end(); ++it) {
+        auto action = *it;
+        QVariant var = action->data();
+        if (var.convert(qMetaTypeId<ActionData>())) {
+            ActionData data = ActionData::fromVariant(var);
+            switch (data.type) {
+            case ActionData::Null:
+                action->setText(QObject::tr("Null"));
+                break;
+            case ActionData::MoreFiles:
+                action->setText(QObject::tr("More files..."));
+                break;
+            case ActionData::MoreDirs:
+                action->setText(QObject::tr("More folders..."));
+                break;
+            case ActionData::Clear:
+                action->setText(QObject::tr("Clear recent list"));
+                break;
+            default:
+                break;
+            }
+        }
+    }
+}
+
+void FilesActionEnginePrivate::handleRecentAction(QAction *action) {
+    QVariant var = action->data();
+    if (var.convert(qMetaTypeId<ActionData>())) {
+        ActionData data = ActionData::fromVariant(var);
+        switch (data.type) {
+        case ActionData::Null:
+            break;
+        case ActionData::OpenFile:
+            eventMgr->openFile(data.data);
+            break;
+        case ActionData::OpenDir:
+            break;
+        case ActionData::MoreFiles:
+            break;
+        case ActionData::MoreDirs:
+            break;
+        case ActionData::Clear:
+            qRecord->commitRecent(CRecordHolder::Project, CRecordHolder::Clear);
+            qRecord->commitRecent(CRecordHolder::Folder, CRecordHolder::Clear);
+            break;
+        }
+    }
 }

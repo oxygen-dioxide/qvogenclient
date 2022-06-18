@@ -1,7 +1,10 @@
 #ifndef ACTIONS_H
 #define ACTIONS_H
 
+#include <QtGlobal>
+
 namespace ActionImpl {
+
     enum MainMenu {
         File,
         Edit,
@@ -9,6 +12,7 @@ namespace ActionImpl {
         Modify,
         Playback,
         Help,
+        IndexMax,
     };
 
     enum Action {
@@ -69,6 +73,37 @@ namespace ActionImpl {
         Help_AboutApplication,
         Help_AboutQt,
     };
+
+    enum StateType {
+        FileState = 0x1,
+        EditState = 0x2,
+        SelectState = 0x4,
+        StateMask = FileState | EditState | SelectState,
+    };
+    Q_DECLARE_FLAGS(StateTypes, StateType);
+
+    enum State {
+        NoFlag = 0x0,
+
+        DocumentFlag = 0x1,
+        TypeMask = DocumentFlag,
+
+        EditedFlag = 0x100,
+        UntitledFlag = EditedFlag * 2,
+        DeletedFlag = UntitledFlag * 2,
+
+        FileMask = DocumentFlag & EditedFlag & UntitledFlag & DeletedFlag,
+
+        UndoFlag = 0x1000,
+        RedoFlag = UndoFlag * 2,
+        EditMask = UndoFlag & RedoFlag,
+
+        SelectionFlag = 0x1000,
+        SelectNoteFlag = SelectionFlag * 2,
+        SelectMask = SelectionFlag & SelectNoteFlag,
+    };
+
+    Q_DECLARE_FLAGS(States, State);
 
 }; // namespace ActionImpl
 

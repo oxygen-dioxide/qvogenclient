@@ -33,7 +33,6 @@ QSize TPianoScroll::sizeHint() const {
 }
 
 QSize TPianoScroll::minimumSizeHint() const {
-    QSize sz = NoneScrollArea::minimumSizeHint();
-    return m_area ? QSize(m_area->width(), sz.height()) : sz;
+    return sizeHint();
 }
 

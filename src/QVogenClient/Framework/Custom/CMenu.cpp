@@ -35,14 +35,22 @@ void CMenu::setSubIcon(const QSvgUri &icon) {
     emit styleChanged();
 }
 
-QSvgUri CMenu::subIconHover() const {
-    return m_subIconHover;
+QSvgUri CMenu::subIconActive() const {
+    return m_subIconActive;
 }
 
-void CMenu::setSubIconHover(const QSvgUri &icon) {
-    m_subIconHover = icon;
+void CMenu::setSubIconActive(const QSvgUri &icon) {
+    m_subIconActive = icon;
     update();
     emit styleChanged();
+}
+
+QSvgUri CMenu::subIconDisabled() const {
+    return m_subIconDisabled;
+}
+
+void CMenu::setSubIconDisabled(const QSvgUri &subIconDisabled) {
+    m_subIconDisabled = subIconDisabled;
 }
 
 QSize CMenu::subIconMargins() const {
@@ -145,8 +153,10 @@ void CMenu::paintEvent(QPaintEvent *event) {
 
         // Draw Right Arrow
         if (action->menu()) {
-            QIcon subIcon =
-                (opt.state & QStyle::State_Selected) ? m_subIconHover.toIcon() : m_subIcon.toIcon();
+            QIcon subIcon = (opt.state & QStyle::State_Enabled)
+                                ? ((opt.state & QStyle::State_Selected) ? m_subIconActive.toIcon()
+                                                                        : m_subIcon.toIcon())
+                                : m_subIconDisabled.toIcon();
             if (!subIcon.isNull()) {
                 int a = actionRect.height();
                 QRect iconRegion(actionRect.right() - a, actionRect.top(), a, a);

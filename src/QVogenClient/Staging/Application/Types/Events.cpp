@@ -13,4 +13,5 @@ int QEventImpl::MenuUpdateRequestEvent::menuIndex() const {
 
 void QEventImpl::Register() {
     QEvent::registerEventType(MenuUpdateRequest);
+    QEvent::registerEventType(SceneRectChange);
 }

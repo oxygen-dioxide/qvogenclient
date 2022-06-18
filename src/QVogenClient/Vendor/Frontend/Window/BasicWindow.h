@@ -5,7 +5,7 @@
 
 #include "CWindowBarV2.h"
 
-class BasicWindow : public FRAMELESSHELPER_PREPEND_NAMESPACE(FramelessMainWindow) {
+class BasicWindow : public FRAMELESSHELPER_NAMESPACE::FramelessMainWindow {
     Q_OBJECT
 public:
     explicit BasicWindow(QWidget *parent = nullptr);

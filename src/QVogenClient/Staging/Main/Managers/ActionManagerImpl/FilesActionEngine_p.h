@@ -22,6 +22,10 @@ public:
     QAction *NewAction(ActionImpl::Action a);
     void registerHandler(QMenu *menu);
 
+    void reloadRecentActions();
+    void reloadRecentActionStrings();
+    void handleRecentAction(QAction *action);
+
     QMap<QAction *, ActionImpl::Action> map;
 
     QMenu *fileMenu;

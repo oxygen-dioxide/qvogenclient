@@ -7,7 +7,7 @@
 #include <QWheelEvent>
 
 void TPianoPanel::wheelEvent(QWheelEvent *event) {
-    VogenPanel::wheelEvent(event);
+    TVogenPanel::wheelEvent(event);
 }
 
 bool TPianoPanel::eventFilter(QObject *obj, QEvent *event) {
@@ -17,5 +17,5 @@ bool TPianoPanel::eventFilter(QObject *obj, QEvent *event) {
             return true;
         }
     }
-    return VogenPanel::eventFilter(obj, event);
+    return TVogenPanel::eventFilter(obj, event);
 }

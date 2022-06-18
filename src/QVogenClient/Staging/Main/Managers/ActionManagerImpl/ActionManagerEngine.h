@@ -3,6 +3,8 @@
 
 #include <QAction>
 
+#include "Types/Actions.h"
+
 class ActionManagerEnginePrivate;
 
 class ActionManagerEngine : public QObject {
@@ -19,6 +21,8 @@ public:
     void setup();
     void reloadStrings();
     void reloadShortcuts();
+
+    virtual void updateStates(ActionImpl::StateTypes st);
 
 protected:
     ActionManagerEngine(ActionManagerEnginePrivate &d, QObject *parent = nullptr);

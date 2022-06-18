@@ -35,6 +35,7 @@ public:
     bool closeAll();
 
     void triggerCurrent(ActionImpl::Action action);
+    ActionImpl::States actionStates() const;
 
 protected:
     TabManager(TabManagerPrivate &d, MainWindow *parent = nullptr);

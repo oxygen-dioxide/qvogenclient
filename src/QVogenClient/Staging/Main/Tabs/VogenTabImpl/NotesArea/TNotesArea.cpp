@@ -1,4 +1,5 @@
 #include "TNotesArea.h"
+#include "TNotesArea_p.h"
 #include "TNotesScroll.h"
 
 #include <QPainter>
@@ -17,11 +18,38 @@ TNotesArea::StyleData::StyleData() {
     timeLine = QColor(0xECECEC);
 }
 
-TNotesArea::TNotesArea(TNotesScroll *parent) : CGraphicsScene(parent), m_view(parent) {
-    init();
+TNotesArea::TNotesArea(TNotesScroll *parent) : TNotesArea(*new TNotesAreaPrivate(), parent) {
 }
 
 TNotesArea::~TNotesArea() {
+}
+
+TNotesArea::TNotesArea(TNotesAreaPrivate &d, TNotesScroll *parent)
+    : CGraphicsScene(parent), d_ptr(&d), m_view(parent) {
+    d.q_ptr = this;
+
+    d.init();
+
+    m_moving = false;
+
+    m_drawMode = PlainSelect;
+    m_pointMode = SingleClick;
+
+    m_transCtl = new TNTransformCtl(this);
+    m_selectCtl = new TNSelectCtl(this);
+    m_playCtl = new TNPlayheadCtl(this);
+    m_spriteCtl = new TNSpriteCtl(this);
+    m_screenCtl = new TNScreenCtl(this);
+    m_notesCtl = new TNNotesCtl(this);
+
+    m_transCtl->install();
+    m_selectCtl->install();
+    m_playCtl->install();
+    m_spriteCtl->install();
+    m_screenCtl->install();
+    m_notesCtl->install();
+
+    connect(this, &QGraphicsScene::sceneRectChanged, this, &TNotesArea::_q_sceneRectChanged);
 }
 
 TNotesScroll *TNotesArea::view() const {
@@ -30,28 +58,6 @@ TNotesScroll *TNotesArea::view() const {
 
 QPointF TNotesArea::mousePosition() const {
     return m_view->mapToScene(m_view->mapFromGlobal(QCursor::pos()));
-}
-
-void TNotesArea::init() {
-    m_sectionCount = 40;
-
-    m_currentWidth = 60;
-    m_currentHeight = 30;
-    m_currentQuantize = 4;
-
-    m_blankSections = 1;
-
-    m_drawMode = PlainSelect;
-    m_pointMode = SingleClick;
-
-    initSelectElements();
-    initSpriteElements();
-    initScreenElements();
-    initPlayElements();
-
-    connect(this, &QGraphicsScene::sceneRectChanged, this, &TNotesArea::handleSceneRectChanged);
-
-    adjustSize();
 }
 
 TNotesArea::StyleData TNotesArea::styleData() const {
@@ -64,59 +70,51 @@ void TNotesArea::setStyleData(const StyleData &data) {
 }
 
 int TNotesArea::sectionCount() const {
-    return m_sectionCount;
+    return m_transCtl->sectionCount();
 }
 
 void TNotesArea::setSectionCount(int sectionCount) {
-    m_sectionCount = sectionCount;
-    adjustSize();
+    m_transCtl->setSectionCount(sectionCount);
 }
 
 int TNotesArea::currentWidth() const {
-    return m_currentWidth;
+    return m_transCtl->currentWidth();
 }
 
 void TNotesArea::setCurrentWidth(int currentWidth) {
-    m_currentWidth = currentWidth;
-    adjustSize();
+    m_transCtl->setCurrentWidth(currentWidth);
 }
 
 int TNotesArea::currentHeight() const {
-    return m_currentHeight;
+    return m_transCtl->currentHeight();
 }
 
 void TNotesArea::setCurrentHeight(int currentHeight) {
-    m_currentHeight = currentHeight;
-    adjustSize();
+    m_transCtl->setCurrentHeight(currentHeight);
 }
 
 int TNotesArea::currentQuantize() const {
-    return m_currentQuantize;
+    return m_transCtl->currentQuantize();
 }
 
 void TNotesArea::setCurrentQuantize(int currentQuantize) {
-    m_currentQuantize = currentQuantize;
-    adjustSize();
+    m_transCtl->setCurrentQuantize(currentQuantize);
 }
 
 int TNotesArea::blankSections() const {
-    return m_blankSections;
+    return m_transCtl->blankSections();
 }
 
 void TNotesArea::setBlankSections(int blankSections) {
-    m_blankSections = blankSections;
-    adjustSize();
+    m_transCtl->setBlankSections(blankSections);
 }
 
 double TNotesArea::zeroLine() const {
-    return m_currentWidth * 4 * m_blankSections;
+    return m_transCtl->zeroLine();
 }
 
 void TNotesArea::setCurrentSizes(int w, int h, int q) {
-    m_currentWidth = w;
-    m_currentHeight = h;
-    m_currentQuantize = q;
-    adjustSize();
+    m_transCtl->setCurrentSizes(w, h, q);
 }
 
 TNotesArea::DrawMode TNotesArea::drawMode() const {
@@ -135,15 +133,10 @@ void TNotesArea::setPointMode(const AddPointMode &pointMode) {
     m_pointMode = pointMode;
 }
 
-void TNotesArea::adjustSize() {
-    setSceneRect(QRectF(0, 0, m_currentWidth * 4 * (m_sectionCount + 1 + m_blankSections),
-                        m_currentHeight * 84));
-}
-
 void TNotesArea::adjustBackground() {
-    int curWidth = m_currentWidth;
-    int curHeight = m_currentHeight;
-    int curAdsorb = m_currentQuantize * 4;
+    int curWidth = currentWidth();
+    int curHeight = currentHeight();
+    int curAdsorb = currentQuantize() * 4;
     double lineWidth = m_styleData.lineWidth;
 
     // Draw Background Unit
@@ -198,3 +191,10 @@ void TNotesArea::adjustBackground() {
     setBackgroundBrush(pixmap);
 }
 
+bool TNotesArea::mouseMoving() const {
+    return m_moving;
+}
+
+bool TNotesArea::visionMoving() const {
+    return m_transCtl->scrollDrag() || m_transCtl->zoomDrag();
+}

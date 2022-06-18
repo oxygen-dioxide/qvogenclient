@@ -11,6 +11,7 @@
 #include "WindowManager.h"
 
 #include "EventManager.h"
+#include "Types/Events.h"
 
 #include <QApplication>
 #include <QEvent>
@@ -171,6 +172,11 @@ void TabManager::triggerCurrent(ActionImpl::Action action) {
     }
 }
 
+States TabManager::actionStates() const {
+    Q_D(const TabManager);
+    return d->states;
+}
+
 TabManager::TabManager(TabManagerPrivate &d, MainWindow *parent) : CentralManager(d, parent) {
     d.init();
 }
@@ -199,6 +205,10 @@ bool TabManager::eventFilter(QObject *obj, QEvent *event) {
             break;
         }
         default:
+            if (event->type() == int(QEventImpl::MenuUpdateRequest)) {
+                auto e = static_cast<QEventImpl::MenuUpdateRequestEvent *>(event);
+                d->reloadActionStates(ActionImpl::StateTypes(e->menuIndex()));
+            }
             break;
         }
     }
@@ -213,6 +223,12 @@ void TabManager::_q_tabCloseRequested(int index) {
 void TabManager::_q_tabIndexChanged(int index, int orgIndex) {
     Q_UNUSED(index)
     Q_UNUSED(orgIndex)
+
+    Q_D(TabManager);
+
+    // Update All Menus
+    QEventImpl::MenuUpdateRequestEvent e(ActionImpl::StateMask);
+    QApplication::sendEvent(d->w, &e);
 }
 
 void TabManager::_q_tabTitleChanged(const QString &title) {

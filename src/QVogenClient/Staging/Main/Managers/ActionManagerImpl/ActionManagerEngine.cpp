@@ -26,6 +26,10 @@ void ActionManagerEngine::reloadShortcuts() {
     d->reloadShortcuts();
 }
 
+void ActionManagerEngine::updateStates(ActionImpl::StateTypes st) {
+    Q_UNUSED(st);
+}
+
 ActionManagerEngine::ActionManagerEngine(ActionManagerEnginePrivate &d, QObject *parent)
     : QObject(parent), d_ptr(&d) {
     d.q_ptr = this;

@@ -180,6 +180,11 @@ void TPianoArea::resizeEvent(QResizeEvent *event) {
             label->move(key->x() + key->width() * 3 / 4 - label->width() / 2, label->y());
         }
         handleUpdateToneLabel();
+
+        auto parent = parentWidget();
+        if (parent) {
+            parent->updateGeometry();
+        }
     }
     return QWidget::resizeEvent(event);
 }

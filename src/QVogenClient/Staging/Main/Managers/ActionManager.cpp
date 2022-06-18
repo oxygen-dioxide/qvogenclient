@@ -23,6 +23,11 @@ bool ActionManager::load() {
     return true;
 }
 
+void ActionManager::reloadStates(ActionImpl::StateTypes st) {
+    Q_D(ActionManager);
+    d->engine->updateStates(st);
+}
+
 ActionManager::ActionManager(ActionManagerPrivate &d, MainWindow *parent)
     : CentralManager(d, parent) {
     d.init();

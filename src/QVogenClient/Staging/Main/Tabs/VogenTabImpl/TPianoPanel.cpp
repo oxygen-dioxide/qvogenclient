@@ -6,7 +6,7 @@
 #include <QScrollBar>
 #include <QWheelEvent>
 
-TPianoPanel::TPianoPanel(VogenTab *tab, QWidget *parent) : VogenPanel(tab, parent) {
+TPianoPanel::TPianoPanel(VogenTab *tab, QWidget *parent) : TVogenPanel(tab, parent) {
     init();
 }
 
@@ -72,7 +72,7 @@ void TPianoPanel::setCurrentHeight(int currentHeight) {
 }
 
 int TPianoPanel::currentQuantize() const {
-    return m_notesArea->currentHeight();
+    return m_notesArea->currentQuantize();
 }
 
 void TPianoPanel::setCurrentQuantize(int currentQuantize) {

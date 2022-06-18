@@ -191,7 +191,8 @@ CWindowBarV2>CMenuBar::item:selected {
 
 CMenu {
     qproperty-subIcon: svg(":/svg/menu/arrow-right-s-line.svg", #CCCCCC);
-    qproperty-subIconHover: svg(":/svg/menu/arrow-right-s-line.svg", white);
+    qproperty-subIconActive: svg(":/svg/menu/arrow-right-s-line.svg", white);
+    qproperty-subIconDisabled: svg(":/svg/menu/arrow-right-s-line.svg", #666666);
     qproperty-subIconMargins: 5px 5px;
     padding: 5px 5px;
     background: #303030;
@@ -204,13 +205,13 @@ CMenu::item {
     color: #CCCCCC;
 }
 
-CMenu::item:selected {
-    color: white;
-    background-color: #0060C0;
-}
-
 CMenu::item:disabled {
     color: #666666;
+}
+
+CMenu::item:!disabled:selected {
+    color: white;
+    background-color: #0060C0;
 }
 
 CMenu::separator {

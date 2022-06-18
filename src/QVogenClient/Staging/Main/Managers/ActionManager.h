@@ -2,6 +2,7 @@
 #define ACTIONMANAGER_H
 
 #include "../CentralManager.h"
+#include "Types/Actions.h"
 
 #include <QAction>
 
@@ -19,6 +20,8 @@ public:
 
 public:
     bool load() override;
+
+    void reloadStates(ActionImpl::StateTypes st);
 
 protected:
     ActionManager(ActionManagerPrivate &d, MainWindow *parent = nullptr);

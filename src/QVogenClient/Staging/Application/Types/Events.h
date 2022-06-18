@@ -6,14 +6,16 @@
 namespace QEventImpl {
     enum Event {
         MenuUpdateRequest = QEvent::User + 1000,
+
+        SceneRectChange,
     };
 
     // Menu Update Request
     class MenuUpdateRequestEvent : public QEvent {
+    public:
         MenuUpdateRequestEvent(int menuIndex);
         ~MenuUpdateRequestEvent();
 
-    public:
         int menuIndex() const;
 
     protected:

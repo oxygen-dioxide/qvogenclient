@@ -3,6 +3,7 @@
 #include "DataManager.h"
 #include "WindowManager.h"
 
+#include "ActionManager.h"
 #include "MainWindow.h"
 
 #include "FolderTab.h"
@@ -46,6 +47,43 @@ void TabManagerPrivate::reloadWindowTitle(const QString &title) {
     } else {
         w->setWindowTitle(QString("%1 - %2").arg(title, qData->windowTitle()));
     }
+}
+
+void TabManagerPrivate::reloadActionStates(ActionImpl::StateTypes st) {
+    auto tab = currentTab();
+
+    states &= ~ActionImpl::TypeMask;
+
+    if (st & ActionImpl::FileState) {
+        states &= ~ActionImpl::FileMask;
+        if (tab) {
+            if (tab->type() & CentralTab::Document) {
+                auto docTab = qobject_cast<DocumentTab *>(tab);
+                states |= ActionImpl::DocumentFlag;
+                states |= docTab->isEdited() ? ActionImpl::EditedFlag : ActionImpl::NoFlag;
+                states |= docTab->isUntitled() ? ActionImpl::UntitledFlag : ActionImpl::NoFlag;
+                states |= docTab->isDeleted() ? ActionImpl::DeletedFlag : ActionImpl::NoFlag;
+            }
+        }
+    }
+    if (st & ActionImpl::EditState) {
+        states &= ~ActionImpl::EditMask;
+        if (tab) {
+            if (tab->type() & CentralTab::Document) {
+                states |= ActionImpl::DocumentFlag;
+            }
+        }
+    }
+    if (st & ActionImpl::SelectState) {
+        states &= ~ActionImpl::SelectMask;
+        if (tab) {
+            if (tab->type() & CentralTab::Document) {
+                states |= ActionImpl::DocumentFlag;
+            }
+        }
+    }
+
+    w->actionMgr()->reloadStates(st);
 }
 
 bool TabManagerPrivate::tryCloseTab(int index) {

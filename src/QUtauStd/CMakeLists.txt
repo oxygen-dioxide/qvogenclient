@@ -7,6 +7,7 @@ set(QUTAUSTD_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 set(QT_LIBS)
 set(QUTAUSTD_FILES)
+set(RES_FILES)
 
 # 查找Qt库
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Core REQUIRED)
@@ -14,14 +15,18 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core REQUIRED)
 list(APPEND QT_LIBS Qt${QT_VERSION_MAJOR}::Core)
 
 # 添加源文件
+if (WIN32)
+    list(APPEND RES_FILES ${QUTAUSTD_DIR}/win32/res.rc)
+endif()
+
 file(GLOB QUTAUSTD_FILES ${QUTAUSTD_DIR}/*.h ${QUTAUSTD_DIR}/*.cpp)
 
 # 构建库
 if(BUILD_STATIC_LIBRARY)
-    add_library(${QUTAUSTD_NAME} STATIC ${QUTAUSTD_FILES})
+    add_library(${QUTAUSTD_NAME} STATIC ${QUTAUSTD_FILES} ${RES_FILES})
     target_compile_definitions(${QUTAUSTD_NAME} PUBLIC QUTAUSTD_BUILD_STATIC)
 else()
-    add_library(${QUTAUSTD_NAME} SHARED ${QUTAUSTD_FILES})
+    add_library(${QUTAUSTD_NAME} SHARED ${QUTAUSTD_FILES} ${RES_FILES})
 endif()
 
 set_target_properties(${QUAZIP_LIB_TARGET_NAME} PROPERTIES

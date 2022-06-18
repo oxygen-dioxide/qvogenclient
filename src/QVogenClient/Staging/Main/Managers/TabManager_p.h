@@ -17,6 +17,9 @@ public:
 
     void init();
 
+    // Flags
+    ActionImpl::States states;
+
     // Info
     CentralTab *currentTab() const;
     CentralTab *tabAt(int index) const;
@@ -24,6 +27,7 @@ public:
 
     // State
     void reloadWindowTitle(const QString &title);
+    void reloadActionStates(ActionImpl::StateTypes st);
 
     // Close
     bool tryCloseTab(int index);

@@ -1,17 +1,13 @@
 #ifndef SEQUENCETEXTFILE_H
 #define SEQUENCETEXTFILE_H
 
-#include <QFile>
-#include <QTextCodec>
-
-#include <QLinkNote.h>
-#include <SectionSettings.h>
-#include <SectionVersion.h>
-#include <UtaProjectText.h>
+#include "QLinkNote.h"
+#include "SectionSettings.h"
+#include "SectionVersion.h"
 
 using SectionNotes = QList<QLinkNote>;
 
-class SequenceTextFile {
+class QUTAUSTD_EXPORT SequenceTextFile {
 public:
     SequenceTextFile();
     ~SequenceTextFile();

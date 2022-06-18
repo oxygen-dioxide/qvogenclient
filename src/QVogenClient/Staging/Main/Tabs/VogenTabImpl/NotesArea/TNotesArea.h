@@ -8,25 +8,42 @@
 #include "Elements/TNRectScreen.h"
 #include "Elements/TNRubber.h"
 
+#include "Controllers/TNNotesCtl.h"
+#include "Controllers/TNPlayheadCtl.h"
+#include "Controllers/TNScreenCtl.h"
+#include "Controllers/TNSelectCtl.h"
+#include "Controllers/TNSpriteCtl.h"
+#include "Controllers/TNTransformCtl.h"
+
 #include <QSet>
 
 class TNotesScroll;
+class TNotesAreaPrivate;
 
 class TNotesArea : public CGraphicsScene {
     Q_OBJECT
+    Q_DECLARE_PRIVATE(TNotesArea)
 public:
-    explicit TNotesArea(TNotesScroll *parent = nullptr);
+    TNotesArea(TNotesScroll *parent = nullptr);
     ~TNotesArea();
 
-    const double spriteZIndex = 1;
-    const double noteZIndex = 2;
-    const double pointZIndex = 3;
-    const double linesZIndex = 4;
-    const double vibratoZIndex = 5;
-    const double lyricEditZIndex = 6;
-    const double rubberBandZIndex = 7;
-    const double playHeadZIndex = 8;
-    const double barZIndex = 9;
+protected:
+    TNotesArea(TNotesAreaPrivate &d, TNotesScroll *parent = nullptr);
+
+    QScopedPointer<TNotesAreaPrivate> d_ptr;
+
+public:
+    enum ElementZIndex {
+        Sprite = 1,
+        Note,
+        Point,
+        Lines,
+        Vibrato,
+        LyricEdit,
+        RubberBand,
+        Playhead,
+        Bar,
+    };
 
     struct StyleData {
         double lineWidth;
@@ -55,9 +72,6 @@ public:
 
     TNotesScroll *view() const;
     QPointF mousePosition() const;
-
-private:
-    void init();
 
 public:
     StyleData styleData() const;
@@ -89,71 +103,36 @@ public:
     void setPointMode(const AddPointMode &pointMode);
 
 protected:
+    TNTransformCtl *m_transCtl;
+    TNSelectCtl *m_selectCtl;
+
+    TNPlayheadCtl *m_playCtl;
+    TNSpriteCtl *m_spriteCtl;
+    TNScreenCtl *m_screenCtl;
+
+    TNNotesCtl *m_notesCtl;
+
     TNotesScroll *m_view;
-    StyleData m_styleData;
+    TNotesArea::StyleData m_styleData;
 
-    int m_sectionCount;
+    TNotesArea::DrawMode m_drawMode;
+    TNotesArea::AddPointMode m_pointMode;
 
-    int m_currentWidth;
-    int m_currentHeight;
-    int m_currentQuantize;
-
-    int m_blankSections;
-
-    DrawMode m_drawMode;
-    AddPointMode m_pointMode;
-
-    void adjustSize();
     void adjustBackground();
 
 public:
     // ========================================  Elements ========================================
-    // ----------------------------------------  Screen  ----------------------------------------
-protected:
-    TNRectScreen *m_screen;
-
-    void updateScreen();
-
-private:
-    void initScreenElements();
 
     // ----------------------------------------  Select  ----------------------------------------
-protected:
-    TNRubber *m_rubber;
 
     bool m_moving;
 
-    bool m_scrollDrag;
-    bool m_zoomDrag;
-    QPoint m_zoomAnchor;
-
-    void stopSelecting();
-
-    void setScrollDrag(bool scrollDrag);
-    void setZoomDrag(bool zoomDrag);
-
-private:
-    void initSelectElements();
-
 public:
     bool isSelecting() const;
-    bool isScrollDragging() const;
-    bool isZoomDragging() const;
 
     bool scrollZoomAllowed() const;
 
     // ----------------------------------------  Sprite  ----------------------------------------
-protected:
-    TNEdgeSprite *m_sprite;
-
-    bool m_spriteVisible;
-    Qt::Corner m_spritePosition;
-
-    void updateSprite();
-
-private:
-    void initSpriteElements();
-
 public:
     void loadSprite(const QString &path);
 
@@ -166,40 +145,22 @@ public:
     double spriteAlpha() const;
     void setSpriteAlpha(double spriteAlpha);
 
-    // =========================================================================================
-    // Events
-protected:
-    TNPlayhead *m_playhead;
-
-    int m_playToNote;
-    qint64 m_playToPosition;
-    double m_playToTick;
-
-    void updatePlayhead();
-
-private:
-    void initPlayElements();
-
 public:
-    void setPlayPosition(double x);
-
     // ----------------------------------------  Events  ----------------------------------------
+    bool mouseMoving() const;
+
+    bool visionMoving() const;
+
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
 
-    void focusInEvent(QFocusEvent *event) override;
     void focusOutEvent(QFocusEvent *event) override;
 
-    void viewMoveEvent(QGraphicsSceneMoveEvent *event) override;
-    void viewResizeEvent(QGraphicsSceneResizeEvent *event) override;
-
 private:
-    void handleSceneRectChanged(const QRectF &rect);
-    void rearrangeElements();
-    void settleMouseUp(); // Focus out or mouse release
+    void _q_sceneRectChanged(const QRectF &rect);
 };
 
 #endif // TNOTESAREA_H

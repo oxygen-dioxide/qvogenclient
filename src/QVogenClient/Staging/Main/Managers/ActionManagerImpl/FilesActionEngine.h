@@ -2,6 +2,7 @@
 #define FILESACTIONENGINE_H
 
 #include "ActionManagerEngine.h"
+#include "Types/Actions.h"
 
 class FilesActionEnginePrivate;
 
@@ -12,11 +13,15 @@ public:
     explicit FilesActionEngine(QObject *parent = nullptr);
     ~FilesActionEngine();
 
+public:
+    void updateStates(ActionImpl::StateTypes st) override;
+
 protected:
     FilesActionEngine(FilesActionEnginePrivate &d, QObject *parent = nullptr);
 
 private:
-    void q_actionTriggered(QAction *action);
+    void _q_recentCommited();
+    void _q_actionTriggered(QAction *action);
 };
 
 #endif // FILESACTIONENGINE_H
