@@ -10,6 +10,11 @@
 TNRectNote::TNRectNote(TNotesArea *area, QGraphicsItem *parent) : TNRectSelectable(area, parent) {
     m_movable = true;
     m_stretch = false;
+
+    // Initialize Default Properties
+    start = 0;
+    length = CommonTuneStd::TIME_BASE;
+    tone = CommonTuneStd::StandardToneNum();
 }
 
 TNRectNote::~TNRectNote() {

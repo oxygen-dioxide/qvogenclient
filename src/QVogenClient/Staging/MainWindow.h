@@ -48,4 +48,5 @@ protected:
     EventManager *m_eventMgr;
     ActionManager *m_actionMgr;
 };
+
 #endif // MAINWINDOW_H

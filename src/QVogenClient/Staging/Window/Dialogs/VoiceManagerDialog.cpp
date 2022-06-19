@@ -66,6 +66,9 @@ void VoiceManagerDialog::_q_removeVoice() {
     auto selection = d->tree->selectedItems();
     for (auto it = selection.begin(); it != selection.end(); ++it) {
         auto item = *it;
+        if (item->type() != VoiceManagerDialogPrivate::VoiceItem) {
+            continue;
+        }
         QString path = item->data(0, VoiceManagerDialogPrivate::VoicePath).toString();
         if (!path.isEmpty()) {
             Sys::rmDir(path);

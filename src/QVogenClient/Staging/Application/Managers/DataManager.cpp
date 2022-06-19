@@ -119,7 +119,7 @@ void DataManager::reloadStrings() {
     allFiles = tr("*");
 #endif
 
-    d->projectFilter = tr("Vogen Package File(*.vog);;"
+    d->projectFilter = tr("Vogen Package Files(*.vog);;"
                           "All Files(%1)")
                            .arg(allFiles);
 
@@ -133,7 +133,7 @@ void DataManager::reloadStrings() {
 
     d->appendFilter = tr("Standard MIDI Files(*.mid);;"
                          "UTAU Sequence Text(*.ust);;"
-                         "Vogen Package File(*.vog);;"
+                         "Vogen Package Files(*.vog);;"
                          "Synthesizer V Files(*.svp *.s5p);;"
                          "VOCALOID Files(*.vsqx *.vsq);;"
                          "OpenUtau Files(*.ustx);;"
@@ -142,16 +142,19 @@ void DataManager::reloadStrings() {
 
     d->exportSelectionFilter = tr("Standard MIDI Files(*.mid);;"
                                   "UTAU Sequence Text(*.ust);;"
-                                  "Vogen Package File(*.vog);;"
-                                  "Synthesizer V Files(*.svp);;"
-                                  "VOCALOID Files(*.vsqx);;"
+                                  "Vogen Package Files(*.vog);;"
+                                  "Synthesizer V Files(*.svp *.s5p);;"
+                                  "VOCALOID Files(*.vsqx *.vsq);;"
+                                  "OpenUtau Files(*.ustx);;"
                                   "All Files(%1)")
                                    .arg(allFiles);
 
     d->exportTrackFilter = tr("Standard MIDI Files(*.mid);;"
                               "UTAU Sequence Text(*.ust);;"
-                              "Synthesizer V Files(*.svp);;"
-                              "VOCALOID Files(*.vsqx);;"
+                              "Vogen Package Files(*.vog);;"
+                              "Synthesizer V Files(*.svp *.s5p);;"
+                              "VOCALOID Files(*.vsqx *.vsq);;"
+                              "OpenUtau Files(*.ustx);;"
                               "All Files(%1)")
                                .arg(allFiles);
 
@@ -190,22 +193,22 @@ DataManager::DataManager(DataManagerPrivate &d, QObject *parent) : BaseManager(d
 void DataManager::localeLoad(int index) {
     Q_D(DataManager);
     d->eliminate();
-    //    switch (index) {
-    //    case 0:
-    //        translate(":/translations/qsynthesis_en.qm");
-    //        break;
-    //    case 1:
-    //        translate(":/translations/qsynthesis_cn.qm");
-    //        break;
-    //    case 2:
-    //        translate(":/translations/qsynthesis_cht.qm");
-    //        break;
-    //    case 3:
-    //        translate(":/translations/qsynthesis_jp.qm");
-    //        break;
-    //    default:
-    //        break;
-    //    }
+    switch (index) {
+    case 0:
+        d->translate(":/translations/qvogenclient_zh_CN.qm");
+        break;
+    case 1:
+        d->translate(":/translations/qvogenclient_zh_CN.qm");
+        break;
+    case 2:
+        d->translate(":/translations/qvogenclient_zh_CN.qm");
+        break;
+    case 3:
+        d->translate(":/translations/qvogenclient_zh_CN.qm");
+        break;
+    default:
+        break;
+    }
 }
 
 int DataManager::localeCount() const {

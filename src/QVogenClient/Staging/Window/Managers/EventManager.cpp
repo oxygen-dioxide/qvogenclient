@@ -65,9 +65,18 @@ bool EventManager::importFile(const QString &filename) {
         path = qData->openFile(tr("Import"), qData->getFileFilter(DataManager::ImportFile),
                                FLAG_IMPORT, d->w);
     }
-    if (!path.isEmpty()) {
+    if (path.isEmpty()) {
+        return false;
     }
-    return false;
+    FileParser parser(qData->mainTitle(), d->w);
+    CommonScore notes;
+
+    bool res = parser.parseFile(path, notes);
+    if (!res){
+        return false;
+    }
+
+    return true;
 }
 
 bool EventManager::appendFile(const QString &filename) {

@@ -23,7 +23,7 @@ MainWindow *WindowManager::newWindow() {
 
     auto w = new MainWindow();
     w->setAttribute(Qt::WA_DeleteOnClose);
-    w->installEventFilter(this);
+	w->installEventFilter(this);
 
     // Recover Window State
     QRect rect = qRecordCData.windowRect;

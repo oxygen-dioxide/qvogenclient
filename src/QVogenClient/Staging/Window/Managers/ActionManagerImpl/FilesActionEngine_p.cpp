@@ -336,7 +336,7 @@ void FilesActionEnginePrivate::reloadStrings() {
     file_importFile->setText(QObject::tr("Import..."));
     file_appendFile->setText(QObject::tr("Append..."));
     file_fileSettings->setText(QObject::tr("File Settings"));
-    file_closeFile->setText(QObject::tr("Close File"));
+    file_closeFile->setText(QObject::tr("Close"));
     file_closeWindow->setText(QObject::tr("Close Window"));
 
     file_exportSelection->setText(QObject::tr("Export Selection..."));
@@ -557,13 +557,13 @@ void FilesActionEnginePrivate::reloadRecentActionStrings() {
                 action->setText(QObject::tr("Null"));
                 break;
             case ActionData::MoreFiles:
-                action->setText(QObject::tr("More files..."));
+                action->setText(QObject::tr("More Files..."));
                 break;
             case ActionData::MoreDirs:
-                action->setText(QObject::tr("More folders..."));
+                action->setText(QObject::tr("More Folders..."));
                 break;
             case ActionData::Clear:
-                action->setText(QObject::tr("Clear recent list"));
+                action->setText(QObject::tr("Clear Recent List"));
                 break;
             default:
                 break;

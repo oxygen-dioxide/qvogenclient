@@ -71,7 +71,8 @@ void VoiceManagerDialogPrivate::reloadVoices() {
     for (auto it = voices.begin(); it != voices.end(); ++it) {
         const auto &info = *it;
 
-        auto item = new QTreeWidgetItem();
+        auto item = new QTreeWidgetItem(ItemType::VoiceItem);
+
         item->setText(0, info.name);
         item->setText(1, info.version);
         item->setText(2, info.builtBy);

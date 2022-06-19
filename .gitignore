@@ -82,3 +82,4 @@ Libs/*
 _workingDir*
 .vscode
 .idea
+out/*

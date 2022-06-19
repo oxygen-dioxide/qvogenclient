@@ -159,13 +159,17 @@ set (QM_FILES)
 
 find_qt_module(LinguistTools)
 
-# Simplified Chinese
-add_files(TS_FILES Resources/translations/qvogenclient_zh_CN.ts)
+add_files(TS_FILES Resources/translations/qvogenclient_zh_CN.ts) # Simplified Chinese
 
 set_source_files_properties(${TS_FILES}
     PROPERTIES OUTPUT_LOCATION "${MY_SRC_DIR}/Resources/translations"
     )
-qt5_create_translation(QM_FILES ${MY_SRC_DIR} ${TS_FILES})
+
+qt5_create_translation(QM_FILES ${TS_FILES} ${PROJECT_HEADERS} ${PROJECT_SOURCES})
+
+# Translation targets are not in target "all"
+add_custom_target(lupdate_task DEPENDS ${TS_FILES})
+add_custom_target(lrelease_task DEPENDS ${QM_FILES})
 
 # ------------------------------ Promote code experience ------------------------------
 

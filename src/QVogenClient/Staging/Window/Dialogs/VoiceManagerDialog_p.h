@@ -17,6 +17,10 @@ public:
     VoiceManagerDialogPrivate();
     ~VoiceManagerDialogPrivate();
 
+    enum ItemType {
+        VoiceItem = QTreeWidgetItem::UserType + 1,
+    };
+
     enum DataRole {
         VoicePath = Qt::UserRole + 1,
         VoiceIdentity,
@@ -25,7 +29,6 @@ public:
     void init();
 
     void reloadVoices();
-
     void reloadStrings();
 
     void updateDefaultColumnWidth();
