@@ -18,6 +18,8 @@ private:
 public:
     TNotesArea *area() const;
 
+    friend QDebug operator<<(QDebug debug, const TNRectObject *obj);
+
 protected:
     TNotesArea *m_area;
 

@@ -11,6 +11,8 @@ namespace QEventImpl {
 
         SceneRubberSelect,
 
+        ItemGeometryUpdate,
+
         // LayoutRequest
     };
 

@@ -51,7 +51,7 @@ public:
     QList<Utterance> utterances;
 
 protected:
-    bool loadCore(bool *valid) override;
+    bool loadCore(bool *valid = nullptr) override;
     bool saveCore() override;
     void resetCore() override;
 };

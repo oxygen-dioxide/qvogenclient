@@ -7,6 +7,8 @@
 #include "BaseManager.h"
 #include "Macros.h"
 
+#include "QVogenVoiceInfo.h"
+
 #define qTheme ExtensionManager::instance()
 
 class ExtensionManagerPrivate;
@@ -26,7 +28,11 @@ public:
 public:
     void themeLoad(int index);
     int themeCount() const;
+
     QStringList themeNames() const;
+
+    void reloadVoiceList();
+    const QList<QVogenVoiceInfo> &voiceList() const;
 
 protected:
     ExtensionManager(ExtensionManagerPrivate &d, QObject *parent = nullptr);

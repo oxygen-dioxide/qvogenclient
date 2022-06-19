@@ -14,8 +14,12 @@ public:
 
     QString path() const;
 
+    bool autoDestroy() const;
+    void setAutoDestroy(bool autoDestroy);
+
 protected:
     QString m_path;
+    bool m_autoDestroy;
 };
 
 #endif // TEMPDIRGUARD_H

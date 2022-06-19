@@ -25,10 +25,21 @@ public:
     bool isSelected() const;
     void setSelected(bool selected);
 
+    int begin() const;
+    void setBegin(int begin);
+
+    int end() const;
+    void setEnd(int end);
+
 protected:
+    int m_begin;
+    int m_end;
+
     bool m_selected;
 
 signals:
+    void beginChanged(int val, int oldVal);
+    void endChanged(int val, int oldVal);
 };
 
 #endif // TNRECTSELECTABLE_H

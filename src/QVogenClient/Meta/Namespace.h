@@ -52,6 +52,8 @@ namespace Qs {
 
     const char DIR_NAME_TEMP_CACHE[] = "cache";
 
+    const char DIR_NAME_VOICE[] = "voice";
+
     const char DIR_NAME_CONFIG[] = "config";
     const char DIR_NAME_CONFIG_FONTS[] = "fonts";
     const char DIR_NAME_CONFIG_THEMES[] = "themes";

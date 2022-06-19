@@ -23,7 +23,7 @@ public:
     void setTempDir(const QString &tempDir);
 
 protected:
-    virtual bool loadCore(bool *valid);
+    virtual bool loadCore(bool *valid = nullptr);
     virtual bool saveCore();
 
     virtual void resetCore();

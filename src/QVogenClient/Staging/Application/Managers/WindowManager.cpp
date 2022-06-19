@@ -59,7 +59,7 @@ bool WindowManager::eventFilter(QObject *obj, QEvent *event) {
     Q_D(WindowManager);
     if (qstrcmp(obj->metaObject()->className(), "MainWindow") == 0) {
         auto w = qobject_cast<MainWindow *>(obj);
-        if (event->type() == QEvent::Close) {
+        if (event->type() == QEvent::DeferredDelete) {
             // Save Window State
             qRecordData.windowRect = w->geometry();
             qRecordData.windowMaximized = w->isMaximized();

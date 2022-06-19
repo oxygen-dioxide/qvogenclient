@@ -1,7 +1,10 @@
 #include "TNRectObject.h"
 #include "../TNotesArea.h"
 
+#include <QDebug>
 #include <QEvent>
+
+#include "Types/Events.h"
 
 TNRectObject::TNRectObject(TNotesArea *area, QGraphicsItem *parent)
     : QObject(area), QGraphicsRectItem(parent), m_area(area) {
@@ -23,8 +26,13 @@ void TNRectObject::layoutRequestEvent(QEvent *event) {
 }
 
 bool TNRectObject::event(QEvent *event) {
-    if (event->type() == QEvent::LayoutRequest) {
+    if (event->type() == (int) QEventImpl::ItemGeometryUpdate) {
         layoutRequestEvent(event);
     }
     return QObject::event(event);
+}
+
+QDebug operator<<(QDebug debug, const TNRectObject *obj) {
+    debug << static_cast<const QObject *>(obj);
+    return debug;
 }

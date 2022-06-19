@@ -11,6 +11,8 @@
 #include <QApplication>
 
 TNNotesCtl::TNNotesCtl(TNotesArea *parent) : TNController(parent) {
+    m_timeBounds = new TNEntityList(this);
+    m_selection = new TNEntityList(this);
 }
 
 TNNotesCtl::~TNNotesCtl() {
@@ -21,6 +23,8 @@ void TNNotesCtl::install() {
 }
 
 void TNNotesCtl::setNotesFromCommon(const QList<CommonNote> &notes) {
+    const QSignalBlocker guard(m_timeBounds);
+
     for (auto it = notes.begin(); it != notes.end(); ++it) {
         const auto &note = *it;
         auto p = createNote();
@@ -30,12 +34,14 @@ void TNNotesCtl::setNotesFromCommon(const QList<CommonNote> &notes) {
         p->tone = note.noteNum;
         p->lyric = note.lyric;
 
+        // Insert to note management
         m_notes.append(p);
-
-        insertNoteRef(p);
+        m_timeBounds->insert(p);
     }
+
     adjustGeometries();
-    a->setSectionCountHint(totalLength());
+
+    adjustCanvas();
 }
 
 const QList<TNRectNote *> &TNNotesCtl::notes() const {
@@ -45,17 +51,19 @@ const QList<TNRectNote *> &TNNotesCtl::notes() const {
 void TNNotesCtl::selectAll() {
     for (auto it = m_notes.begin(); it != m_notes.end(); ++it) {
         const auto &note = *it;
-        if (!note->isSelected()) {
-            selectOne(note);
-        }
+        selectOne(note);
     }
 }
 
 void TNNotesCtl::deselect() {
-    for (auto it = m_selection.begin(); it != m_selection.end(); ++it) {
-        (*it)->setSelected(false);
+    const auto &selection = m_selection->begins();
+    for (auto it = selection.begin(); it != selection.end(); ++it) {
+        const auto &set = *it;
+        for (auto it2 = set.begin(); it2 != set.end(); ++it2) {
+            (*it2)->setSelected(false);
+        }
     }
-    m_selection.clear();
+    m_selection->clear();
 }
 
 TNRectNote *TNNotesCtl::createNote() {
@@ -65,21 +73,33 @@ TNRectNote *TNNotesCtl::createNote() {
     return p;
 }
 
+void TNNotesCtl::adjustGeometry(TNRectNote *note) {
+    QEvent e(static_cast<QEvent::Type>(QEventImpl::ItemGeometryUpdate));
+    QApplication::sendEvent(note, &e);
+}
+
 void TNNotesCtl::adjustGeometries() {
     for (auto it = m_notes.begin(); it != m_notes.end(); ++it) {
-        QEvent e(QEvent::LayoutRequest);
-        QApplication::sendEvent(*it, &e);
+        adjustGeometry(*it);
     }
 }
 
+void TNNotesCtl::adjustCanvas() {
+    a->setSectionCountHint(totalLength());
+}
+
 void TNNotesCtl::selectOne(TNRectNote *p) {
-    p->setSelected(true);
-    m_selection.insert(p);
+    if (!p->isSelected()) {
+        p->setSelected(true);
+        m_selection->insert(p);
+    }
 }
 
 void TNNotesCtl::deselectOne(TNRectNote *p) {
-    p->setSelected(false);
-    m_selection.remove(p);
+    if (p->isSelected()) {
+        p->setSelected(false);
+        m_selection->remove(p);
+    }
 }
 
 bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
@@ -105,9 +125,22 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                     break;
                 }
                 case TNRectSelectable::SelectContinuously: {
-                    if (m_selection.isEmpty()) {
-                        selectOne(noteItem);
-                    } else {
+                    selectOne(noteItem);
+                    const auto &starts = m_selection->begins();
+
+                    auto startItem = qobject_cast<TNRectNote *>(*starts.front().begin());
+                    auto endItem = qobject_cast<TNRectNote *>(*starts.back().begin());
+
+                    int startIndex = m_timeBounds->findBegin(startItem);
+                    int endIndex = m_timeBounds->findBegin(endItem);
+
+                    const auto &allStarts = m_timeBounds->begins();
+                    for (int i = startIndex; i <= endIndex; ++i) {
+                        const auto &set = allStarts.at(i);
+                        for (auto it2 = set.begin(); it2 != set.end(); ++it2) {
+                            auto item = qobject_cast<TNRectNote *>(*it2);
+                            selectOne(item);
+                        }
                     }
                     break;
                 }
@@ -168,47 +201,34 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
     return TNController::eventFilter(obj, event);
 }
 
-void TNNotesCtl::insertNoteRef(TNRectNote *p) {
-    m_startRef.insert(p);
-    m_endRef.insert(p);
-}
-
-void TNNotesCtl::removeNoteRef(TNRectNote *p) {
-    m_startRef.remove(p);
-    m_endRef.remove(p);
-}
-
-void TNNotesCtl::updateNoteRefs(const QList<TNRectNote *> &notes) {
-    for (auto p : notes) {
-        m_startRef.remove(p);
-        m_endRef.remove(p);
-    }
-    for (auto p : notes) {
-        m_startRef.insert(p);
-        m_endRef.insert(p);
-    }
-}
-
 int TNNotesCtl::startTick() const {
-    if (m_startRef.isEmpty()) {
+    const auto &starts = m_timeBounds->begins();
+    if (starts.isEmpty()) {
         return 0;
     }
-    auto front = *m_startRef.begin();
-    return front->start;
+    const auto &set = starts.front();
+    auto p = qobject_cast<TNRectNote *>(*set.begin());
+    return p->start;
 }
 
 int TNNotesCtl::totalLength() const {
-    if (m_endRef.isEmpty()) {
+    const auto &ends = m_timeBounds->begins();
+    if (ends.isEmpty()) {
         return 0;
     }
-    auto front = *m_endRef.rbegin();
-    return front->start + front->length;
+    const auto &set = ends.back();
+    auto p = qobject_cast<TNRectNote *>(*set.begin());
+    return p->start + p->length;
 }
 
-bool TNNotesCtl::NoteComparator_Start::operator()(TNRectNote *p1, const TNRectNote *p2) const {
-    return p1->start < p2->start;
+void TNNotesCtl::_q_beginChanged(int index, int val) {
+    Q_UNUSED(index);
+    Q_UNUSED(val);
 }
 
-bool TNNotesCtl::NoteComparator_End::operator()(TNRectNote *p1, const TNRectNote *p2) const {
-    return p1->start + p1->length < p2->start + p2->length;
+void TNNotesCtl::_q_endChanged(int index, int val) {
+    Q_UNUSED(val);
+    if (index == m_timeBounds->ends().size() - 1) {
+        adjustCanvas();
+    }
 }

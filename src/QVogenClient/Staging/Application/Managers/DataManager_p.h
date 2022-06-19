@@ -29,6 +29,8 @@ public:
     QString audioFilter;           // *.wav
     QString toolsFilter;           // *.exe
 
+    QString voiceFilter;
+
     // Translators
     bool translate(const QString &filename);
     void eliminate();

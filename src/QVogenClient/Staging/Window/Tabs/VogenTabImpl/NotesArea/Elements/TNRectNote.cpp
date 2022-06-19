@@ -65,6 +65,9 @@ void TNRectNote::setStretch(bool stretch) {
 void TNRectNote::layoutRequestEvent(QEvent *event) {
     Q_UNUSED(event);
 
+    setBegin(start);
+    setEnd(start + length);
+
     QRectF geometry = m_area->convertValueToGeometry(start, tone, length);
     setPos(geometry.topLeft());
     setRect(0, 0, geometry.width(), geometry.height());

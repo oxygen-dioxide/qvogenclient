@@ -59,6 +59,7 @@ public:
         ImageFiles,
         AudioFiles,
         ExecutableFiles,
+        VoicePackage,
     };
 
     QString getFileFilter(FileFilter f) const;
@@ -89,7 +90,9 @@ public:
     QString fileManagerName() const;
 
 public:
+    QString getRandomDirName() const;
     QString allocGlobalTempDirName() const;
+    QString allocVoiceTempDirName() const;
 
 protected:
     DataManager(DataManagerPrivate &d, QObject *parent = nullptr);

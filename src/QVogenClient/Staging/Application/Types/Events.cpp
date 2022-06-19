@@ -35,5 +35,6 @@ void QEventImpl::Register() {
     QEvent::registerEventType(MenuUpdateRequest);
     QEvent::registerEventType(SceneRectChange);
     QEvent::registerEventType(SceneRubberSelect);
+    QEvent::registerEventType(ItemGeometryUpdate);
 }
 

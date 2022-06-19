@@ -4,10 +4,13 @@
 #include "SystemHelper.h"
 
 TempDirGuard::TempDirGuard() {
+    m_autoDestroy = true;
 }
 
 TempDirGuard::~TempDirGuard() {
-    destroy();
+    if (m_autoDestroy) {
+        destroy();
+    }
 }
 
 void TempDirGuard::create() {
@@ -34,4 +37,12 @@ out:
 
 QString TempDirGuard::path() const {
     return m_path;
+}
+
+bool TempDirGuard::autoDestroy() const {
+    return m_autoDestroy;
+}
+
+void TempDirGuard::setAutoDestroy(bool autoDestroy) {
+    m_autoDestroy = autoDestroy;
 }

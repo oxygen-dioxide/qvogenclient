@@ -9,6 +9,8 @@
 
 #include "Utils/QCssAnalyzer.h"
 
+#include "DataManager.h"
+
 #include <QMessageBox>
 
 Q_SINGLETON_DECLARE(ExtensionManager)
@@ -21,10 +23,17 @@ ExtensionManager::~ExtensionManager() {
 }
 
 bool ExtensionManager::load() {
+    Q_D(ExtensionManager);
+
+    // Load Voice
+    reloadVoiceList();
+
+    // Load Theme
     if (qRecordCData.themeIndex < 0 || qRecordCData.themeIndex > themeCount()) {
         qRecordData.themeIndex = 0;
     }
     themeLoad(qRecordCData.themeIndex);
+
     return true;
 }
 
@@ -76,6 +85,27 @@ QStringList ExtensionManager::themeNames() const {
                         tr("Light (Default)"),       //
                         tr("None")};
     return list;
+}
+
+void ExtensionManager::reloadVoiceList() {
+    Q_D(ExtensionManager);
+    d->voices.clear();
+    QDir voiceDir(qData->getStandardPath(DataManager::Voice));
+    if (voiceDir.exists()) {
+        QStringList flist = voiceDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
+        for (auto it = flist.begin(); it != flist.end(); ++it) {
+            QString subPath = voiceDir.absoluteFilePath(*it);
+            QVogenVoiceInfo info(subPath);
+            if (info.load()) {
+                d->voices.append(info);
+            }
+        }
+    }
+}
+
+const QList<QVogenVoiceInfo> &ExtensionManager::voiceList() const {
+    Q_D(const ExtensionManager);
+    return d->voices;
 }
 
 ExtensionManager::ExtensionManager(ExtensionManagerPrivate &d, QObject *parent)

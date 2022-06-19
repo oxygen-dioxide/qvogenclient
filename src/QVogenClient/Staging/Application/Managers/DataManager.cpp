@@ -173,6 +173,10 @@ void DataManager::reloadStrings() {
     d->toolsFilter = tr("Executable(*)");
 #endif
 
+    d->voiceFilter = tr("Vogen Voice Package(*.vogeon);;"
+                        "All Files(%1)")
+                         .arg(allFiles);
+
     emit stringUpdated();
 }
 
@@ -305,6 +309,8 @@ QString DataManager::getFileFilter(DataManager::FileFilter f) const {
     case ExecutableFiles:
         res = d->toolsFilter;
         break;
+    case VoicePackage:
+        res = d->voiceFilter;
     };
     return res;
 }
@@ -314,6 +320,7 @@ QString DataManager::getStandardPath(DataManager::StandardPath s) const {
     QString res;
     switch (s) {
     case Voice:
+        res = d->appDataPath + Slash + Qs::DIR_NAME_VOICE;
         break;
     case Plugins:
         break;
@@ -381,8 +388,15 @@ QString DataManager::fileManagerName() const {
 #endif
 }
 
+QString DataManager::getRandomDirName() const {
+    return QString("Temporary_%1").arg(makeRandomString(8));
+}
+
 QString DataManager::allocGlobalTempDirName() const {
     Q_D(const DataManager);
-    QString dirname = QString("Temporary_%1").arg(makeRandomString(8));
-    return d->appTempPath + Slash + "global" + Slash + dirname;
+    return d->appTempPath + Slash + "global" + Slash + getRandomDirName();
+}
+
+QString DataManager::allocVoiceTempDirName() const {
+    return getStandardPath(Voice) + Slash + getRandomDirName();
 }

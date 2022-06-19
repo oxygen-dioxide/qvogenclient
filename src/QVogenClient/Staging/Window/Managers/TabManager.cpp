@@ -13,6 +13,8 @@
 #include "EventManager.h"
 #include "Types/Events.h"
 
+#include "Dialogs/VoiceManagerDialog.h"
+
 #include <QApplication>
 #include <QEvent>
 #include <QMessageBox>
@@ -161,6 +163,12 @@ void TabManager::triggerCurrent(ActionImpl::Action action) {
     }
     case File_SaveAs: {
         d->w->eventMgr()->saveAsFile(tab);
+        break;
+    }
+    case Help_VoiceManager:{
+        auto dlg = new VoiceManagerDialog(d->w);
+        dlg->exec();
+        dlg->deleteLater();
         break;
     }
     case Help_AboutQt: {

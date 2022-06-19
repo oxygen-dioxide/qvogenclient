@@ -4,7 +4,7 @@
 #include "CommonNote.h"
 #include "TNController.h"
 
-#include "QNavigatableList.h"
+#include "../Utils/TNEntityList.h"
 
 class TNRectNote;
 
@@ -22,22 +22,20 @@ public:
     const QList<TNRectNote *> &notes() const;
 
 public:
-    struct NoteComparator_Start {
-        bool operator()(TNRectNote *p1, const TNRectNote *p2) const;
-    };
-    struct NoteComparator_End {
-        bool operator()(TNRectNote *p1, const TNRectNote *p2) const;
-    };
-
     void selectAll();
     void deselect();
 
 protected:
     QList<TNRectNote *> m_notes;
-    QNavigatableList<TNRectNote *, NoteComparator_Start> m_selection;
+
+    TNEntityList *m_timeBounds; // Index
+    TNEntityList *m_selection;  // Index
 
     TNRectNote *createNote();
+
+    void adjustGeometry(TNRectNote *note);
     void adjustGeometries();
+    void adjustCanvas();
 
     void selectOne(TNRectNote *p);
     void deselectOne(TNRectNote *p);
@@ -45,17 +43,12 @@ protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
 
 protected:
-    void insertNoteRef(TNRectNote *p);
-    void removeNoteRef(TNRectNote *p);
-    void updateNoteRefs(const QList<TNRectNote *> &notes);
-
     int startTick() const;
     int totalLength() const;
 
-    QNavigatableList<TNRectNote *, NoteComparator_Start> m_startRef;
-    QNavigatableList<TNRectNote *, NoteComparator_End> m_endRef;
-
-signals:
+private:
+    void _q_beginChanged(int index, int val);
+    void _q_endChanged(int index, int val);
 };
 
 #endif // TNNOTESCTL_H
