@@ -174,32 +174,32 @@
         <translation type="unfinished">Vogen 声库文件(*.vog);;所有文件(%1)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="369"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="367"/>
         <source>Error</source>
         <translation type="unfinished">错误</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="377"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="375"/>
         <source>Untitled</source>
         <translation type="unfinished">未命名</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="381"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="379"/>
         <source>(Deleted)</source>
         <translation type="unfinished">(已删除)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="386"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="384"/>
         <source>Explorer</source>
         <translation type="unfinished">文件资源管理器</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="388"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="386"/>
         <source>Finder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="390"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="388"/>
         <source>File Manager</source>
         <translation type="unfinished">文件管理器</translation>
     </message>

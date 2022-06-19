@@ -195,16 +195,14 @@ void DataManager::localeLoad(int index) {
     d->eliminate();
     switch (index) {
     case 0:
-        d->translate(":/translations/qvogenclient_zh_CN.qm");
         break;
     case 1:
         d->translate(":/translations/qvogenclient_zh_CN.qm");
+        d->translate(":/translations/qtbase_zh_CN.qm");
         break;
     case 2:
-        d->translate(":/translations/qvogenclient_zh_CN.qm");
         break;
     case 3:
-        d->translate(":/translations/qvogenclient_zh_CN.qm");
         break;
     default:
         break;

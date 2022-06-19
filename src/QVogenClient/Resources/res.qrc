@@ -123,5 +123,6 @@
         <file>svg/app/logo.svg</file>
         <file>svg/app/logo-custom.svg</file>
         <file>translations/qvogenclient_zh_CN.qm</file>
+        <file>translations/qtbase_zh_CN.qm</file>
     </qresource>
 </RCC>
