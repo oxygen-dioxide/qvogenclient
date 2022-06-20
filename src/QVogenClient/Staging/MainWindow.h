@@ -4,9 +4,13 @@
 #include "BasicWindow.h"
 
 #include "CCoupleTabFrame.h"
-#include "CentralNavBar.h"
 #include "CentralTabWidget.h"
-#include "CentralToolBar.h"
+
+#include "Bars/CentralNavBar.h"
+#include "Bars/CentralToolBar.h"
+
+#include "Panels/ControlPanel.h"
+#include "Panels/UtterPanel.h"
 
 #include <QGridLayout>
 
@@ -42,6 +46,11 @@ protected:
     CentralTabWidget *m_tabs;
 
     CCoupleTabFrame *m_frame;
+    ControlPanel *m_ctrlPanel;
+    UtterPanel *m_utterPanel;
+
+    CCoupleTabBarCard *m_ctrlCard;
+    CCoupleTabBarCard *m_utterCard;
 
     // Managers
     TabManager *m_tabMgr;

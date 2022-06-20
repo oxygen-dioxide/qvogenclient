@@ -45,9 +45,7 @@ add_compile_definitions(APP_VERSION="${APP_VERSION}")
 # Libraries
 add_subdirectory(FramelessHelper)
 
-add_subdirectory(QMidi)
-
-add_subdirectory(QUtauStd)
+add_subdirectory(ImportFormats)
 
 add_subdirectory(QuaZip)
 

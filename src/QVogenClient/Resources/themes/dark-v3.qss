@@ -398,7 +398,31 @@ CCoupleTabContainer:handle:vertical {
 }
 
 CCoupleTabBarCard {
-    qproperty-iconUp: svg(":/svg/app/logo-light.svg", white);
+    qproperty-iconSize: 16px 16px;
+    qproperty-spaceRatio: 0.25;
+    color: #CCCCCC;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: 4px 8px;
+}
+
+CCoupleTabBarCard:checked {
+    color: white;
+    background-color: #2F2F2F;
+}
+
+CCoupleTabBarCard:!checked:hover {
+    background-color: #292929;
+}
+
+CCoupleTabBarCard#ctrl-card {
+    qproperty-iconUp: svg(":/svg/tuning-panel-bar/sliders-solid.svg", #CCCCCC);
+    qproperty-iconUpChecked: svg(":/svg/tuning-panel-bar/sliders-solid.svg", white);
+}
+
+CCoupleTabBarCard#utter-card {
+    qproperty-iconUp: svg(":/svg/tuning-panel-bar/quote-right-solid.svg", #CCCCCC);
+    qproperty-iconUpChecked: svg(":/svg/tuning-panel-bar/quote-right-solid.svg", white);
 }
 
 
@@ -461,7 +485,7 @@ TSectionsArea {
 }
 
 
-/* TPianoPanel*/
+/* PianoPanel*/
 
 TPianoPanel {
     /* SectionsArea */
@@ -486,4 +510,48 @@ TPianoPanel {
     #161616, /* quarter */
     #1C1C1C, /* time */
     ));
+}
+
+
+/* Central Tool Bar */
+
+CentralToolBar>CToolButton {
+    padding: 8px;
+    border: 1px solid transparent;
+    /* border-radius: 3px; */
+    margin: 0;
+    width: 12px;
+    height: 12px;
+}
+
+CentralToolBar>CToolButton[type=cursor]:checked {
+    background-color: rgba(255, 255, 255, 15%);
+}
+
+CentralToolBar>CToolButton#cursor-button {
+    qproperty-iconUp: svg(":/svg/tuning-tool-bar/mouse-pointer-solid.svg", #666666);
+    qproperty-iconUpChecked: svg(":/svg/tuning-tool-bar/mouse-pointer-solid.svg", white);
+}
+
+CentralToolBar>CToolButton#note-button {
+    qproperty-iconUp: svg(":/svg/tuning-tool-bar/pencil-alt-solid.svg", #666666);
+    qproperty-iconUpChecked: svg(":/svg/tuning-tool-bar/pencil-alt-solid.svg", white);
+}
+
+CentralToolBar>CToolButton#freehand-button {
+    qproperty-iconUp: svg(":/svg/tuning-tool-bar/wave-square-solid.svg", #666666);
+    qproperty-iconUpChecked: svg(":/svg/tuning-tool-bar/wave-square-solid.svg", white);
+}
+
+CentralToolBar>CToolButton#play-button {
+    qproperty-iconUp: svg(":/svg/tuning-tool-bar/play-solid.svg", #499C54);
+    qproperty-iconUpChecked: svg(":/svg/tuning-tool-bar/pause-solid.svg", #C75450);
+}
+
+CentralToolBar>CToolButton#stop-button {
+    qproperty-iconUp: svg(":/svg/tuning-tool-bar/stop-solid.svg", #999999);
+}
+
+CentralToolBar>CToolButton#replay-button {
+    qproperty-iconUp: svg(":/svg/tuning-tool-bar/reply-solid.svg", #999999);
 }

@@ -4,10 +4,12 @@
 #include "CommonScore.h"
 #include "CommonTuneStd.h"
 
+#include "DataManager.h"
+
 bool FileParser::parseMidiFile(const QString &filename, CommonScore &oNotes) {
     QMidiFile midi;
     if (!midi.load(filename)) {
-        QMessageBox::warning(qobject_cast<QWidget *>(parent()), m_title,
+        QMessageBox::warning(qobject_cast<QWidget *>(parent()), qData->errorTitle(),
                              tr("Failed to read MIDI file!"));
         return 0;
     }

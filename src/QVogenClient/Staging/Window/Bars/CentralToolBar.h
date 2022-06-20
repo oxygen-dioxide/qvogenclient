@@ -12,6 +12,13 @@ public:
     CentralToolBar(QWidget *parent = nullptr);
     ~CentralToolBar();
 
+public:
+    enum CursorModes {
+        Select,
+        Sketch,
+        Free,
+    };
+
 protected:
     CentralToolBar(CentralToolBarPrivate &d, QWidget *parent = nullptr);
 

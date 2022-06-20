@@ -27,31 +27,33 @@ void VoiceManagerDialog::reloadStrings() {
 
 VoiceManagerDialog::VoiceManagerDialog(VoiceManagerDialogPrivate &d, QWidget *parent)
     : BaseDialog(d, parent) {
-    d.init();
+	d.init();
 
     Q_TR_NOTIFY(VoiceManagerDialog);
 
-    setWindowTitle(tr("Voice Database Manager"));
+	setWindowTitle(tr("Voice Database Manager"));
 
     auto desktop = qApp->desktop();
     resize(desktop->width() / 2, desktop->height() / 2);
+
+    // Set average size for each column only at beginning
     d.updateDefaultColumnWidth();
 }
 
 void VoiceManagerDialog::_q_installVoice() {
     Q_D(VoiceManagerDialog);
 
-    QStringList paths = qData->openFiles(
-        tr("Open"), qData->getFileFilter(DataManager::VoicePackage), FLAG_VOICE, this);
+	QStringList paths = qData->openFiles(tr("Open"), qData->getFileFilter(DataManager::VoicePackage), FLAG_VOICE, this);
     for (auto it = paths.begin(); it != paths.end(); ++it) {
         QVogenVoiceFile voice(*it);
+        // Extract to temp dir to check integrity
         if (!voice.load()) {
             QMessageBox::critical(this, qData->errorTitle(), tr("Failed to load voice package."));
             continue;
         }
+        // Extract to app data dir to install
         if (!voice.install()) {
-            QMessageBox::critical(this, qData->errorTitle(),
-                                  tr("Failed to install voice package."));
+			QMessageBox::critical(this, qData->errorTitle(), tr("Failed to install voice package."));
             continue;
         }
     }

@@ -194,6 +194,7 @@ add_files(INCLUDE_PATHS
     Staging/Window/Managers
     Staging/Window/Tabs
     Staging/Frontend/Basic
+    Staging/Frontend/Utils
     Vendor/Frontend
     Vendor/Frontend/Utils
     Vendor/Frontend/Window

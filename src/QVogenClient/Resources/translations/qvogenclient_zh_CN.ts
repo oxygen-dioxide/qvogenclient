@@ -171,7 +171,7 @@
     <message>
         <location filename="../../Staging/Application/Managers/DataManager.cpp" line="179"/>
         <source>Vogen Voice Package(*.vogeon);;All Files(%1)</source>
-        <translation type="unfinished">Vogen 声库文件(*.vog);;所有文件(%1)</translation>
+        <translation type="unfinished">Vogen 声库文件(*.vogeon);;所有文件(%1)</translation>
     </message>
     <message>
         <location filename="../../Staging/Application/Managers/DataManager.cpp" line="367"/>
@@ -253,33 +253,46 @@
 <context>
     <name>FileParser</name>
     <message>
-        <location filename="../../Vendor/Frontend/Utils/FilePaserImpl/FileParser_Vocaloid.cpp" line="6"/>
-        <location filename="../../Vendor/Frontend/Utils/FilePaserImpl/FileParser_Vocaloid.cpp" line="12"/>
-        <location filename="../../Vendor/Frontend/Utils/FilePaserImpl/FileParser_SynthV.cpp" line="6"/>
-        <location filename="../../Vendor/Frontend/Utils/FilePaserImpl/FileParser_SynthV.cpp" line="12"/>
-        <location filename="../../Vendor/Frontend/Utils/FilePaserImpl/FileParser_OpenUTAU.cpp" line="5"/>
+        <location filename="../../Staging/Frontend/Utils/FilePaserImpl/FileParser_Vocaloid.cpp" line="8"/>
+        <location filename="../../Staging/Frontend/Utils/FilePaserImpl/FileParser_Vocaloid.cpp" line="14"/>
+        <location filename="../../Staging/Frontend/Utils/FilePaserImpl/FileParser_SynthV.cpp" line="8"/>
+        <location filename="../../Staging/Frontend/Utils/FilePaserImpl/FileParser_SynthV.cpp" line="14"/>
+        <location filename="../../Staging/Frontend/Utils/FilePaserImpl/FileParser_OpenUTAU.cpp" line="7"/>
         <source>Feature is to be implemented.</source>
         <translation type="unfinished">本功能等待实现。</translation>
     </message>
     <message>
-        <location filename="../../Vendor/Frontend/Utils/FilePaserImpl/FileParser_UTAU.cpp" line="10"/>
+        <location filename="../../Staging/Frontend/Utils/FilePaserImpl/FileParser_UTAU.cpp" line="11"/>
         <source>Failed to read UTAU file!</source>
         <translation type="unfinished">无法加载 UTAU 文件！</translation>
     </message>
     <message>
-        <location filename="../../Vendor/Frontend/Utils/FilePaserImpl/FileParser_Midi.cpp" line="11"/>
+        <location filename="../../Staging/Frontend/Utils/FilePaserImpl/FileParser_Midi.cpp" line="13"/>
         <source>Failed to read MIDI file!</source>
         <translation type="unfinished">无法加载 MIDI 文件！</translation>
     </message>
     <message>
-        <location filename="../../Vendor/Frontend/Utils/FilePaserImpl/FileParser_Midi.cpp" line="72"/>
+        <location filename="../../Staging/Frontend/Utils/FilePaserImpl/FileParser_Midi.cpp" line="74"/>
         <source>Track %1</source>
         <translation type="unfinished">音轨 %1</translation>
     </message>
     <message>
-        <location filename="../../Vendor/Frontend/Utils/FilePaserImpl/FileParser_Midi.cpp" line="74"/>
+        <location filename="../../Staging/Frontend/Utils/FilePaserImpl/FileParser_Midi.cpp" line="76"/>
         <source>%1 notes</source>
         <translation type="unfinished">%1个音符</translation>
+    </message>
+</context>
+<context>
+    <name>MainWindow</name>
+    <message>
+        <location filename="../../Staging/MainWindow.cpp" line="98"/>
+        <source>Control</source>
+        <translation type="unfinished">控制</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/MainWindow.cpp" line="99"/>
+        <source>Utterances</source>
+        <translation type="unfinished">乐句</translation>
     </message>
 </context>
 <context>
@@ -821,17 +834,17 @@
         <translation type="unfinished">声库管理器</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog.cpp" line="45"/>
+        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog.cpp" line="46"/>
         <source>Open</source>
         <translation type="unfinished">打开</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog.cpp" line="49"/>
+        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog.cpp" line="51"/>
         <source>Failed to load voice package.</source>
         <translation type="unfinished">无法加载声库文件。</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog.cpp" line="54"/>
+        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog.cpp" line="56"/>
         <source>Failed to install voice package.</source>
         <translation type="unfinished">无法安装声库文件。</translation>
     </message>

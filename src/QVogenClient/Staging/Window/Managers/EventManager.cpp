@@ -68,11 +68,11 @@ bool EventManager::importFile(const QString &filename) {
     if (path.isEmpty()) {
         return false;
     }
-    FileParser parser(qData->mainTitle(), d->w);
+    FileParser parser(d->w);
     CommonScore notes;
 
     bool res = parser.parseFile(path, notes);
-    if (!res){
+    if (!res) {
         return false;
     }
 
