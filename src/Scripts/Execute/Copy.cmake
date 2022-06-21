@@ -5,7 +5,7 @@
 # -D dest="/foo/bar"
 # -P Copy.cmake
 
-include(${CMAKE_CURRENT_LIST_DIR}/Basic.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/../Basic.cmake)
 
 check_defined(type)
 check_defined(files)

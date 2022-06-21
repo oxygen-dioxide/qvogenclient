@@ -64,3 +64,5 @@ cmake --build . --target lrelease_task
 ````
 cmake --build . --target app_deploy
 ````
+
++ Deploy Path: `release` in project directory

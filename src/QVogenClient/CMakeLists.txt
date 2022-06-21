@@ -126,7 +126,7 @@ add_custom_command(TARGET ${PROJECT_NAME}
     COMMAND ${CMAKE_COMMAND}
     -D filename=${PROJECT_ARCHIVE_DIR}/main_target_lst_file
     -D content=$<TARGET_FILE:${PROJECT_NAME}>
-    -P ${PROJECT_SCRIPTS_DIR}/Log.cmake
+    -P ${PROJECT_SCRIPTS_DIR}/Execute/Log.cmake
 )
 
 # ------------------------------ Translations ------------------------------
@@ -155,7 +155,7 @@ add_custom_command(TARGET ${PROJECT_NAME}
     -D type=copy
     -D files=${QM_FILES_WRAP}
     -D dest=$<TARGET_FILE_DIR:${PROJECT_NAME}>/${TRANSLATIONS_DIRNAME}
-    -P ${PROJECT_SCRIPTS_DIR}/Copy.cmake
+    -P ${PROJECT_SCRIPTS_DIR}/Execute/Copy.cmake
     DEPENDS ${QM_FILES}
 )
 
@@ -180,7 +180,7 @@ add_custom_command(TARGET ${PROJECT_NAME}
     -D type=copy
     -D files=${BASE_QM_FILES_WRAP}
     -D dest=$<TARGET_FILE_DIR:${PROJECT_NAME}>/${TRANSLATIONS_DIRNAME}
-    -P ${PROJECT_SCRIPTS_DIR}/Copy.cmake
+    -P ${PROJECT_SCRIPTS_DIR}/Execute/Copy.cmake
     DEPENDS ${BASE_QM_FILES}
     DEPENDS base_lrelease_task
 )

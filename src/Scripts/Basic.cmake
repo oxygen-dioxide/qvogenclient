@@ -7,11 +7,13 @@ function(check_defined VAR)
     endif()
 endfunction()
 
+
 # Marshall filenames with |
 function(wrap_filenames OUTPUT)
     string(JOIN "|" str ${ARGN})
     set(${OUTPUT} ${str} PARENT_SCOPE)
 endfunction()
+
 
 # Unmarshall filenames with |
 function(unwrap_filenames filenames OUTPUT)

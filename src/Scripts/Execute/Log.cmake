@@ -4,7 +4,7 @@
 # -D filename="/foo/bar"
 # -P Log.cmake
 
-include(${CMAKE_CURRENT_LIST_DIR}/Basic.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/../Basic.cmake)
 
 check_defined(content)
 check_defined(filename)

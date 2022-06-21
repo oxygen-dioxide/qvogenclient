@@ -4,11 +4,13 @@ macro(find_qt_module Module)
     find_package(Qt${QT_VERSION_MAJOR} COMPONENTS ${Module} REQUIRED)
 endmacro()
 
+
 # Use this micro to include a Qt module
 macro(add_qt_module List Module)
     find_qt_module(${Module})
     list(APPEND ${List} Qt${QT_VERSION_MAJOR}::${Module})
 endmacro()
+
 
 # Use this micro to include a Qt private header
 macro(include_qt_private Module)

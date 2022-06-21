@@ -39,7 +39,7 @@ execute_process(COMMAND ${CMAKE_COMMAND}
         -D type=copy
         -D files=${PROJECT_TARGETS_WRAP}
         -D dest=${RELEASE_DIR}
-        -P ${CMAKE_CURRENT_LIST_DIR}/../Copy.cmake
+        -P ${CMAKE_CURRENT_LIST_DIR}/../Execute/Copy.cmake
         )
 
 # Execute Windeployqt
@@ -58,5 +58,5 @@ execute_process(COMMAND ${CMAKE_COMMAND}
         -D type=copy_dir
         -D files=${APP_DIRS_WRAP}
         -D dest=${RELEASE_DIR}
-        -P ${CMAKE_CURRENT_LIST_DIR}/../Copy.cmake
+        -P ${CMAKE_CURRENT_LIST_DIR}/../Execute/Copy.cmake
         )
