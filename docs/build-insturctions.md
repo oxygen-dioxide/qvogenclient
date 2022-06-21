@@ -46,3 +46,21 @@ Qt doesn't work well with input programs, you may need to move some shared libra
 ## Build from source
 
 There's no other libraries you need to compile in advance.
+
+### CMake Targets
+
+#### Update Translatoin
+````
+cmake --build . --target lupdate_task
+````
+
+#### Release Translation
+````
+cmake --build . --target lrelease_task
+````
++ Build `lrelease_task` or `all` target to release translation.
+
+#### Deploy Application
+````
+cmake --build . --target app_deploy
+````

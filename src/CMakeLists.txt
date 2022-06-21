@@ -1,3 +1,5 @@
+# ------------------------------ Basic information ------------------------------
+
 cmake_minimum_required(VERSION 3.17)
 
 project(QVogenClient LANGUAGES CXX)
@@ -15,32 +17,39 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 
-# Make Resources Directory
-set(APP_RESOURCES_DIR ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/resources)
-if (NOT IS_DIRECTORY ${APP_RESOURCES_DIR})
-    file(MAKE_DIRECTORY ${APP_RESOURCES_DIR})
+set(PROJECT_SCRIPTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Scripts) # Scripts
+set(PROJECT_ARCHIVE_DIR ${PROJECT_BINARY_DIR}/etc)
+
+if(NOT DEFINED PROJECT_DEPLOY_PATH)
+    set(PROJECT_DEPLOY_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../release) # Release
 endif()
+
+set(APP_TRANSLATIONS_DIR translations)
+set(SYNTH_DIRNAME resources/synth)
+set(TRANSLATIONS_DIRNAME translations)
 
 # Determining Current System
 set(SYS_WIN OFF)
 set(SYS_MAC OFF)
 set(SYS_LINUX OFF)
 
-if (CMAKE_SYSTEM_NAME MATCHES "Windows")
+if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     set(SYS_WIN ON)
     message(STATUS "[INFO] Current System is Windows")
-elseif (CMAKE_SYSTEM_NAME MATCHES "Linux")
+elseif(CMAKE_SYSTEM_NAME MATCHES "Linux")
     set(SYS_LINUX ON)
     message(STATUS "[INFO] Current System is Linux")
-elseif (APPLE)
+elseif(APPLE)
     set(SYS_MAC ON)
     message(STATUS "[INFO] Current System is Macintosh")
-else ()
+else()
     message(FATAL_ERROR "Unsupported System !!!")
-endif ()
+endif()
 
 # Global
 add_compile_definitions(APP_VERSION="${APP_VERSION}")
+
+# ------------------------------ Sub Projects ------------------------------
 
 # Libraries
 add_subdirectory(FramelessHelper)
@@ -54,3 +63,23 @@ add_subdirectory(RenderHost)
 
 # Application
 add_subdirectory(QVogenClient)
+
+# ------------------------------ Deploy Targets ------------------------------
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Core REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core REQUIRED)
+
+if(SYS_WIN)
+    string(TOLOWER ${CMAKE_SYSTEM_PROCESSOR} ARCH_NAME)
+    set(RELEASE_DIR_NAME qvogenclient-win-${ARCH_NAME}-${APP_VERSION})
+
+    add_custom_target(app_deploy
+        COMMAND ${CMAKE_COMMAND}
+        -D ETC_DIR="${PROJECT_ARCHIVE_DIR}"
+        -D RELEASE_DIR="${PROJECT_DEPLOY_PATH}/${RELEASE_DIR_NAME}"
+        -D QT_TOOLS_DIR="${_qt5Core_install_prefix}/bin"
+        -P "${PROJECT_SCRIPTS_DIR}/Deploy/WinDeploy.cmake"
+        DEPENDS lrelease_task base_lrelease_task QVogenClient RenderHost
+    )
+elseif(SYS_MAC)
+else()
+endif()

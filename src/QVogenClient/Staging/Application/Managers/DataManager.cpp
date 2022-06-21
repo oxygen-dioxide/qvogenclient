@@ -197,8 +197,8 @@ void DataManager::localeLoad(int index) {
     case 0:
         break;
     case 1:
-        d->translate(":/translations/qvogenclient_zh_CN.qm");
-        d->translate(":/translations/qtbase_zh_CN.qm");
+        d->translate(Sys::appPath() + "/translations/qvogenclient_zh_CN.qm");
+        d->translate(Sys::appPath() + "/translations/qtbase_zh_CN.qm");
         break;
     case 2:
         break;

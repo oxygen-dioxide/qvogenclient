@@ -1,3 +1,8 @@
+include(${PROJECT_SCRIPTS_DIR}/Basic.cmake)
+include(${PROJECT_SCRIPTS_DIR}/FindQt.cmake)
+include(${PROJECT_SCRIPTS_DIR}/ListUtil.cmake)
+include(${PROJECT_SCRIPTS_DIR}/Translate.cmake)
+
 # ------------------------------ Basic information ------------------------------
 
 # Include current directory
@@ -13,64 +18,19 @@ set(QT_LIBS)
 set(QT_RESOURCES)
 set(RC_FILES)
 set(ICONS)
-set(MY_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 set(PROJECT_SOURCES)
 set(PROJECT_HEADERS)
 set(INCLUDE_PATHS)
 
-
 # ------------------------------ Macros/Functions ------------------------------
 
-# Use this micro to find a Qt module
-macro(find_qt_module Module)
-    find_package(QT NAMES Qt6 Qt5 COMPONENTS ${Module} REQUIRED)
-    find_package(Qt${QT_VERSION_MAJOR} COMPONENTS ${Module} REQUIRED)
-endmacro()
-
-# Use this micro to include a Qt module
-macro(add_qt_module List Module)
-    find_qt_module(${Module})
-    list(APPEND ${List} Qt${QT_VERSION_MAJOR}::${Module})
-endmacro()
-
-# Use this micro to include a Qt private header
-macro(include_qt_private Module)
-    include_directories(${Qt${QT_VERSION_MAJOR}${Module}_PRIVATE_INCLUDE_DIRS})
-endmacro()
-
-# Use this micro to add prefix to each item and save to list
-macro(list_append_with_prefix List Prefix)
-    foreach (Item ${ARGN})
-        list(APPEND ${List} ${Prefix}${Item})
-    endforeach ()
-endmacro()
-
-# Use this micro to remove all items in list1 which are in list2
-macro(list_remove_all List1 List2)
-    foreach (Item ${${List2}})
-        list(REMOVE_ITEM ${List1} ${Item})
-    endforeach ()
-endmacro()
-
 # Use to conveniently add files in this CMakeLists
-macro(add_files List)
-    list_append_with_prefix(${List} ${MY_SRC_DIR}/ ${ARGN})
+macro(add_current_files List)
+    list_append_with_prefix(${List} ${CMAKE_CURRENT_SOURCE_DIR}/ ${ARGN})
 endmacro()
-
-# Use to add files recursively
-macro(add_recursively List)
-    set(TEMP_LIST)
-    file(GLOB_RECURSE TEMP_LIST ${ARGN})
-    foreach (Item ${TEMP_LIST})
-        list(APPEND ${List} ${Item})
-    endforeach ()
-    set(TEMP_LIST)
-endmacro()
-
 
 # ------------------------------ Include/Import/Link ------------------------------
-
 add_qt_module(QT_LIBS Widgets)
 add_qt_module(QT_LIBS Svg)
 add_qt_module(QT_LIBS Network)
@@ -80,64 +40,72 @@ include_qt_private(Gui)
 include_qt_private(Widgets)
 
 # Qt resources file (.qrc)
-add_files(QT_RESOURCES Resources/res.qrc)
+add_current_files(QT_RESOURCES Resources/res.qrc)
 
 # Add resource files
-if (SYS_WIN)
+if(SYS_WIN)
     # Add windows resource file
-    add_files(RC_FILES Resources/logo/win/res.rc)
-elseif (SYS_MAC)
+    add_current_files(RC_FILES Resources/logo/win/res.rc)
+elseif(SYS_MAC)
     # Add mac icon file
-    add_files(ICONS Resources/logo/mac/qsynth2.icns)
-endif ()
+    add_current_files(ICONS Resources/logo/mac/qsynth2.icns)
+endif()
 
 # Add fixed files
-add_recursively(PROJECT_SOURCES "${MY_SRC_DIR}/Framework/*.cpp" "${MY_SRC_DIR}/Framework/*.cc")
-add_recursively(PROJECT_HEADERS "${MY_SRC_DIR}/Framework/*.hpp" "${MY_SRC_DIR}/Framework/*.h")
-add_recursively(PROJECT_SOURCES "${MY_SRC_DIR}/Meta/*.cpp" "${MY_SRC_DIR}/Meta/*.cc")
-add_recursively(PROJECT_HEADERS "${MY_SRC_DIR}/Meta/*.hpp" "${MY_SRC_DIR}/Meta/*.h")
-add_recursively(PROJECT_SOURCES "${MY_SRC_DIR}/Vendor/*.cpp" "${MY_SRC_DIR}/Vendor/*.cc")
-add_recursively(PROJECT_HEADERS "${MY_SRC_DIR}/Vendor/*.hpp" "${MY_SRC_DIR}/Vendor/*.h")
-add_recursively(PROJECT_SOURCES "${MY_SRC_DIR}/Staging/*.cpp" "${MY_SRC_DIR}/Staging/*.cc")
-add_recursively(PROJECT_HEADERS "${MY_SRC_DIR}/Staging/*.hpp" "${MY_SRC_DIR}/Staging/*.h")
+list_add_recursively(PROJECT_SOURCES
+    "${CMAKE_CURRENT_SOURCE_DIR}/Framework/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Framework/*.cc")
+list_add_recursively(PROJECT_HEADERS
+    "${CMAKE_CURRENT_SOURCE_DIR}/Framework/*.hpp" "${CMAKE_CURRENT_SOURCE_DIR}/Framework/*.h")
+list_add_recursively(PROJECT_SOURCES
+    "${CMAKE_CURRENT_SOURCE_DIR}/Meta/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Meta/*.cc")
+list_add_recursively(PROJECT_HEADERS
+    "${CMAKE_CURRENT_SOURCE_DIR}/Meta/*.hpp" "${CMAKE_CURRENT_SOURCE_DIR}/Meta/*.h")
+list_add_recursively(PROJECT_SOURCES
+    "${CMAKE_CURRENT_SOURCE_DIR}/Vendor/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Vendor/*.cc")
+list_add_recursively(PROJECT_HEADERS
+    "${CMAKE_CURRENT_SOURCE_DIR}/Vendor/*.hpp" "${CMAKE_CURRENT_SOURCE_DIR}/Vendor/*.h")
+list_add_recursively(PROJECT_SOURCES
+    "${CMAKE_CURRENT_SOURCE_DIR}/Staging/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/Staging/*.cc")
+list_add_recursively(PROJECT_HEADERS
+    "${CMAKE_CURRENT_SOURCE_DIR}/Staging/*.hpp" "${CMAKE_CURRENT_SOURCE_DIR}/Staging/*.h")
 
 # Add specific files
-add_files(PROJECT_SOURCES
-        main.cpp
-        )
+add_current_files(PROJECT_SOURCES
+    main.cpp
+)
 
-add_files(PROJECT_HEADERS
-        )
+add_current_files(PROJECT_HEADERS
+)
 
 # Add executable
-if (SYS_WIN)
+if(SYS_WIN)
     # Windows need rc files
     add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${QT_RESOURCES} ${RC_FILES})
-elseif (SYS_MAC)
+elseif(SYS_MAC)
     # Mac need icon
     add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${QT_RESOURCES} ${ICONS})
-else ()
+else()
     # Linux
     add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${QT_RESOURCES})
-endif ()
+endif()
 
 # Link OS dependent libraries
-if (SYS_WIN)
+if(SYS_WIN)
     target_link_libraries(${PROJECT_NAME} PRIVATE dwmapi user32 shell32 advapi32 winmm)
-elseif (SYS_MAC)
+elseif(SYS_MAC)
     target_link_libraries(${PROJECT_NAME} PRIVATE CoreMIDI CoreFoundation CoreAudio)
-else ()
+else()
     target_link_libraries(${PROJECT_NAME} PRIVATE asound)
-endif ()
+endif()
 
 # Set Properties
-if (APP_DEPLOY)
+if(APP_DEPLOY)
     set_target_properties(${PROJECT_NAME} PROPERTIES
-            WIN32_EXECUTABLE TRUE
-            MACOSX_BUNDLE TRUE
-            MACOSX_BUNDLE_BUNDLE_VERSION 1.0.0.0
-            MACOSX_BUNDLE_SHORT_VERSION_STRING 1.0
-            )
+        WIN32_EXECUTABLE TRUE
+        MACOSX_BUNDLE TRUE
+        MACOSX_BUNDLE_BUNDLE_VERSION 1.0.0.0
+        MACOSX_BUNDLE_SHORT_VERSION_STRING 1.0
+    )
 endif()
 
 # Link Custom libraries
@@ -152,30 +120,75 @@ target_link_libraries(${PROJECT_NAME} PRIVATE QuaZip::QuaZip)
 # Link Qt libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE ${QT_LIBS})
 
+# Write location to logs
+add_custom_command(TARGET ${PROJECT_NAME}
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND}
+    -D filename=${PROJECT_ARCHIVE_DIR}/main_target_lst_file
+    -D content=$<TARGET_FILE:${PROJECT_NAME}>
+    -P ${PROJECT_SCRIPTS_DIR}/Log.cmake
+)
+
 # ------------------------------ Translations ------------------------------
-
-set (TS_FILES)
-set (QM_FILES)
-
 find_qt_module(LinguistTools)
 
-add_files(TS_FILES Resources/translations/qvogenclient_zh_CN.ts) # Simplified Chinese
+# Project Translations
+set(TS_FILES)
+set(QM_FILES)
 
-set_source_files_properties(${TS_FILES}
-    PROPERTIES OUTPUT_LOCATION "${MY_SRC_DIR}/Resources/translations"
-    )
+add_current_files(TS_FILES Resources/translations/qvogenclient_zh_CN.ts) # Simplified Chinese
 
-qt5_create_translation(QM_FILES ${TS_FILES} ${PROJECT_HEADERS} ${PROJECT_SOURCES})
+# Add lupdate
+# Avoid using qt5_create_translation because CMake Clean will remove the ts files which are specified as an output file
+add_custom_target(lupdate_task)
+add_lupdate_commands(${TS_FILES} ${PROJECT_HEADERS} ${PROJECT_SOURCES} TARGET lupdate_task)
 
-# Translation targets are not in target "all"
-add_custom_target(lupdate_task DEPENDS ${TS_FILES})
-add_custom_target(lrelease_task DEPENDS ${QM_FILES})
+# Add lrelease
+qt5_add_translation(QM_FILES ${TS_FILES})
+add_custom_target(lrelease_task ALL DEPENDS ${QM_FILES})
+
+# Copy .qm files to translations dir after build if they exists
+wrap_filenames(QM_FILES_WRAP ${QM_FILES})
+add_custom_command(TARGET ${PROJECT_NAME}
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND}
+    -D type=copy
+    -D files=${QM_FILES_WRAP}
+    -D dest=$<TARGET_FILE_DIR:${PROJECT_NAME}>/${TRANSLATIONS_DIRNAME}
+    -P ${PROJECT_SCRIPTS_DIR}/Copy.cmake
+    DEPENDS ${QM_FILES}
+)
+
+# Library Translations
+set(BASE_TS_FILES)
+set(BASE_QM_FILES)
+
+add_current_files(BASE_TS_FILES Resources/translations/qtbase_zh_CN.ts)
+
+# This ts file is not generated by current project, it comes from Qt source code
+# But we need to add an lrelease task to update it when it changes
+
+# Add lrelease
+qt5_add_translation(BASE_QM_FILES ${BASE_TS_FILES})
+add_custom_target(base_lrelease_task ALL DEPENDS ${BASE_QM_FILES})
+
+# Copy .qm files to translations dir after build if they exists
+wrap_filenames(BASE_QM_FILES_WRAP ${BASE_QM_FILES})
+add_custom_command(TARGET ${PROJECT_NAME}
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND}
+    -D type=copy
+    -D files=${BASE_QM_FILES_WRAP}
+    -D dest=$<TARGET_FILE_DIR:${PROJECT_NAME}>/${TRANSLATIONS_DIRNAME}
+    -P ${PROJECT_SCRIPTS_DIR}/Copy.cmake
+    DEPENDS ${BASE_QM_FILES}
+    DEPENDS base_lrelease_task
+)
 
 # ------------------------------ Promote code experience ------------------------------
 
 # Include directories
-
-add_files(INCLUDE_PATHS
+add_current_files(INCLUDE_PATHS
     Framework
     Framework/Custom
     Framework/Helpers
@@ -205,8 +218,8 @@ add_files(INCLUDE_PATHS
     Vendor/LowLevel
     Vendor/LowLevel/CommonTune
     Vendor/LowLevel/Utils
-    )
+)
 
-foreach (Path ${INCLUDE_PATHS})
+foreach(Path ${INCLUDE_PATHS})
     include_directories(${Path})
-endforeach ()
+endforeach()

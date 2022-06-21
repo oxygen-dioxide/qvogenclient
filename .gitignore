@@ -83,3 +83,7 @@ _workingDir*
 .vscode
 .idea
 out/*
+CMakeSettings*
+out
+.vs
+release/

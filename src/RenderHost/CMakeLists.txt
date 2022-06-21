@@ -1,3 +1,6 @@
+include(${PROJECT_SCRIPTS_DIR}/FindQt.cmake)
+include(${PROJECT_SCRIPTS_DIR}/ListUtil.cmake)
+
 project(RenderHost)
 
 # Runtime Versions (Change if necessary)
@@ -37,25 +40,7 @@ set(VOGEN_MODEL_DIR Models)
 set(VOGEN_ROM_DIR Romanization)
 set(VOGEN_DICTS_DIR RomDicts)
 
-# Macros
-macro(add_recursively List)
-    set(TEMP_LIST)
-    file(GLOB_RECURSE TEMP_LIST ${ARGN})
-    foreach (Item ${TEMP_LIST})
-        list(APPEND ${List} ${Item})
-    endforeach ()
-    set(TEMP_LIST)
-endmacro()
 
-macro(find_qt_module Module)
-    find_package(QT NAMES Qt6 Qt5 COMPONENTS ${Module} REQUIRED)
-    find_package(Qt${QT_VERSION_MAJOR} COMPONENTS ${Module} REQUIRED)
-endmacro()
-
-macro(add_qt_module List Module)
-    find_qt_module(${Module})
-    list(APPEND ${List} Qt${QT_VERSION_MAJOR}::${Module})
-endmacro()
 
 # Find ONNX Runtime Library
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
@@ -82,8 +67,7 @@ add_subdirectory(World)
 add_qt_module(QT_LIBS Core)
 
 file(GLOB SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
-add_recursively(SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/Meta/*.h"
-                             "${CMAKE_CURRENT_SOURCE_DIR}/Meta/*.cpp")
+list_add_recursively(SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/Meta/*.h" "${CMAKE_CURRENT_SOURCE_DIR}/Meta/*.cpp")
 
 # Add Executable
 add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${RESOURCE_FILES})
@@ -98,31 +82,30 @@ target_link_libraries(${PROJECT_NAME} PRIVATE world::tool)
 # Include Directories
 target_include_directories(${PROJECT_NAME} PRIVATE "${ONNX_RUNTIME_DIR}/include")
 
-# Copy Libraries
+# Copy Libraries to target path after build
 foreach(BIN_FILE ${ONNX_RUNTIME_BIN})
     add_custom_command(TARGET ${PROJECT_NAME}
         POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy "${BIN_FILE}" "$<TARGET_FILE_DIR:${PROJECT_NAME}>")
+        COMMAND ${CMAKE_COMMAND} -E copy ${BIN_FILE} $<TARGET_FILE_DIR:${PROJECT_NAME}>)
 endforeach()
 
-# Copy Resources
-if(NOT IS_DIRECTORY ${APP_RESOURCES_DIR}/${VOGEN_MODEL_DIR})
-    execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${RES_DIR}/${VOGEN_MODEL_DIR}
-        ${APP_RESOURCES_DIR}/${VOGEN_MODEL_DIR}
-    )
+# Get Synth Dir Name
+if(NOT DEFINED SYNTH_DIRNAME)
+    set(SYNTH_DIRNAME resources/synth)
 endif()
 
-if(NOT IS_DIRECTORY ${APP_RESOURCES_DIR}/${VOGEN_ROM_DIR})
-    execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${RES_DIR}/${VOGEN_ROM_DIR}
-        ${APP_RESOURCES_DIR}/${VOGEN_ROM_DIR}
-    )
-endif()
+# Copy Resources to resources path after build
+add_custom_command(TARGET ${PROJECT_NAME}
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${RES_DIR}/${VOGEN_MODEL_DIR} "$<TARGET_FILE_DIR:${PROJECT_NAME}>/${SYNTH_DIRNAME}/${VOGEN_MODEL_DIR}")
 
-if(NOT IS_DIRECTORY ${APP_RESOURCES_DIR}/${VOGEN_DICTS_DIR})
-    execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${RES_DIR}/${VOGEN_DICTS_DIR}
-        ${APP_RESOURCES_DIR}/${VOGEN_DICTS_DIR}
-    )
-endif()
+add_custom_command(TARGET ${PROJECT_NAME}
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${RES_DIR}/${VOGEN_ROM_DIR} "$<TARGET_FILE_DIR:${PROJECT_NAME}>/${SYNTH_DIRNAME}/${VOGEN_ROM_DIR}")
+
+add_custom_command(TARGET ${PROJECT_NAME}
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${RES_DIR}/${VOGEN_DICTS_DIR} "$<TARGET_FILE_DIR:${PROJECT_NAME}>/${SYNTH_DIRNAME}/${VOGEN_DICTS_DIR}")
