@@ -20,7 +20,7 @@ void TPianoPanel::init() {
     setLayout(m_layout);
 
     m_pianoScroll = new TPianoScroll();
-    m_pianoArea = new TPianoArea(m_pianoScroll);
+    m_pianoArea = new TPianoArea();
     m_pianoScroll->setArea(m_pianoArea);
 
     m_notesScroll = new TNotesScroll();
@@ -29,7 +29,7 @@ void TPianoPanel::init() {
 
     m_sectionsArea = new TSectionsArea();
 
-    m_layout->addWidget(new QWidget(), 0, 0);
+    m_layout->addItem(new QSpacerItem(0, 0), 0, 0);
     m_layout->addWidget(m_sectionsArea, 0, 1);
     m_layout->addWidget(m_pianoScroll, 1, 0);
     m_layout->addWidget(m_notesScroll, 1, 1);

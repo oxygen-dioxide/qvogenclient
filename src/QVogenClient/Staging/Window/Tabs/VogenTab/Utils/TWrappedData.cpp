@@ -1,7 +1,7 @@
 #include "TWrappedData.h"
 
-TWrappedData::TWrappedData() {
+TWProject::TWProject() {
 }
 
-TWrappedData::~TWrappedData() {
+TWProject::~TWProject() {
 }

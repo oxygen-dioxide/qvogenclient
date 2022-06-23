@@ -24,11 +24,16 @@ public:
     bool save() override;
     bool saveAs(const QString &filename) override;
 
+    void undo() override;
+    void redo() override;
+
     void makeUntitled(const QString &name = QString());
 
 protected:
     void setUntitled(bool untitled) override;
     void setDeleted(bool deleted) override;
+
+    bool event(QEvent *event) override;
 };
 
 #endif // VOGENTAB_H

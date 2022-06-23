@@ -1,11 +1,11 @@
 #ifndef TNNOTEGROUP_H
 #define TNNOTEGROUP_H
 
-#include "TNEntityListT.h"
-
 #include "../Elements/TNRectNote.h"
 
-Q_DECLARE_ENTITY_LIST(TNNoteList, TNRectNote)
+#include "TNNoteListTmp.h"
+
+//Q_DECLARE_ENTITY_LIST(TNNoteList, TNRectNote)
 
 class TNNoteGroup : public TNNoteList {
     Q_OBJECT

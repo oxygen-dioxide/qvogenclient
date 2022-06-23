@@ -4,6 +4,11 @@
 
 #include "DocumentTab_p.h"
 
+#include "Types/Actions.h"
+#include "Types/Events.h"
+
+#include <QApplication>
+
 DocumentTab::DocumentTab(QWidget *parent) : DocumentTab(*new DocumentTabPrivate(), parent) {
 }
 
@@ -30,17 +35,26 @@ bool DocumentTab::isDeleted() const {
 void DocumentTab::setUntitled(bool untitled) {
     Q_D(DocumentTab);
     d->untitled = untitled;
+
+    QEventImpl::MenuUpdateRequestEvent e(ActionImpl::FileState);
+    QApplication::sendEvent(window(), &e);
 }
 
 void DocumentTab::setDeleted(bool deleted) {
     Q_D(DocumentTab);
     d->deleted = deleted;
     updateTabName();
+
+    QEventImpl::MenuUpdateRequestEvent e(ActionImpl::FileState);
+    QApplication::sendEvent(window(), &e);
 }
 
 void DocumentTab::setEdited(bool edited) {
     CentralTab::setEdited(edited);
     updateTabName();
+
+    QEventImpl::MenuUpdateRequestEvent e(ActionImpl::EditState);
+    QApplication::sendEvent(window(), &e);
 }
 
 void DocumentTab::filenameSet(const QString &filename) {

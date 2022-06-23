@@ -6,6 +6,8 @@
 #include "Macros.h"
 #include "QVogenFile.h"
 
+#include "Types/Events.h"
+
 #include "Utils/TWrappedData.h"
 
 #include <QDir>
@@ -44,22 +46,22 @@ bool VogenTab::load() {
     }
 
     // Interpret
-    TWrappedData pd;
+    TWProject pd;
     pd.projectName = vog.projectName;
     pd.tempo = vog.tempo;
     pd.beat = vog.beat;
     pd.accomOffset = vog.accomOffset;
 
-    QList<TWrappedData::Utterance> utterances;
+    QList<TWProject::Utterance> utterances;
     for (const auto &utter : vog.utterances) {
-        TWrappedData::Utterance u;
+        TWProject::Utterance u;
         u.name = utter.name;
         u.singer = utter.singer;
         u.romScheme = utter.romScheme;
 
-        QList<TWrappedData::Note> notes;
+        QList<TWProject::Note> notes;
         for (const auto &note : utter.notes) {
-            TWrappedData::Note p{note.pitch, note.lyric, note.rom, note.start, note.duration};
+            TWProject::Note p{note.pitch, note.lyric, note.rom, note.start, note.duration};
             notes.append(p);
         }
         u.notes = std::move(notes);
@@ -108,6 +110,44 @@ bool VogenTab::saveAs(const QString &filename) {
     return true;
 }
 
+void VogenTab::undo() {
+    Q_D(VogenTab);
+    bool success = true;
+    if (!d->earliest()) {
+        auto op = d->historyList.at(d->historyIndex - 1);
+        switch (op->type()) {
+        case TBaseOperation::NoteMove:
+            success = d->piano->notesArea()->processOperation(op, true);
+            break;
+        default:
+            break;
+        }
+        if (success) {
+            d->historyIndex--;
+            setEdited(d->savedHistoryIndex != d->historyIndex);
+        }
+    }
+}
+
+void VogenTab::redo() {
+    Q_D(VogenTab);
+    bool success = true;
+    if (!d->latest()) {
+        auto op = d->historyList.at(d->historyIndex);
+        switch (op->type()) {
+        case TBaseOperation::NoteMove:
+            success = d->piano->notesArea()->processOperation(op, false);
+            break;
+        default:
+            break;
+        }
+        if (success) {
+            d->historyIndex++;
+            setEdited(d->savedHistoryIndex != d->historyIndex);
+        }
+    }
+}
+
 void VogenTab::makeUntitled(const QString &name) {
     setUntitled(true);
     if (name.isEmpty()) {
@@ -124,9 +164,22 @@ void VogenTab::setUntitled(bool untitled) {
         Q_D(VogenTab);
         d->untitledIndex = -1;
     }
+
     updateTabName();
 }
 
 void VogenTab::setDeleted(bool deleted) {
     DocumentTab::setDeleted(deleted);
+}
+
+bool VogenTab::event(QEvent *event) {
+    Q_D(VogenTab);
+    switch (event->type()) {
+    case QEventImpl::PianoRollChange:
+        d->dispatchEvent(static_cast<QEventImpl::PianoRollChangeEvent *>(event));
+        break;
+    default:
+        break;
+    }
+    return DocumentTab::event(event);
 }

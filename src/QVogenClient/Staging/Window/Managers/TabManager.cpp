@@ -193,6 +193,18 @@ void TabManager::triggerCurrent(ActionImpl::Action action) {
         d->w->eventMgr()->saveAsFile(tab);
         break;
     }
+    case Edit_Undo: {
+        if (tab->type() & CentralTab::Document) {
+            tab->undo();
+        }
+        break;
+    }
+    case Edit_Redo: {
+        if (tab->type() & CentralTab::Document) {
+            tab->redo();
+        }
+        break;
+    }
     case Help_Welcome: {
         addUnique(CentralTab::Welcome);
         break;

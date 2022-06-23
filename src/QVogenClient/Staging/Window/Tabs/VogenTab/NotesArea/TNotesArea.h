@@ -16,6 +16,7 @@
 #include "Controllers/TNSpriteCtl.h"
 #include "Controllers/TNTransformCtl.h"
 
+#include "../Utils/Operations/TBaseOperation.h"
 #include "../Utils/TWrappedData.h"
 
 #include <QSet>
@@ -172,7 +173,9 @@ public:
 
     // ----------------------------------------  Notes  ----------------------------------------
 public:
-    void setProjectData(const TWrappedData &data);
+    void setProjectData(const TWProject &data);
+
+    bool processOperation(TBaseOperation *op, bool undo);
 
     // ----------------------------------------  Events  ----------------------------------------
 

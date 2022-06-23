@@ -74,7 +74,10 @@ void TabManagerPrivate::reloadActionStates(ActionImpl::StateTypes st) {
         states &= ~ActionImpl::EditMask;
         if (tab) {
             if (tab->type() & CentralTab::Document) {
+                auto docTab = qobject_cast<DocumentTab *>(tab);
                 states |= ActionImpl::DocumentFlag;
+                states |= docTab->canUndo() ? ActionImpl::UndoFlag : ActionImpl::NoFlag;
+                states |= docTab->canRedo() ? ActionImpl::RedoFlag : ActionImpl::NoFlag;
             }
         }
     }

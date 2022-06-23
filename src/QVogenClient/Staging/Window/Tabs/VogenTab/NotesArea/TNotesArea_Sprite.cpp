@@ -1,6 +1,8 @@
 #include "TNotesArea.h"
 #include "TNotesScroll.h"
 
+#include "../Utils/Operations/TONoteMove.h"
+
 void TNotesArea::loadSprite(const QString &path) {
     m_spriteCtl->loadSprite(path);
 }
@@ -29,6 +31,26 @@ void TNotesArea::setSpriteAlpha(double spriteAlpha) {
     m_spriteCtl->setSpriteAlpha(spriteAlpha);
 }
 
-void TNotesArea::setProjectData(const TWrappedData &data) {
+void TNotesArea::setProjectData(const TWProject &data) {
     m_notesCtl->setUtterances(data.utterances);
+}
+
+bool TNotesArea::processOperation(TBaseOperation *op, bool undo) {
+    switch (op->type()) {
+    case TBaseOperation::NoteMove: {
+        auto m = static_cast<TONoteMove *>(op);
+        int f = undo ? -1 : 1;
+
+        QList<TWNote::Movement> moves;
+        foreach (const auto &move, m->moves) {
+            moves.append(TWNote::Movement{move.id, f * move.hMove, f * move.vMove});
+        }
+
+        m_notesCtl->moveNotes(moves);
+        break;
+    }
+    default:
+        break;
+    }
+    return true;
 }

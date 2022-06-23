@@ -16,6 +16,9 @@ public:
     bool edited;
     QString filename;
 
+    virtual bool earliest() const;
+    virtual bool latest() const;
+
     virtual QString setTabNameProxy(const QString &tabName); // Set the title of tab
     virtual QString tabText();
 };

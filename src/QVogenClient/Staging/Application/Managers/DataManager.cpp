@@ -368,11 +368,11 @@ QString DataManager::errorTitle() const {
 }
 
 QString DataManager::untitledFileName() const {
-    return "*";
+    return tr("Untitled");
 }
 
-QString DataManager::untitledPrefix() const {
-    return tr("Untitled");
+QString DataManager::unsavedPrefix() const {
+    return "*";
 }
 
 QString DataManager::deletedPrefix() const {

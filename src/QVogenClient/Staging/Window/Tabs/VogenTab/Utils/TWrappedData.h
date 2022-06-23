@@ -4,10 +4,10 @@
 #include <QList>
 #include <QString>
 
-class TWrappedData {
+class TWProject {
 public:
-    TWrappedData();
-    ~TWrappedData();
+    TWProject();
+    ~TWProject();
 
     struct Phoneme {
         QString name;
@@ -38,5 +38,13 @@ public:
 
     QList<Utterance> utterances;
 };
+
+namespace TWNote {
+    struct Movement {
+        quint64 id;
+        int hMove;
+        int vMove;
+    };
+} // namespace TWNote
 
 #endif // TWRAPPEDDATA_H

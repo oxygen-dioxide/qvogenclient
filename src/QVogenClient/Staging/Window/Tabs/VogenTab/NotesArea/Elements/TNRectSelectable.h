@@ -9,6 +9,8 @@ public:
     explicit TNRectSelectable(TNotesArea *area, QGraphicsItem *parent = nullptr);
     ~TNRectSelectable();
 
+    quint64 id;
+
 public:
     enum Behavior {
         NoBehavior,

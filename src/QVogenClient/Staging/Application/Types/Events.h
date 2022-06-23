@@ -69,6 +69,14 @@ namespace QEventImpl {
         PianoRollChangeEvent(int type);
         ~PianoRollChangeEvent();
 
+        enum ChangeType {
+            Operate,
+        };
+
+        inline int cType() const {
+            return t;
+        }
+
     protected:
         int t;
     };

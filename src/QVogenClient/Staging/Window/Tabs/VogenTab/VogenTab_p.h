@@ -8,6 +8,10 @@
 
 #include "QVogenFile.h"
 
+#include "Types/Events.h"
+
+#include "Utils/Operations/TBaseOperation.h"
+
 class VogenTabPrivate : public DocumentTabPrivate {
     Q_DECLARE_PUBLIC(VogenTab)
 public:
@@ -15,8 +19,6 @@ public:
     ~VogenTabPrivate();
 
     void init();
-
-    QString setTabNameProxy(const QString &tabName) override;
 
     // UI
     TPianoPanel *piano;
@@ -29,6 +31,24 @@ public:
 
     // Data
     QVogenFile vog;
+
+    // Operations
+    QList<TBaseOperation *> historyList;
+    int historyIndex;
+    int savedHistoryIndex;
+
+    bool earliest() const override;
+    bool latest() const override;
+
+    void addHistory(TBaseOperation *op);
+    void clearHistory();
+
+    void updateSaveStatus();
+
+    // Events
+    void dispatchEvent(QEventImpl::PianoRollChangeEvent *event);
+
+    QString setTabNameProxy(const QString &tabName) override;
 };
 
 #endif // VOGENTABPRIVATE_H

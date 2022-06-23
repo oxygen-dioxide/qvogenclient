@@ -1,12 +1,14 @@
-#include "TNEntityList.h"
+#include "TNNoteListTmp.h"
 
-TNEntityList::TNEntityList(QObject *parent) : QObject(parent) {
+#include <QDebug>
+
+TNNoteList::TNNoteList(QObject *parent) : QObject(parent) {
 }
 
-TNEntityList::~TNEntityList() {
+TNNoteList::~TNNoteList() {
 }
 
-bool TNEntityList::insert(TNRectSelectable *item) {
+bool TNNoteList::insert(TNRectNote *item) {
     // Insert to set
     if (m_set.contains(item)) {
         return false;
@@ -20,21 +22,21 @@ bool TNEntityList::insert(TNRectSelectable *item) {
     insert_end(item, item->end());
 
     // Connect
-    connect(item, &TNRectSelectable::beginChanged, this, &TNEntityList::_q_beginChanged);
-    connect(item, &TNRectSelectable::endChanged, this, &TNEntityList::_q_endChanged);
+    connect(item, &TNRectNote::beginChanged, this, &TNNoteList::_q_beginChanged);
+    connect(item, &TNRectNote::endChanged, this, &TNNoteList::_q_endChanged);
 
     return true;
 }
 
-bool TNEntityList::remove(TNRectSelectable *item) {
+bool TNNoteList::remove(TNRectNote *item) {
     auto it = m_set.find(item);
     if (it == m_set.end()) {
         return false;
     }
 
     // Disconnect
-    disconnect(item, &TNRectSelectable::beginChanged, this, &TNEntityList::_q_beginChanged);
-    disconnect(item, &TNRectSelectable::endChanged, this, &TNEntityList::_q_endChanged);
+    disconnect(item, &TNRectNote::beginChanged, this, &TNNoteList::_q_beginChanged);
+    disconnect(item, &TNRectNote::endChanged, this, &TNNoteList::_q_endChanged);
 
     // Remove from ends
     remove_end(item, item->end());
@@ -48,26 +50,26 @@ bool TNEntityList::remove(TNRectSelectable *item) {
     return true;
 }
 
-void TNEntityList::clear() {
+void TNNoteList::clear() {
     for (auto it = m_set.begin(); it != m_set.end(); ++it) {
         auto item = *it;
-        disconnect(item, &TNRectSelectable::beginChanged, this, &TNEntityList::_q_beginChanged);
-        disconnect(item, &TNRectSelectable::endChanged, this, &TNEntityList::_q_endChanged);
+        disconnect(item, &TNRectNote::beginChanged, this, &TNNoteList::_q_beginChanged);
+        disconnect(item, &TNRectNote::endChanged, this, &TNNoteList::_q_endChanged);
     }
     m_ends.clear();
     m_begins.clear();
     m_set.clear();
 }
 
-bool TNEntityList::contains(TNRectSelectable *item) const {
+bool TNNoteList::contains(TNRectNote *item) const {
     return m_set.contains(item);
 }
 
-bool TNEntityList::isEmpty() const {
+bool TNNoteList::isEmpty() const {
     return m_set.isEmpty();
 }
 
-int TNEntityList::findBegin(TNRectSelectable *item, int *pos) {
+int TNNoteList::findBegin(TNRectNote *item, int *pos) {
     int index = lowerBound_begin(item->begin());
     auto &set = m_begins[index].second;
     if (pos) {
@@ -79,7 +81,7 @@ int TNEntityList::findBegin(TNRectSelectable *item, int *pos) {
     return -1;
 }
 
-int TNEntityList::findEnd(TNRectSelectable *item, int *pos) {
+int TNNoteList::findEnd(TNRectNote *item, int *pos) {
     int index = lowerBound_end(item->end());
     auto &set = m_ends[index].second;
     if (pos) {
@@ -91,29 +93,29 @@ int TNEntityList::findEnd(TNRectSelectable *item, int *pos) {
     return -1;
 }
 
-const QList<QPair<int, QSet<TNRectSelectable *>>> &TNEntityList::begins() const {
+const QList<QPair<int, QSet<TNRectNote *>>> &TNNoteList::begins() const {
     return m_begins;
 }
 
-const QList<QPair<int, QSet<TNRectSelectable *>>> &TNEntityList::ends() const {
+const QList<QPair<int, QSet<TNRectNote *>>> &TNNoteList::ends() const {
     return m_ends;
 }
 
-int TNEntityList::firstBegin() const {
+int TNNoteList::firstBegin() const {
     if (m_begins.isEmpty()) {
         return 0;
     }
     return m_begins.front().first;
 }
 
-int TNEntityList::lastEnd() const {
+int TNNoteList::lastEnd() const {
     if (m_ends.isEmpty()) {
         return 0;
     }
     return m_ends.back().first;
 }
 
-int TNEntityList::lowerBound_begin(int val) const {
+int TNNoteList::lowerBound_begin(int val) const {
     int i, j, mid;
     i = 0;
     j = m_begins.size() - 1;
@@ -128,7 +130,7 @@ int TNEntityList::lowerBound_begin(int val) const {
     return i;
 }
 
-int TNEntityList::lowerBound_end(int val) const {
+int TNNoteList::lowerBound_end(int val) const {
     int i, j, mid;
     i = 0;
     j = m_ends.size() - 1;
@@ -143,7 +145,7 @@ int TNEntityList::lowerBound_end(int val) const {
     return i;
 }
 
-int TNEntityList::insert_begin(TNRectSelectable *item, int val) {
+int TNNoteList::insert_begin(TNRectNote *item, int val) {
     int index = lowerBound_begin(val);
     if (index < m_begins.size()) {
         auto &pair = m_begins[index];
@@ -157,7 +159,7 @@ int TNEntityList::insert_begin(TNRectSelectable *item, int val) {
     return index;
 }
 
-int TNEntityList::insert_end(TNRectSelectable *item, int val) {
+int TNNoteList::insert_end(TNRectNote *item, int val) {
     int index = lowerBound_end(val);
     if (index < m_ends.size()) {
         auto &pair = m_ends[index];
@@ -171,7 +173,7 @@ int TNEntityList::insert_end(TNRectSelectable *item, int val) {
     return index;
 }
 
-int TNEntityList::remove_begin(TNRectSelectable *item, int val) {
+int TNNoteList::remove_begin(TNRectNote *item, int val) {
     int index = lowerBound_begin(val);
     auto &set = m_begins[index].second;
     set.remove(item);
@@ -181,7 +183,7 @@ int TNEntityList::remove_begin(TNRectSelectable *item, int val) {
     return index;
 }
 
-int TNEntityList::remove_end(TNRectSelectable *item, int val) {
+int TNNoteList::remove_end(TNRectNote *item, int val) {
     int index = lowerBound_end(val);
     auto &set = m_ends[index].second;
     set.remove(item);
@@ -191,16 +193,16 @@ int TNEntityList::remove_end(TNRectSelectable *item, int val) {
     return index;
 }
 
-void TNEntityList::_q_beginChanged(int val, int oldVal) {
-    auto item = qobject_cast<TNRectSelectable *>(sender());
+void TNNoteList::_q_beginChanged(int val, int oldVal) {
+    auto item = qobject_cast<TNRectNote *>(sender());
     remove_begin(item, oldVal);
 
     int index = insert_begin(item, val);
     emit beginChanged(index, val);
 }
 
-void TNEntityList::_q_endChanged(int val, int oldVal) {
-    auto item = qobject_cast<TNRectSelectable *>(sender());
+void TNNoteList::_q_endChanged(int val, int oldVal) {
+    auto item = qobject_cast<TNRectNote *>(sender());
     remove_end(item, oldVal);
 
     int index = insert_end(item, val);

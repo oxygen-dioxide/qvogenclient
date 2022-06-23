@@ -6,6 +6,9 @@
 #include "Types/Events.h"
 #include "Types/Graphics.h"
 
+#include "../../Utils/Events/TOperateEvent.h"
+#include "../../Utils/Operations/TONoteMove.h"
+
 #include "ViewHelper.h"
 
 #include <QApplication>
@@ -18,6 +21,8 @@ TNNotesCtl::TNNotesCtl(TNotesArea *parent) : TNController(parent) {
 
     m_mainGroup = new TNNoteGroup(this);
     m_currentGroup = m_mainGroup;
+
+    m_noteMaxId = 0;
 }
 
 TNNotesCtl::~TNNotesCtl() {
@@ -27,7 +32,7 @@ void TNNotesCtl::install() {
     a->installEventFilter(this);
 }
 
-void TNNotesCtl::setUtterances(const QList<TWrappedData::Utterance> &utters) {
+void TNNotesCtl::setUtterances(const QList<TWProject::Utterance> &utters) {
     for (const auto &utter : utters) {
         auto g = (utter.name == MAIN_GROUP_NAME) ? m_mainGroup : new TNNoteGroup(this);
 
@@ -52,6 +57,7 @@ void TNNotesCtl::setUtterances(const QList<TWrappedData::Utterance> &utters) {
 
             // Insert to all notes
             m_timeBounds->insert(p);
+            m_noteMap.insert(p->id, p);
         }
 
         // Insert to groups
@@ -67,12 +73,26 @@ void TNNotesCtl::setUtterances(const QList<TWrappedData::Utterance> &utters) {
     {
         const auto &starts = m_timeBounds->begins();
         if (!starts.isEmpty()) {
-            const auto &set = starts.front();
+            const auto &set = starts.front().second;
             auto p = qobject_cast<TNRectNote *>(*set.begin());
             a->setVisionFitToItem(p, Qt::AnchorVerticalCenter, false);
             a->setVisionFitToItem(p, Qt::AnchorHorizontalCenter, false);
         }
     }
+}
+
+void TNNotesCtl::moveNotes(const QList<TWNote::Movement> &moves) {
+    for (const auto &move : qAsConst(moves)) {
+        auto it = m_noteMap.find(move.id);
+        if (it == m_noteMap.end()) {
+            return;
+        }
+        auto note = it.value();
+        note->start += move.hMove;
+        note->tone += move.vMove;
+        adjustGeometry(note);
+    }
+    adjustCanvas();
 }
 
 void TNNotesCtl::selectAll() {
@@ -81,7 +101,8 @@ void TNNotesCtl::selectAll() {
 
 void TNNotesCtl::deselect() {
     const auto &selection = m_selection->begins();
-    for (const auto &set : selection) {
+    for (const auto &pair : selection) {
+        const auto &set = pair.second;
         for (auto note : set) {
             note->setSelected(false);
         }
@@ -111,10 +132,13 @@ bool TNNotesCtl::isStretching() const {
     return !m_stretchingData.isEmpty();
 }
 
-TNRectNote *TNNotesCtl::createNote() {
+TNRectNote *TNNotesCtl::createNote(quint64 id) {
     auto p = new TNRectNote(a);
+    p->id = (id == 0) ? (++m_noteMaxId) : id;
+
     a->addItem(p);
     p->setZValue(a->Note);
+
     return p;
 }
 
@@ -125,8 +149,9 @@ void TNNotesCtl::adjustGeometry(TNRectNote *note) {
 
 void TNNotesCtl::adjustGroupGeometry(const TNNoteGroup *group) {
     QList<TNRectNote *> notes;
-    const auto &sets = group->begins();
-    for (const auto &set : sets) {
+    const auto &all = group->begins();
+    for (const auto &pair : all) {
+        const auto &set = pair.second;
         for (auto note : set) {
             notes.append(note);
         }
@@ -138,8 +163,9 @@ void TNNotesCtl::adjustGroupGeometry(const TNNoteGroup *group) {
 
 void TNNotesCtl::adjustAllGeometry() {
     QList<TNRectNote *> notes;
-    const auto &sets = m_timeBounds->begins();
-    for (const auto &set : sets) {
+    const auto &all = m_timeBounds->begins();
+    for (const auto &pair : all) {
+        const auto &set = pair.second;
         for (auto note : set) {
             notes.append(note);
         }
@@ -169,7 +195,8 @@ void TNNotesCtl::deselectOne(TNRectNote *p) {
 
 void TNNotesCtl::setGroupSelected(TNNoteGroup *group, bool selected) {
     const auto &all = group->begins();
-    for (const auto &set : all) {
+    for (const auto &pair : all) {
+        const auto &set = pair.second;
         for (auto note : set) {
             selected ? selectOne(note) : deselectOne(note);
         }
@@ -178,7 +205,8 @@ void TNNotesCtl::setGroupSelected(TNNoteGroup *group, bool selected) {
 
 void TNNotesCtl::setGroupEnabled(TNNoteGroup *group, bool enabled) {
     const auto &all = group->begins();
-    for (const auto &set : all) {
+    for (const auto &pair : all) {
+        const auto &set = pair.second;
         for (auto note : set) {
             note->setEnabled(enabled);
         }
@@ -216,15 +244,15 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                     selectOne(noteItem);
                     const auto &starts = m_selection->begins();
 
-                    auto startItem = qobject_cast<TNRectNote *>(*starts.front().begin());
-                    auto endItem = qobject_cast<TNRectNote *>(*starts.back().begin());
+                    auto startItem = *starts.front().second.begin();
+                    auto endItem = *starts.back().second.begin();
 
                     int startIndex = m_currentGroup->findBegin(startItem);
                     int endIndex = m_currentGroup->findBegin(endItem);
 
                     const auto &allStarts = m_currentGroup->begins();
                     for (int i = startIndex; i <= endIndex; ++i) {
-                        const auto &set = allStarts.at(i);
+                        const auto &set = allStarts.at(i).second;
                         for (auto note : set) {
                             selectOne(note);
                         }
@@ -250,16 +278,11 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                 if (toMove) {
                     // Start Movement
                     const auto &selection = m_selection->begins();
-                    for (const auto &set : selection) {
+                    for (const auto &pair : selection) {
+                        const auto &set = pair.second;
                         for (auto note : set) {
                             if (note->isEnabled()) {
-                                MovingData m;
-                                m.note = note;
-                                m.originPos = note->pos();
-                                m_movingData.append(m);
-                                m.dx = 0;
-                                m.dy = 0;
-
+                                m_movingData.append(MovingData{note, note->pos(), 0, 0});
                                 m_startPoint = e->scenePos();
                             }
                         }
@@ -279,7 +302,8 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
             int fx = offset.x() < 0 ? -1 : 1;
             int fy = offset.y() < 0 ? -1 : 1;
 
-            double w = double(a->currentWidth()) / a->currentQuantize();
+            int q = a->currentQuantize();
+            double w = double(a->currentWidth()) / q;
             double h = a->currentHeight();
 
             int dx = int(offset.x() / w + fx * 0.5);
@@ -292,8 +316,8 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
             if (!m_movingData.isEmpty()) {
                 for (auto &m : m_movingData) {
                     m.note->setPos(m.originPos + offset);
-                    m.dx = dx;
-                    m.dy = dy;
+                    m.dx = dx * (480 / q);
+                    m.dy = -dy;
                 }
             }
             break;
@@ -304,10 +328,28 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
 
             // Movement
             if (!m_movingData.isEmpty()) {
-                for (const auto &m : m_movingData) {
-                    adjustGeometry(m.note);
+                QList<TONoteMove::MoveData> moves;
+                for (const auto &m : qAsConst(m_movingData)) {
+                    auto note = m.note;
+
+                    // Update note
+                    note->start += m.dx;
+                    note->tone += m.dy;
+                    adjustGeometry(note);
+
+                    // Save movement
+                    moves.append(TONoteMove::MoveData{note->id, m.dx, m.dy});
                 }
                 m_movingData.clear();
+
+                // New Operation
+                TONoteMove *op = new TONoteMove();
+                op->moves = std::move(moves);
+
+                // Dispatch
+                TOperateEvent e;
+                e.setData(op);
+                e.dispatch(a);
             }
             break;
         }
@@ -333,8 +375,9 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
 
         case QEventImpl::SceneRubberSelect: {
             auto e = static_cast<QEventImpl::SceneRubberSelectEvent *>(event);
-            const auto &sets = m_currentGroup->begins();
-            for (const auto &set : sets) {
+            const auto &all = m_currentGroup->begins();
+            for (const auto &pair : all) {
+                const auto &set = pair.second;
                 for (auto note : set) {
                     if (!note->isSelected() &&
                         View::rectHitTest(QRectF(note->pos(), note->rect().size()), e->rect())) {
@@ -357,17 +400,17 @@ int TNNotesCtl::startTick() const {
     if (starts.isEmpty()) {
         return 0;
     }
-    const auto &set = starts.front();
+    const auto &set = starts.front().second;
     auto p = qobject_cast<TNRectNote *>(*set.begin());
     return p->start;
 }
 
 int TNNotesCtl::totalLength() const {
-    const auto &ends = m_timeBounds->begins();
+    const auto &ends = m_timeBounds->ends();
     if (ends.isEmpty()) {
         return 0;
     }
-    const auto &set = ends.back();
+    const auto &set = ends.back().second;
     auto p = qobject_cast<TNRectNote *>(*set.begin());
     return p->start + p->length;
 }

@@ -7,24 +7,23 @@
 #include "../Utils/TNNoteGroup.h"
 
 class TNNotesCtl : public TNController {
-Q_OBJECT
+    Q_OBJECT
 public:
     explicit TNNotesCtl(TNotesArea *parent = nullptr);
-
     ~TNNotesCtl();
 
 public:
     void install() override;
 
-    void setUtterances(const QList<TWrappedData::Utterance> &utters);
+    void setUtterances(const QList<TWProject::Utterance> &utters);
+
+    void moveNotes(const QList<TWNote::Movement> &moves);
 
 public:
     void selectAll();
-
     void deselect();
 
     bool isMoving() const;
-
     bool isStretching() const;
 
 protected:
@@ -48,16 +47,20 @@ protected:
     QList<StretchingData> m_stretchingData;
 
 protected:
+    quint64 m_noteMaxId;
+
     QList<TNNoteGroup *> m_noteGroups; // Utterances
     TNNoteGroup *m_mainGroup;
     TNNoteGroup *m_currentGroup;
 
+    QMap<quint64, TNRectNote *> m_noteMap;
     TNNoteList *m_timeBounds; // All
-    TNNoteList *m_selection;  // Index
+
+    TNNoteList *m_selection; // Index
 
     void switchGroup(TNNoteGroup *group);
 
-    TNRectNote *createNote();
+    TNRectNote *createNote(quint64 id = 0);
 
     void adjustGeometry(TNRectNote *note);
     void adjustGroupGeometry(const TNNoteGroup *group);

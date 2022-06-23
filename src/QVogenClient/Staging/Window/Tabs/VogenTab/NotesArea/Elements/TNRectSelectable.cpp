@@ -56,6 +56,6 @@ void TNRectSelectable::setEnd(int end) {
     int org = m_end;
     m_end = end;
     if (m_end != org) {
-        emit beginChanged(m_end, org);
+        emit endChanged(m_end, org);
     }
 }

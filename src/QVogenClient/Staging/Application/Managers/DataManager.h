@@ -85,7 +85,7 @@ public:
     QString windowTitle() const;
     QString errorTitle() const;
     QString untitledFileName() const;
-    QString untitledPrefix() const;
+    QString unsavedPrefix() const;
     QString deletedPrefix() const;
     QString fileManagerName() const;
 

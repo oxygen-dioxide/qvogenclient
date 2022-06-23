@@ -24,8 +24,8 @@ public:
     int findBegin(TNRectSelectable *item, int *pos = nullptr);
     int findEnd(TNRectSelectable *item, int *pos = nullptr);
 
-    const QList<QSet<TNRectSelectable *>> &begins() const;
-    const QList<QSet<TNRectSelectable *>> &ends() const;
+    const QList<QPair<int, QSet<TNRectSelectable *>>> &begins() const;
+    const QList<QPair<int, QSet<TNRectSelectable *>>> &ends() const;
 
     int firstBegin() const;
     int lastEnd() const;
@@ -35,8 +35,8 @@ signals:
     void endChanged(int index, int val);
 
 protected:
-    QList<QSet<TNRectSelectable *>> m_begins;
-    QList<QSet<TNRectSelectable *>> m_ends;
+    QList<QPair<int, QSet<TNRectSelectable *>>> m_begins;
+    QList<QPair<int, QSet<TNRectSelectable *>>> m_ends;
     QSet<TNRectSelectable *> m_set;
 
     int lowerBound_begin(int val) const;
