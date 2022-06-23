@@ -337,6 +337,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
             int q = a->currentQuantize();
             double w = double(a->currentWidth()) / q;
             double h = a->currentHeight();
+            int tw = 480 / q;
 
             int dx = offset.x() / w + fx * 0.5;
             int dy = offset.y() / h + fy * 0.5;
@@ -344,19 +345,31 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
             offset.setX(dx * w);
             offset.setY(dy * h);
 
-            // Movement
             if (!m_movingData.isEmpty()) {
                 for (auto &m : m_movingData) {
-                    m.note->setPos(m.originPos + offset);
-                    m.dx = dx * (480 / q);
-                    m.dy = -dy;
+                    auto note = m.note;
+
+                    int dx2 = dx * tw;
+                    dx2 = int((note->start + dx2) / tw) * tw - note->start;
+
+                    int dy2 = -dy;
+                    dy2 = qMin(qMax(24, note->tone + dy2), 107) - note->tone;
+
+                    note->setPos(a->convertValueToPosition(note->start + dx2, note->tone + dy2));
+                    m.dx = dx2;
+                    m.dy = dy2;
                 }
             } else if (!m_stretchingData.isEmpty()) {
                 for (auto &s : m_stretchingData) {
-                    int dw = dx * (480 / q);
-                    dw = qMax(-(s.note->length - 15), dw);
-                    s.note->setSize(double(s.note->length + dw) / 480 * a->currentWidth(),
-                                    s.note->height());
+                    auto note = s.note;
+                    int end = note->start + note->length;
+
+                    int dw = dx * tw;
+                    dw = int((end + dw) / tw) * tw - end;
+                    dw = qMax(-(note->length - 15), dw);
+
+                    note->setSize(double(note->length + dw) / 480 * a->currentWidth(),
+                                  note->height());
                     s.dw = dw;
                 }
             }
