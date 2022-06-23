@@ -62,6 +62,17 @@ void TNNotesCtl::setUtterances(const QList<TWrappedData::Utterance> &utters) {
 
     adjustAllGeometry();
     adjustCanvas();
+
+    // Move scroll
+    {
+        const auto &starts = m_timeBounds->begins();
+        if (!starts.isEmpty()) {
+            const auto &set = starts.front();
+            auto p = qobject_cast<TNRectNote *>(*set.begin());
+            a->setVisionFitToItem(p, Qt::AnchorVerticalCenter, false);
+            a->setVisionFitToItem(p, Qt::AnchorHorizontalCenter, false);
+        }
+    }
 }
 
 void TNNotesCtl::selectAll() {

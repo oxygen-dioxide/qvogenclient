@@ -2,6 +2,7 @@
 #define CGRAPHICSVIEW_H
 
 #include <QGraphicsView>
+#include <QPropertyAnimation>
 
 class CGraphicsView : public QGraphicsView {
     Q_OBJECT
@@ -16,6 +17,9 @@ private:
 public:
     QRectF viewportRect() const;
 
+    void horizontalTween(int value);
+    void verticalTween(int value);
+
     void setValueX(int value);
     int valueX() const;
 
@@ -23,6 +27,9 @@ public:
     int valueY() const;
 
 protected:
+    QPropertyAnimation *m_horizontalAnimation;
+    QPropertyAnimation *m_verticalAnimation;
+
     void scrollContentsBy(int dx, int dy) override;
     bool viewportEvent(QEvent *event) override;
 

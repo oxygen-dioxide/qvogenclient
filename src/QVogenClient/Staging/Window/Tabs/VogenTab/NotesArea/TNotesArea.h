@@ -153,6 +153,10 @@ public:
 
     QGraphicsItem *itemUnderMouse() const;
 
+    void setVisionFitToItem(QGraphicsItem *item, Qt::AnchorPoint side, bool tween = false);
+    void setVisionFitToItem(QGraphicsItem *item, Qt::Orientations orients, bool tween = false);
+    void setVisionFitToPos(double pos, Qt::AnchorPoint side, bool tween = false);
+
     // ----------------------------------------  Sprite  ----------------------------------------
 public:
     void loadSprite(const QString &path);

@@ -9,6 +9,19 @@
 #include <QDebug>
 #include <QPainter>
 
+static void _q_hoverFromMouseEvent(QGraphicsSceneHoverEvent *hover,
+                                   const QGraphicsSceneMouseEvent *mouseEvent) {
+    hover->setWidget(mouseEvent->widget());
+    hover->setPos(mouseEvent->pos());
+    hover->setScenePos(mouseEvent->scenePos());
+    hover->setScreenPos(mouseEvent->screenPos());
+    hover->setLastPos(mouseEvent->lastPos());
+    hover->setLastScenePos(mouseEvent->lastScenePos());
+    hover->setLastScreenPos(mouseEvent->lastScreenPos());
+    hover->setModifiers(mouseEvent->modifiers());
+    hover->setAccepted(mouseEvent->isAccepted());
+}
+
 TNRectNote::TNRectNote(TNotesArea *area, QGraphicsItem *parent) : TNRectSelectable(area, parent) {
     m_movable = true;
     m_stretch = false;
@@ -74,8 +87,16 @@ TNRectSelectable::Behavior TNRectNote::mousePressBehavior() const {
 }
 
 void TNRectNote::setStretch(bool stretch) {
+    if (stretch == m_stretch) {
+        return;
+    }
     m_stretch = stretch;
-    setCursor(stretch ? Qt::SizeHorCursor : Qt::ArrowCursor);
+    if (m_stretch) {
+        m_oldCursor = cursor();
+        setCursor(Qt::SizeHorCursor);
+    } else {
+        setCursor(m_oldCursor);
+    }
 }
 
 void TNRectNote::layoutRequestEvent(QEvent *event) {
@@ -96,16 +117,18 @@ void TNRectNote::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
 }
 
 void TNRectNote::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
-    if (m_movable && m_enabled) {
-        setStretch(event->pos().x() > width() - 5);
+    if (m_movable) {
+        if (m_enabled) {
+            setStretch(event->pos().x() > width() - 5);
+        } else {
+            setStretch(false);
+        }
     }
     TNRectSelectable::hoverMoveEvent(event);
 }
 
 void TNRectNote::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
-    if (m_stretch) {
-        setStretch(false);
-    }
+    setStretch(false);
     TNRectSelectable::hoverLeaveEvent(event);
 }
 

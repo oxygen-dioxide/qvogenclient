@@ -3,6 +3,8 @@
 
 #include "TNRectSelectable.h"
 
+#include <QCursor>
+
 class TNNoteGroup;
 
 class TNRectNote : public TNRectSelectable {
@@ -23,7 +25,9 @@ public:
 
 protected:
     bool m_movable;
+
     bool m_stretch;
+    QCursor m_oldCursor;
 
     void setStretch(bool stretch);
 

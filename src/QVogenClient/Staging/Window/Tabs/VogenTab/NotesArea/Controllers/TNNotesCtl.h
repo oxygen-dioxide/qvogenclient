@@ -60,31 +60,24 @@ protected:
     TNRectNote *createNote();
 
     void adjustGeometry(TNRectNote *note);
-
     void adjustGroupGeometry(const TNNoteGroup *group);
-
     void adjustAllGeometry();
-
     void adjustCanvas();
 
     void selectOne(TNRectNote *p);
-
     void deselectOne(TNRectNote *p);
 
     void setGroupSelected(TNNoteGroup *group, bool selected);
-
     void setGroupEnabled(TNNoteGroup *group, bool enabled);
 
     bool eventFilter(QObject *obj, QEvent *event) override;
 
 protected:
     int startTick() const;
-
     int totalLength() const;
 
 private:
     void _q_beginChanged(int index, int val);
-
     void _q_endChanged(int index, int val);
 };
 
