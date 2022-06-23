@@ -10,10 +10,12 @@ public:
 
     enum OperateType {
         NoteMove,
+        NoteStretch,
     };
 
 public:
     int type() const;
+
     virtual bool differ() const;
 
 protected:

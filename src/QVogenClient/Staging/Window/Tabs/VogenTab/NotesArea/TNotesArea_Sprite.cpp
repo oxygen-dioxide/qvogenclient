@@ -2,6 +2,7 @@
 #include "TNotesScroll.h"
 
 #include "../Utils/Operations/TONoteMove.h"
+#include "../Utils/Operations/TONoteStretch.h"
 
 void TNotesArea::loadSprite(const QString &path) {
     m_spriteCtl->loadSprite(path);
@@ -47,6 +48,18 @@ bool TNotesArea::processOperation(TBaseOperation *op, bool undo) {
         }
 
         m_notesCtl->moveNotes(moves);
+        break;
+    }
+    case TBaseOperation::NoteStretch: {
+        auto s = static_cast<TONoteStretch *>(op);
+        int f = undo ? -1 : 1;
+
+        QList<TWNote::Stretch> stretches;
+        foreach (const auto &stretch, s->stretches) {
+            stretches.append(TWNote::Stretch{stretch.id, f * stretch.hStretch});
+        }
+
+        m_notesCtl->stretchNotes(stretches);
         break;
     }
     default:

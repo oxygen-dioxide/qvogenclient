@@ -45,6 +45,12 @@ namespace TWNote {
         int hMove;
         int vMove;
     };
+
+    struct Stretch {
+        quint64 id;
+        int hStretch;
+    };
+
 } // namespace TWNote
 
 #endif // TWRAPPEDDATA_H

@@ -18,6 +18,7 @@ public:
     void setUtterances(const QList<TWProject::Utterance> &utters);
 
     void moveNotes(const QList<TWNote::Movement> &moves);
+    void stretchNotes(const QList<TWNote::Stretch> &stretches);
 
 public:
     void selectAll();
@@ -38,7 +39,7 @@ protected:
         TNRectNote *note;
         QPointF originPos;
         QSizeF originSize;
-        int dx;
+        int dw;
     };
 
     QPointF m_startPoint;

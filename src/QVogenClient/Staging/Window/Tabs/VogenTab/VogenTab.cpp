@@ -117,6 +117,7 @@ void VogenTab::undo() {
         auto op = d->historyList.at(d->historyIndex - 1);
         switch (op->type()) {
         case TBaseOperation::NoteMove:
+        case TBaseOperation::NoteStretch:
             success = d->piano->notesArea()->processOperation(op, true);
             break;
         default:
@@ -136,6 +137,7 @@ void VogenTab::redo() {
         auto op = d->historyList.at(d->historyIndex);
         switch (op->type()) {
         case TBaseOperation::NoteMove:
+        case TBaseOperation::NoteStretch:
             success = d->piano->notesArea()->processOperation(op, false);
             break;
         default:

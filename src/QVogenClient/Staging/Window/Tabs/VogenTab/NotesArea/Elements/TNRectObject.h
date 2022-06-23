@@ -19,6 +19,9 @@ public:
     TNotesArea *area() const;
 
     QSizeF size() const;
+    void setSize(const QSizeF &size);
+    void setSize(double w, double h);
+
     double width() const;
     double height() const;
 

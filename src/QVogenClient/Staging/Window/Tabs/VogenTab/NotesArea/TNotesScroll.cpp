@@ -42,17 +42,6 @@ TNotesArea *TNotesScroll::area() const {
 }
 
 bool TNotesScroll::event(QEvent *event) {
-    //    switch (event->type()) {
-    //    case QEvent::FontChange: {
-    //        auto area = this->area();
-    //        if (area) {
-    //            area->setFont(this->font());
-    //        }
-    //        break;
-    //    }
-    //    default:
-    //        break;
-    //    }
     return CGraphicsView::event(event);
 }
 

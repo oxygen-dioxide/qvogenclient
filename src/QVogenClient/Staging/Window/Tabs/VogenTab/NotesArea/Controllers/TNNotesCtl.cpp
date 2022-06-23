@@ -8,6 +8,7 @@
 
 #include "../../Utils/Events/TOperateEvent.h"
 #include "../../Utils/Operations/TONoteMove.h"
+#include "../../Utils/Operations/TONoteStretch.h"
 
 #include "ViewHelper.h"
 
@@ -90,6 +91,19 @@ void TNNotesCtl::moveNotes(const QList<TWNote::Movement> &moves) {
         auto note = it.value();
         note->start += move.hMove;
         note->tone += move.vMove;
+        adjustGeometry(note);
+    }
+    adjustCanvas();
+}
+
+void TNNotesCtl::stretchNotes(const QList<TWNote::Stretch> &stretches) {
+    for (const auto &stretch : qAsConst(stretches)) {
+        auto it = m_noteMap.find(stretch.id);
+        if (it == m_noteMap.end()) {
+            return;
+        }
+        auto note = it.value();
+        note->length += stretch.hStretch;
         adjustGeometry(note);
     }
     adjustCanvas();
@@ -228,6 +242,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                 // Get Next Behavior of Mouse Press
                 TNRectSelectable::Behavior behavior = noteItem->mousePressBehavior();
                 bool toMove = false;
+                bool toStretch = false;
                 switch (behavior) {
                 case TNRectSelectable::SelectOne: {
                     selectOne(noteItem);
@@ -267,7 +282,11 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                 case TNRectSelectable::IndependentStretch:
                 case TNRectSelectable::RelativeStretch:
                 case TNRectSelectable::AbsoluteStretch: {
-                    selectOne(noteItem);
+                    if (!noteItem->isSelected()) {
+                        deselect();
+                        selectOne(noteItem);
+                    }
+                    toStretch = true;
                     break;
                 }
                 default: {
@@ -283,6 +302,19 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                         for (auto note : set) {
                             if (note->isEnabled()) {
                                 m_movingData.append(MovingData{note, note->pos(), 0, 0});
+                                m_startPoint = e->scenePos();
+                            }
+                        }
+                    }
+                } else if (toStretch) {
+                    // Start Stretch
+                    const auto &selection = m_selection->begins();
+                    for (const auto &pair : selection) {
+                        const auto &set = pair.second;
+                        for (auto note : set) {
+                            if (note->isEnabled()) {
+                                m_stretchingData.append(
+                                    StretchingData{note, note->pos(), note->size(), 0});
                                 m_startPoint = e->scenePos();
                             }
                         }
@@ -306,8 +338,8 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
             double w = double(a->currentWidth()) / q;
             double h = a->currentHeight();
 
-            int dx = int(offset.x() / w + fx * 0.5);
-            int dy = int(offset.y() / h + fy * 0.5);
+            int dx = offset.x() / w + fx * 0.5;
+            int dy = offset.y() / h + fy * 0.5;
 
             offset.setX(dx * w);
             offset.setY(dy * h);
@@ -319,6 +351,14 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                     m.dx = dx * (480 / q);
                     m.dy = -dy;
                 }
+            } else if (!m_stretchingData.isEmpty()) {
+                for (auto &s : m_stretchingData) {
+                    int dw = dx * (480 / q);
+                    dw = qMax(-(s.note->length - 15), dw);
+                    s.note->setSize(double(s.note->length + dw) / 480 * a->currentWidth(),
+                                    s.note->height());
+                    s.dw = dw;
+                }
             }
             break;
         }
@@ -326,7 +366,6 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
         // Mouse Release Event
         case QEvent::GraphicsSceneMouseRelease: {
 
-            // Movement
             if (!m_movingData.isEmpty()) {
                 QList<TONoteMove::MoveData> moves;
                 for (const auto &m : qAsConst(m_movingData)) {
@@ -338,18 +377,50 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                     adjustGeometry(note);
 
                     // Save movement
-                    moves.append(TONoteMove::MoveData{note->id, m.dx, m.dy});
+                    if (m.dx != 0 || m.dy != 0) {
+                        moves.append(TONoteMove::MoveData{note->id, m.dx, m.dy});
+                    }
                 }
                 m_movingData.clear();
+                adjustCanvas();
 
-                // New Operation
-                TONoteMove *op = new TONoteMove();
-                op->moves = std::move(moves);
+                if (!moves.isEmpty()) {
+                    // New Operation
+                    TONoteMove *op = new TONoteMove();
+                    op->moves = std::move(moves);
 
-                // Dispatch
-                TOperateEvent e;
-                e.setData(op);
-                e.dispatch(a);
+                    // Dispatch
+                    TOperateEvent e;
+                    e.setData(op);
+                    e.dispatch(a);
+                }
+            } else if (!m_stretchingData.isEmpty()) {
+                QList<TONoteStretch::StretchData> stretches;
+                for (const auto &s : qAsConst(m_stretchingData)) {
+                    auto note = s.note;
+
+                    // Update note
+                    note->length += s.dw;
+                    adjustGeometry(note);
+
+                    // Save stretch
+                    if (s.dw != 0) {
+                        stretches.append(TONoteStretch::StretchData{note->id, s.dw});
+                    }
+                }
+                m_stretchingData.clear();
+                adjustCanvas();
+
+                if (!stretches.isEmpty()) {
+                    // New Operation
+                    TONoteStretch *op = new TONoteStretch();
+                    op->stretches = std::move(stretches);
+
+                    // Dispatch
+                    TOperateEvent e;
+                    e.setData(op);
+                    e.dispatch(a);
+                }
             }
             break;
         }

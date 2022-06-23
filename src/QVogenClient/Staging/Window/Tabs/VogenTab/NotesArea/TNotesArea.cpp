@@ -253,15 +253,15 @@ bool TNotesArea::visionMoving() const {
 }
 
 bool TNotesArea::scrollZoomAllowed() const {
-    return !isSelecting() && !visionMoving();
+    return !isSelecting() && !visionMoving() && !itemMoving() && !itemStretching();
 }
 
-bool TNotesArea::itemMoving() const{
+bool TNotesArea::itemMoving() const {
     return m_notesCtl->isMoving();
 }
 
 bool TNotesArea::itemStretching() const {
-	return m_notesCtl->isStretching();
+    return m_notesCtl->isStretching();
 }
 
 QGraphicsItem *TNotesArea::itemUnderMouse() const {

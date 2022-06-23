@@ -25,6 +25,14 @@ QSizeF TNRectObject::size() const {
     return rect().size();
 }
 
+void TNRectObject::setSize(const QSizeF &size) {
+    setRect(QRectF(QPointF(0, 0), size));
+}
+
+void TNRectObject::setSize(double w, double h) {
+    setRect(0, 0, w, h);
+}
+
 double TNRectObject::width() const {
     return rect().width();
 }
