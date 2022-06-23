@@ -23,7 +23,7 @@ private:
 public:
     QWidget *widget() const;
     void setWidget(QWidget *w);
-    void removeWidget();
+    QWidget *takeWidget();
 
     CCoupleTabDoubleBar *leftBar() const;
     CCoupleTabDoubleBar *topBar() const;

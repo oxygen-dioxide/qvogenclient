@@ -120,15 +120,20 @@ QWidget *CCoupleTabFrame::widget() const {
 
 void CCoupleTabFrame::setWidget(QWidget *w) {
     if (m_centralContainer->count() > 0) {
-        m_centralContainer->removeWidget(m_centralContainer->widget(0));
+        delete takeWidget();
     }
     if (w) {
         m_centralContainer->addWidget(w);
     }
 }
 
-void CCoupleTabFrame::removeWidget() {
-    setWidget(nullptr);
+QWidget *CCoupleTabFrame::takeWidget() {
+    if (m_centralContainer->count() > 0) {
+        auto w = m_centralContainer->widget(0);
+        m_centralContainer->removeWidget(w);
+        return w;
+    }
+    return nullptr;
 }
 
 CCoupleTabDoubleBar *CCoupleTabFrame::leftBar() const {

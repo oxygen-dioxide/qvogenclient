@@ -13,6 +13,8 @@ namespace QEventImpl {
 
         ItemGeometryUpdate,
 
+        PianoRollChange,
+
         // LayoutRequest
     };
 
@@ -59,6 +61,16 @@ namespace QEventImpl {
 
     protected:
         QRectF r;
+    };
+
+    // Piano Roll Change
+    class PianoRollChangeEvent : public QEvent {
+    public:
+        PianoRollChangeEvent(int type);
+        ~PianoRollChangeEvent();
+
+    protected:
+        int t;
     };
 
     void Register();

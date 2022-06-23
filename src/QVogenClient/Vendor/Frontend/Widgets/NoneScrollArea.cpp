@@ -15,7 +15,12 @@ void NoneScrollArea::setWidget(QWidget *widget) {
     widget->move(0, 0);
 }
 
-QWidget *NoneScrollArea::widget() {
+QWidget *NoneScrollArea::widget() const {
+    return m_widget;
+}
+
+QWidget *NoneScrollArea::takeWidget() {
+    m_widget = nullptr;
     return m_widget;
 }
 

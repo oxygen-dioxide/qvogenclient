@@ -7,7 +7,8 @@
 #include "MainWindow.h"
 
 #include "FolderTab.h"
-#include "VogenTab.h"
+#include "VogenTab/VogenTab.h"
+#include "WelcomeTab/WelcomeTab.h"
 
 TabManagerPrivate::TabManagerPrivate() {
 }
@@ -100,6 +101,20 @@ VogenTab *TabManagerPrivate::createProjectTab(const QString &filename) {
     auto tab = new VogenTab();
     tab->setFilename(filename);
     w->tabWidget()->addTab(tab, QString());
+    return tab;
+}
+
+CentralTab *TabManagerPrivate::createUniqueTab(CentralTab::Type type) {
+    CentralTab *tab = nullptr;
+    switch (type) {
+    case CentralTab::Welcome:
+        tab = new WelcomeTab();
+    default:
+        break;
+    }
+    if (tab) {
+        w->tabWidget()->addTab(tab, QString());
+    }
     return tab;
 }
 

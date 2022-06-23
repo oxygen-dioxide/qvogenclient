@@ -256,7 +256,7 @@ QScrollableTabBarTab {
     qproperty-iconSize: 20px 20px;
     qproperty-iconMargins: qmargins(4px, 4px);
     qproperty-textMargins: qmargins(4px, 0, 4px, 0);
-    padding: 9px 9px;
+    padding: 10px 9px;
     border-left: 1px solid #252526;
     border-right: 1px solid #252526;
     color: #A0A0A0;
@@ -430,6 +430,10 @@ CCoupleTabBarCard#utter-card {
 
 VogenTab {
     qproperty-icon: url(:/svg/tab-icon/dark/itunes-note-brands.svg);
+}
+
+WelcomeTab {
+    qproperty-icon: url(:/svg/tab-icon/welcome-light.svg);
 }
 
 

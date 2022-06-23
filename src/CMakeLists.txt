@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Application Information
-set(APP_DEPLOY ON)
+set(APP_DEPLOY OFF)
 set(APP_VERSION 0.2.17)
 
 # Set Directories
@@ -17,8 +17,13 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 
-set(PROJECT_SCRIPTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Scripts) # Scripts
-set(PROJECT_ARCHIVE_DIR ${PROJECT_BINARY_DIR}/etc)
+if(NOT DEFINED PROJECT_SCRIPTS_DIR)
+    set(PROJECT_SCRIPTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../scripts/cmake) # Scripts
+endif()
+
+if(NOT DEFINED PROJECT_ARCHIVE_DIR)
+    set(PROJECT_ARCHIVE_DIR ${PROJECT_BINARY_DIR}/etc) # Etc
+endif()
 
 if(NOT DEFINED PROJECT_DEPLOY_PATH)
     set(PROJECT_DEPLOY_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../release) # Release
@@ -80,6 +85,7 @@ if(SYS_WIN)
         -P "${PROJECT_SCRIPTS_DIR}/Deploy/WinDeploy.cmake"
         DEPENDS lrelease_task base_lrelease_task QVogenClient RenderHost
     )
+
 elseif(SYS_MAC)
 else()
 endif()

@@ -2,13 +2,13 @@
 #define TABMANAGER_H
 
 #include "../CentralManager.h"
+#include "CentralTab.h"
 
 #include "Types/Actions.h"
 
 class MainWindow;
 class TabManagerPrivate;
 
-class CentralTab;
 class VogenTab;
 
 class TabManager : public CentralManager {
@@ -24,6 +24,7 @@ public:
     // API
 public:
     VogenTab *addProject(const QString &filename);
+    CentralTab *addUnique(CentralTab::Type type);
 
     CentralTab *currentTab() const;
 

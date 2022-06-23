@@ -3,7 +3,7 @@
 
 #include "CMenu.h"
 #include "MainWindow.h"
-#include "VogenTab.h"
+#include "VogenTab/VogenTab.h"
 
 #include "DataManager.h"
 #include "Logs/CRecordHolder.h"
@@ -63,6 +63,34 @@ VogenTab *TabManager::addProject(const QString &filename) {
         qRecord->commitRecent(CRecordHolder::Project, CRecordHolder::Advance, filename);
     }
 
+    return tab;
+}
+
+CentralTab *TabManager::addUnique(CentralTab::Type type) {
+    Q_D(TabManager);
+
+    QPair<MainWindow *, int> res;
+    d->findExistingTab(type, &res);
+
+    // Find Existing
+    int j = res.second;
+    if (j >= 0) {
+        auto w = res.first;
+        auto tabs = w->tabWidget();
+        tabs->setCurrentIndex(j);
+        // w->showForward();
+        return qobject_cast<CentralTab *>(tabs->currentWidget());
+    }
+
+    // Add new
+    auto tabs = d->w->tabWidget();
+
+    auto tab = d->createUniqueTab(type);
+    if (!tab) {
+        return nullptr;
+    }
+
+    tabs->setCurrentWidget(tab);
     return tab;
 }
 
@@ -165,7 +193,14 @@ void TabManager::triggerCurrent(ActionImpl::Action action) {
         d->w->eventMgr()->saveAsFile(tab);
         break;
     }
-    case Help_VoiceManager:{
+    case Help_Welcome: {
+        addUnique(CentralTab::Welcome);
+        break;
+    }
+    case Help_ShowActions: {
+        break;
+    }
+    case Help_VoiceManager: {
         auto dlg = new VoiceManagerDialog(d->w);
         dlg->exec();
         dlg->deleteLater();

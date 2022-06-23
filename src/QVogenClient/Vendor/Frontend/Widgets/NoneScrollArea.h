@@ -11,7 +11,8 @@ public:
 
 public:
     void setWidget(QWidget *widget);
-    QWidget *widget();
+    QWidget *widget() const;
+    QWidget *takeWidget();
 
     void setPercentageX(double value);
     void setPercentageY(double value);

@@ -3,8 +3,7 @@
 
 #include "../CentralManager_p.h"
 
-#include "VogenTab.h"
-
+#include "CentralTab.h"
 #include "TabManager.h"
 
 class MainWindow;
@@ -34,6 +33,7 @@ public:
 
     // Create
     VogenTab *createProjectTab(const QString &filename);
+    CentralTab *createUniqueTab(CentralTab::Type type);
 
     static void findExistingTab(CentralTab::Type type, QPair<MainWindow *, int> *res,
                                 const QString &filename = QString());

@@ -26,12 +26,12 @@ You need to install these packages to get the required C/C++ header files.
 
 + Midi
 ````
-sudo apt-get install libasound2-dev
+sudo apt install libasound2-dev
 ````
 
 + OpenGL
 ````
-sudo apt-get install mesa-common-dev
+sudo apt install mesa-common-dev
 ````
 
 + X11
