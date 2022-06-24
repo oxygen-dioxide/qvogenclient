@@ -156,7 +156,6 @@ add_custom_command(TARGET ${PROJECT_NAME}
     -D files=${QM_FILES_WRAP}
     -D dest=$<TARGET_FILE_DIR:${PROJECT_NAME}>/${TRANSLATIONS_DIRNAME}
     -P ${PROJECT_SCRIPTS_DIR}/Execute/Copy.cmake
-    DEPENDS ${QM_FILES}
 )
 
 # Library Translations
@@ -181,7 +180,6 @@ add_custom_command(TARGET ${PROJECT_NAME}
     -D files=${BASE_QM_FILES_WRAP}
     -D dest=$<TARGET_FILE_DIR:${PROJECT_NAME}>/${TRANSLATIONS_DIRNAME}
     -P ${PROJECT_SCRIPTS_DIR}/Execute/Copy.cmake
-    DEPENDS ${BASE_QM_FILES}
     DEPENDS base_lrelease_task
 )
 

@@ -9,6 +9,8 @@
 
 #include "Types/Events.h"
 
+#include "Logs/CRecordHolder.h"
+
 void TNotesArea::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     CGraphicsScene::mousePressEvent(event);
 }
@@ -54,4 +56,15 @@ void TNotesArea::_q_sceneRectChanged(const QRectF &rect) {
     QApplication::sendEvent(this, &e);
 
     adjustBackground();
+}
+
+void TNotesArea::_q_eStateCommited(int eType) {
+    switch (eType) {
+    case CRecordHolder::Quantization: {
+        setCurrentQuantize(qRecordCData.currentQuantize);
+        break;
+    }
+    default:
+        break;
+    }
 }

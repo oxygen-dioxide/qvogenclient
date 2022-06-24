@@ -47,7 +47,9 @@ FilesActionEngine::FilesActionEngine(FilesActionEnginePrivate &d, QObject *paren
     d.init();
 }
 
-void FilesActionEngine::_q_recentCommited() {
+void FilesActionEngine::_q_recentCommited(int rType) {
+    Q_UNUSED(rType);
+
     Q_D(FilesActionEngine);
     d->reloadRecentActions();
 }
@@ -57,9 +59,6 @@ void FilesActionEngine::_q_actionTriggered(QAction *action) {
     auto menu = qobject_cast<QMenu *>(sender());
     if (menu == d->recentMenu) {
         d->handleRecentAction(action);
-    } else if (menu == d->buildInMenu) {
-
-    } else if (menu == d->pluginsMenu) {
     } else {
         auto it = d->map.find(action);
         if (it == d->map.end()) {

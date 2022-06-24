@@ -83,10 +83,11 @@ public:
     // View
     QMenu *appearanceMenu;
     QMenu *panelsMenu;
-    QMenu *quantizationMenu;
-    QMenu *playheadMenu;
     QMenu *displayMenu;
     QMenu *cursorMenu;
+
+    QAction *view_quantization;
+    QAction *view_playhead;
 
     QAction *appearance_toolBar;
     QAction *appearance_navBar;
@@ -101,9 +102,6 @@ public:
     QAction *panels_lyricsPanel;
     QAction *panels_statePanel;
 
-    QAction *playhead_normal;
-    QAction *playhead_center;
-
     QAction *display_note;
     QAction *display_pitch;
     QAction *display_env;
@@ -113,14 +111,14 @@ public:
     QAction *cursor_free;
 
     // Modify
-    QMenu *buildInMenu; // *
-    QMenu *pluginsMenu; // *
-
     QAction *modify_insertLyrics;
     QAction *modify_findReplace;
     QAction *modify_transpose;
     QAction *modify_octaveUp;
     QAction *modify_octaveDown;
+
+    QAction *modify_buildIn;
+    QAction *modify_plugins;
 
     // Play
     QAction *play_play;

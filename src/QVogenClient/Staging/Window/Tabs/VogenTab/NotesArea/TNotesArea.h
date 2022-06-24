@@ -189,6 +189,7 @@ protected:
 
 private:
     void _q_sceneRectChanged(const QRectF &rect);
+    void _q_eStateCommited(int eType);
 };
 
 #endif // TNOTESAREA_H

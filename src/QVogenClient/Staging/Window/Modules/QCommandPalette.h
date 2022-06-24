@@ -1,34 +1,58 @@
 #ifndef QCOMMANDPALETTE_H
 #define QCOMMANDPALETTE_H
 
+#include <QLayout>
 #include <QListWidgetItem>
 #include <QWidget>
 
-#include "QCommandPaletteImpl/QCommandPaletteItem.h"
+#include "QPixelSize.h"
+
+#include "Widgets/BaseContainer.h"
 
 class QCommandPalettePrivate;
 
-class QCommandPalette : public QWidget {
+class QCommandPalette : public BaseContainer {
     Q_OBJECT
     Q_DECLARE_PRIVATE(QCommandPalette)
+    Q_LAYOUT_PROPERTY_DELCARE
 public:
     explicit QCommandPalette(QWidget *parent = nullptr);
     ~QCommandPalette();
 
+    enum CommandType {
+        All,
+        RecentFiles,
+        RecentDirs,
+        ColorThemes,
+        Languages,
+        Quantization,
+        Playhead,
+        BuildIns,
+        Plugins,
+    };
+
+    class NotifyFilter;
+    friend class QCommandPalette::NotifyFilter;
+
 public:
-    int addWidget(QCommandPaletteItemWidget *w);
-    int insertWidget(int index, QCommandPaletteItemWidget *w);
-    QCommandPaletteItemWidget *takeWidget(int index);
-    QCommandPaletteItemWidget *widget(int index) const;
+    void showCommands(CommandType type);
+    void showLineEdit(const QString &hint);
+    void finish();
+
     int count() const;
 
 signals:
-    void activated(int index);
+    void activated(QListWidgetItem *item);
     void abandoned();
+
+    void textChanged(const QString &text);
+    void indexChanged(int index);
 
 protected:
     void showEvent(QShowEvent *event) override;
     bool eventFilter(QObject *obj, QEvent *event) override;
+
+    bool notifyFilter(QObject *obj, QEvent *event);
 
 protected:
     QCommandPalette(QCommandPalettePrivate &d, QWidget *parent = nullptr);

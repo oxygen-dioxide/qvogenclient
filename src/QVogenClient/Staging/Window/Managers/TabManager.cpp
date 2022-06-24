@@ -205,6 +205,10 @@ void TabManager::triggerCurrent(ActionImpl::Action action) {
         }
         break;
     }
+    case View_Quantization:{
+        d->w->showCommands(QCommandPalette::Quantization);
+        break;
+    }
     case Help_Welcome: {
         addUnique(CentralTab::Welcome);
         break;

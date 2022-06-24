@@ -115,17 +115,16 @@ void FilesActionEnginePrivate::setup() {
     // View
     appearanceMenu = new CMenu();
     panelsMenu = new CMenu();
-    quantizationMenu = new CMenu();
-    playheadMenu = new CMenu();
     displayMenu = new CMenu();
     cursorMenu = new CMenu();
 
     registerHandler(appearanceMenu);
     registerHandler(panelsMenu);
-    registerHandler(quantizationMenu);
-    registerHandler(playheadMenu);
     registerHandler(displayMenu);
     registerHandler(cursorMenu);
+
+    view_quantization = NewAction(ActionImpl::View_Quantization);
+    view_playhead = NewAction(ActionImpl::View_Playhead);
 
     appearance_toolBar = NewAction(ActionImpl::View_Appearance_ToolBar);
     appearance_navBar = NewAction(ActionImpl::View_Appearance_NavigationBar);
@@ -140,29 +139,23 @@ void FilesActionEnginePrivate::setup() {
     panels_lyricsPanel = new QAction();
     panels_statePanel = new QAction();
 
-    playhead_normal = new QAction();
-    playhead_center = new QAction();
-
     display_note = new QAction();
     display_pitch = new QAction();
     display_env = new QAction();
 
-    cursor_select = new QAction();
-    cursor_sketch = new QAction();
-    cursor_free = new QAction();
+    cursor_select = NewAction(ActionImpl::View_Cursor_Select);
+    cursor_sketch = NewAction(ActionImpl::View_Cursor_Sketch);
+    cursor_free = NewAction(ActionImpl::View_Cursor_Freehand);
 
     // Modify
-    buildInMenu = new CMenu(); // *
-    pluginsMenu = new CMenu(); // *
-
-    registerHandler(buildInMenu);
-    registerHandler(pluginsMenu);
-
     modify_insertLyrics = NewAction(ActionImpl::Modify_InsertLyrics);
     modify_findReplace = NewAction(ActionImpl::Modify_FindReplace);
     modify_transpose = NewAction(ActionImpl::Modify_Transpose);
     modify_octaveUp = NewAction(ActionImpl::Modify_OctaveUp);
     modify_octaveDown = NewAction(ActionImpl::Modify_OctaveDown);
+
+    modify_buildIn = NewAction(ActionImpl::Modify_BuildIn);
+    modify_plugins = NewAction(ActionImpl::Modify_Plugins);
 
     // Play
     play_play = NewAction(ActionImpl::Playback_Play);
@@ -245,9 +238,6 @@ void FilesActionEnginePrivate::setup() {
     panelsMenu->addAction(panels_statePanel);
 
     // Play
-    playheadMenu->addAction(playhead_normal);
-    playheadMenu->addAction(playhead_center);
-
     displayMenu->addAction(display_note);
     displayMenu->addAction(display_pitch);
     displayMenu->addAction(display_env);
@@ -259,11 +249,12 @@ void FilesActionEnginePrivate::setup() {
     viewMenu->addMenu(appearanceMenu);
     viewMenu->addMenu(panelsMenu);
     viewMenu->addSeparator();
-    viewMenu->addMenu(quantizationMenu);
-    viewMenu->addMenu(playheadMenu);
     viewMenu->addMenu(displayMenu);
     viewMenu->addSeparator();
     viewMenu->addMenu(cursorMenu);
+    viewMenu->addSeparator();
+    viewMenu->addAction(view_quantization);
+    viewMenu->addAction(view_playhead);
 
     // Modify
     modifyMenu->addAction(modify_insertLyrics);
@@ -274,8 +265,8 @@ void FilesActionEnginePrivate::setup() {
     modifyMenu->addAction(modify_octaveDown);
     modifyMenu->addSeparator();
     modifyMenu->addSeparator();
-    modifyMenu->addMenu(buildInMenu);
-    modifyMenu->addMenu(pluginsMenu);
+    modifyMenu->addAction(modify_buildIn);
+    modifyMenu->addAction(modify_plugins);
     modifyMenu->addSeparator();
 
     // Play
@@ -368,10 +359,11 @@ void FilesActionEnginePrivate::reloadStrings() {
     // View
     appearanceMenu->setTitle(QObject::tr("Appearance"));
     panelsMenu->setTitle(QObject::tr("Tool Panels"));
-    quantizationMenu->setTitle(QObject::tr("Quantization"));
-    playheadMenu->setTitle(QObject::tr("Playhead"));
     displayMenu->setTitle(QObject::tr("Note Display"));
     cursorMenu->setTitle(QObject::tr("Cursor Mode"));
+
+    view_quantization->setText(QObject::tr("Quantization"));
+    view_playhead->setText(QObject::tr("Playhead"));
 
     appearance_toolBar->setText(QObject::tr("Tool Bar"));
     appearance_navBar->setText(QObject::tr("Navigation Bar"));
@@ -386,9 +378,6 @@ void FilesActionEnginePrivate::reloadStrings() {
     panels_lyricsPanel->setText(QObject::tr("Lyrics"));
     panels_statePanel->setText(QObject::tr("State"));
 
-    playhead_normal->setText(QObject::tr("Page"));
-    playhead_center->setText(QObject::tr("Smooth"));
-
     display_note->setText(QObject::tr("Show Note"));
     display_pitch->setText(QObject::tr("Show Pitch"));
     display_env->setText(QObject::tr("Show Envelope"));
@@ -398,14 +387,14 @@ void FilesActionEnginePrivate::reloadStrings() {
     cursor_free->setText(QObject::tr("Freehand Mode"));
 
     // Modify
-    buildInMenu->setTitle(QObject::tr("Build-in Tools")); // *
-    pluginsMenu->setTitle(QObject::tr("Plugins"));        // *
-
     modify_insertLyrics->setText(QObject::tr("Insert Lyrics..."));
     modify_findReplace->setText(QObject::tr("Find/Replace"));
     modify_transpose->setText(QObject::tr("Transpose..."));
     modify_octaveUp->setText(QObject::tr("Shift Up by an Octave"));
     modify_octaveDown->setText(QObject::tr("Shift Down by an Octave"));
+
+    modify_buildIn->setText(QObject::tr("Build-in Tools"));
+    modify_plugins->setText(QObject::tr("Plugins"));
 
     // Play
     play_play->setText(QObject::tr("Play"));

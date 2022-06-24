@@ -14,37 +14,17 @@ CRecordData::~CRecordData() {
 void CRecordData::init() {
     projects.setType(QFileSet::File);
     folders.setType(QFileSet::Directory);
-    wavtools.setType(QFileSet::File);
-    resamplers.setType(QFileSet::File);
 }
 
 void CRecordData::reset() {
-    tool1Path.clear();
-    tool2Path.clear();
-
     projects.clear();
     folders.clear();
-    wavtools.clear();
-    resamplers.clear();
 
     windowRect = QRect();
     windowMaximized = false;
 
-    tracksFormVisibility = true;
-    editorFormVisibility = true;
-    paramsFormVisibility = true;
-
-    lastQuantize = 1;
-    ignoreRestsWhenInsert = true;
-    replaceLyricsWhenInsert = true;
-    separateCharWhenInsert = false;
-
-    noteVisibility = false;
-    pitchVisibility = true;
-    envelopeVisibility = true;
-    paramsVisibility = true;
-
-    playHeadCenter = false;
+    currentQuantize = 1;
+    playheadState = 0;
 
     spriteVisibility = false;
     spriteOpacity = 0.3;

@@ -6,9 +6,9 @@ QWidget {
 }
 
 
-/* CScrollBar */
+/* QScrollBar */
 
-CScrollArea {
+QScrollArea {
     border: none;
     background-color: transparent;
 }
@@ -18,72 +18,72 @@ CGraphicsView {
     background-color: transparent;
 }
 
-CScrollBar {
+QScrollBar {
     background: transparent;
     margin: 0;
 }
 
-CScrollBar:vertical {
+QScrollBar:vertical {
     width: 15px;
 }
 
-CScrollBar:horizontal {
+QScrollBar:horizontal {
     height: 15px;
 }
 
-CScrollBar::handle:vertical {
+QScrollBar::handle:vertical {
     min-height: 40px;
 }
 
-CScrollBar::handle:horizontal {
+QScrollBar::handle:horizontal {
     min-width: 40px;
 }
 
-CScrollBar::handle {
+QScrollBar::handle {
     background: rgba(255, 255, 255, 0.3);
     border: 0px;
     /* margin: 4px 4px 4px 4px; */
 }
 
-CScrollBar::handle:hover {
+QScrollBar::handle:hover {
     background: rgba(255, 255, 255, 0.4);
 }
 
 
-/* CScrollBar::handle:pressed {
+/* QScrollBar::handle:pressed {
     background: rgba(0, 0, 0, 18%);
 } */
 
-CScrollBar::sub-page {
+QScrollBar::sub-page {
     background: transparent;
 }
 
-CScrollBar::add-page {
+QScrollBar::add-page {
     background: transparent;
 }
 
-CScrollBar::up-arrow {
+QScrollBar::up-arrow {
     background: transparent;
 }
 
-CScrollBar::down-arrow {
+QScrollBar::down-arrow {
     background: transparent;
 }
 
-CScrollBar::left-arrow {
+QScrollBar::left-arrow {
     background: transparent;
 }
 
-CScrollBar::right-arrow {
+QScrollBar::right-arrow {
     background: transparent;
 }
 
-CScrollBar::sub-line {
+QScrollBar::sub-line {
     background: transparent;
     width: 0px;
 }
 
-CScrollBar::add-line {
+QScrollBar::add-line {
     background: transparent;
     width: 0px;
 }
@@ -558,4 +558,54 @@ CentralToolBar>CToolButton#stop-button {
 
 CentralToolBar>CToolButton#replay-button {
     qproperty-iconUp: svg(":/svg/tuning-tool-bar/reply-solid.svg", #999999);
+}
+
+
+/* QCommandPalette */
+
+QCommandPalette {
+    background-color: transparent;
+    min-width: 600px;
+    min-height: 400px;
+    qproperty-layoutMargins: 10px;
+    qproperty-layoutSpacing: 10px;
+    qproperty-wallpaper: #252526;
+    qproperty-margins: qmargins(0, 0, 0, 0);
+    /* border-top: 10px solid qlineargradient(y0:0, y1:1, stop: 0 #ECECEC, stop: 1 transparent); */
+    border-top: none;
+    border-left: 8px solid qlineargradient(x0: 0, x1: 1, stop: 0 rgba(0, 0, 0, 25%), stop: 1 transparent);
+    border-bottom: 8px solid qlineargradient(y0: 0, y1: 1, stop: 0 transparent, stop: 1 rgba(0, 0, 0, 25%));
+    border-right: 8px solid qlineargradient(x0: 0, x1: 1, stop: 0 transparent, stop: 1 rgba(0, 0, 0, 25%));
+}
+
+QCommandPaletteListWidget {
+    border: none;
+    outline: 0;
+    background-color: transparent;
+    qproperty-styleData: qvariants(/* styleData */
+    qtypeface(rgba(255, 255, 255, 5%), 1), /* focusType */
+    qtypeface(rgba(0, 96, 192, 25%), 1), /* selectType */
+    qtypeface(transparent, 1), /* underline */
+    qtypeface(#E0E0E0, 15px), /* fileType */
+    qtypeface(#909090, 15px), /* locType */
+    qtypeface(#909090, 15px), /* dateType */
+    qmargins(5px), /* fileMargins */
+    qmargins(0), /* locMargins */
+    qmargins(5px), /* dateMargins */
+    qmargins(0), /* iconMargins */
+    );
+}
+
+QCommandPalette>QLineEdit {
+    padding: 3px 3px;
+}
+
+QCommandPalette>QLineEdit {
+    border: 1px solid transparent;
+    color: #CCCCCC;
+    background-color: #3C3C3C;
+}
+
+QCommandPalette>QLineEdit:focus {
+    border-color: #167FD2;
 }

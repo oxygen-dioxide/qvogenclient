@@ -31,18 +31,23 @@ public:
     CRecordData &data();
 
     // Request recent files by following methods instead
-    enum RecentType { Project, Folder, Wavtool, Resampler };
+    enum RecentType { Project, Folder };
     enum ChangeType { Push, Unshift, Advance, Remove, Clear };
 
-    void commitRecent(RecentType rType, ChangeType cType, const QString &filename = "");
-    QStringList fetchRecent(RecentType rType) const;
+    void commitRecent(RecentType rType, ChangeType cType, const QString &filename = QString());
+
+    // Element States
+    enum EStateType { Quantization, Playhead };
+
+    void commitEState(EStateType eType, int state);
 
 protected:
     CRecordData m_data;
     QString m_filename;
 
 signals:
-    void recentCommited(CRecordHolder::RecentType rType);
+    void recentCommited(int rType);
+    void eStateCommited(int eType);
 };
 
 #endif // CRECORDHOLDER_H

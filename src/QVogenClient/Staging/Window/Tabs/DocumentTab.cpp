@@ -53,7 +53,7 @@ void DocumentTab::setEdited(bool edited) {
     CentralTab::setEdited(edited);
     updateTabName();
 
-    QEventImpl::MenuUpdateRequestEvent e(ActionImpl::EditState);
+    QEventImpl::MenuUpdateRequestEvent e(ActionImpl::FileState | ActionImpl::EditState);
     QApplication::sendEvent(window(), &e);
 }
 

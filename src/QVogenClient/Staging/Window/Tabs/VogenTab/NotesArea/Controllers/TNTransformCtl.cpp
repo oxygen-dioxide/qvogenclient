@@ -72,7 +72,6 @@ int TNTransformCtl::currentQuantize() const {
 
 void TNTransformCtl::setCurrentQuantize(int currentQuantize) {
     m_currentQuantize = currentQuantize;
-    adjustSize();
 }
 
 void TNTransformCtl::setCurrentSizes(int w, int h, int q) {

@@ -2,6 +2,8 @@
 #include "TNotesArea_p.h"
 #include "TNotesScroll.h"
 
+#include "Logs/CRecordHolder.h"
+
 #include <QPainter>
 
 TNotesArea::StyleData::StyleData() {
@@ -59,6 +61,8 @@ TNotesArea::TNotesArea(TNotesAreaPrivate &d, TNotesScroll *parent)
     m_priorCtl->install();
 
     connect(this, &QGraphicsScene::sceneRectChanged, this, &TNotesArea::_q_sceneRectChanged);
+
+    connect(qRecord, &CRecordHolder::eStateCommited, this, &TNotesArea::_q_eStateCommited);
 }
 
 TNotesScroll *TNotesArea::view() const {
@@ -112,6 +116,7 @@ int TNotesArea::currentQuantize() const {
 
 void TNotesArea::setCurrentQuantize(int currentQuantize) {
     m_transCtl->setCurrentQuantize(currentQuantize);
+    adjustBackground();
 }
 
 int TNotesArea::blankSections() const {

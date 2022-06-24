@@ -19,32 +19,14 @@ public:
     void reset();
 
 public:
-    QString tool1Path;
-    QString tool2Path;
-
     QFileSet projects;
     QFileSet folders;
-    QFileSet wavtools;
-    QFileSet resamplers;
 
     QRect windowRect;
     bool windowMaximized;
 
-    bool tracksFormVisibility;
-    bool editorFormVisibility;
-    bool paramsFormVisibility;
-
-    int lastQuantize;
-    bool ignoreRestsWhenInsert;
-    bool replaceLyricsWhenInsert;
-    bool separateCharWhenInsert;
-
-    bool noteVisibility;
-    bool pitchVisibility;
-    bool envelopeVisibility;
-    bool paramsVisibility;
-
-    bool playHeadCenter;
+    int currentQuantize;
+    int playheadState;
 
     bool spriteVisibility;
     double spriteOpacity;

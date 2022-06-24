@@ -114,7 +114,7 @@ QJsonFormatter::ObjectTemp *
 }
 
 bool QJsonFormatter::parse(const QJsonValue &json, QJsonFormatter::Variant *variant) const {
-    bool res = false;
+    bool res = true;
     switch (variant->type()) {
     case NoType:
     case BoolType:
@@ -147,6 +147,8 @@ bool QJsonFormatter::parse(const QJsonValue &json, QJsonFormatter::Variant *vari
                 Variant *dest = *it1;
                 res = fill(src, dest);
             }
+        } else {
+            res = false;
         }
         break;
     }
@@ -160,13 +162,17 @@ bool QJsonFormatter::parse(const QJsonValue &json, QJsonFormatter::Variant *vari
                 if (it2 != obj.end()) {
                     QJsonValueRef src = it2.value();
                     Variant *dest = it.value();
+
                     res = fill(src, dest);
                 }
             }
+        } else {
+            res = false;
         }
         break;
     }
     default:
+        res = false;
         break;
     }
     return res;
@@ -185,6 +191,7 @@ bool QJsonFormatter::fill(const QJsonValue &src, QJsonFormatter::Variant *dest) 
             if (v.is##Class()) {                                                                   \
                 list.append(v.to##Class());                                                        \
             } else {                                                                               \
+                qDebug() << QString::asprintf("QJsonFormattor: \"%s\" supposed to be %s", #Class); \
                 success = false;                                                                   \
                 break;                                                                             \
             }                                                                                      \
@@ -206,6 +213,7 @@ bool QJsonFormatter::fill(const QJsonValue &src, QJsonFormatter::Variant *dest) 
             if (v.is##Class()) {                                                                   \
                 map.insert(it.key(), v.to##Class());                                               \
             } else {                                                                               \
+                qDebug() << QString::asprintf("QJsonFormattor: \"%s\" supposed to be %s", #Class); \
                 success = false;                                                                   \
                 break;                                                                             \
             }                                                                                      \

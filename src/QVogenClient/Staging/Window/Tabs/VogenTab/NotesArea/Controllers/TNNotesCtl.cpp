@@ -351,6 +351,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
 
                     int dx2 = dx * tw;
                     dx2 = int((note->start + dx2) / tw) * tw - note->start;
+                    dx2 = qMax(0, note->start + dx2) - note->start;
 
                     int dy2 = -dy;
                     dy2 = qMin(qMax(24, note->tone + dy2), 107) - note->tone;

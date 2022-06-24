@@ -6,8 +6,9 @@
 #include "CCoupleTabFrame.h"
 #include "CentralTabWidget.h"
 
-#include "Bars/CentralNavBar.h"
-#include "Bars/CentralToolBar.h"
+#include "Modules/CentralNavBar.h"
+#include "Modules/CentralToolBar.h"
+#include "Modules/QCommandPalette.h"
 
 #include "Panels/ControlPanel.h"
 #include "Panels/UtterPanel.h"
@@ -36,6 +37,9 @@ public:
     EventManager *eventMgr() const;
     ActionManager *actionMgr() const;
 
+    int showCommands(QCommandPalette::CommandType type);
+    int showLineEdit(const QString &hint, void previewer(const QString &) = 0);
+
 protected:
     // UI
     QWidget *m_widget;
@@ -43,6 +47,8 @@ protected:
 
     CentralToolBar *m_tools;
     CentralNavBar *m_nav;
+    QCommandPalette *m_cp;
+
     CentralTabWidget *m_tabs;
 
     CCoupleTabFrame *m_frame;
@@ -56,6 +62,12 @@ protected:
     TabManager *m_tabMgr;
     EventManager *m_eventMgr;
     ActionManager *m_actionMgr;
+
+    void resizeEvent(QResizeEvent *event) override;
+
+private:
+    void initSelector();
+    void adjustSelector();
 };
 
 #endif // MAINWINDOW_H

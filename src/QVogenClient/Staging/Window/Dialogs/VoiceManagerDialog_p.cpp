@@ -105,7 +105,7 @@ void VoiceManagerDialogPrivate::updateDefaultColumnWidth() {
     int w = q->width();
     QList<double> ws{0.2, 0.2, 0.2};
 
-    for (int i = 0; i < tree->columnCount(); ++i) {
+    for (int i = 0; i < ws.size(); ++i) {
         tree->setColumnWidth(i, w * ws[i]);
     }
 }

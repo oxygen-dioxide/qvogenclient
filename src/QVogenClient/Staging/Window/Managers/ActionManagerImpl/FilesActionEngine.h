@@ -20,7 +20,7 @@ protected:
     FilesActionEngine(FilesActionEnginePrivate &d, QObject *parent = nullptr);
 
 private:
-    void _q_recentCommited();
+    void _q_recentCommited(int rType);
     void _q_actionTriggered(QAction *action);
 };
 

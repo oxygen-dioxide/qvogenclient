@@ -51,11 +51,21 @@ namespace ActionImpl {
         View_Appearance_ToolWindowsBar,
         View_Appearance_MenuBar,
 
+        View_Cursor_Select,
+        View_Cursor_Sketch,
+        View_Cursor_Freehand,
+
+        View_Quantization,
+        View_Playhead,
+
         Modify_InsertLyrics,
         Modify_FindReplace,
         Modify_Transpose,
         Modify_OctaveUp,
         Modify_OctaveDown,
+
+        Modify_BuildIn,
+        Modify_Plugins,
 
         Playback_Play,
         Playback_Stop,

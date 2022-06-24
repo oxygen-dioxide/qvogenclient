@@ -6,6 +6,8 @@
 #include <QScrollBar>
 #include <QWheelEvent>
 
+#include "Logs/CRecordHolder.h"
+
 TPianoPanel::TPianoPanel(VogenTab *tab, QWidget *parent) : TVogenPanel(tab, parent) {
     init();
 }
@@ -41,7 +43,7 @@ void TPianoPanel::init() {
             &TPianoPanel::handleNotesAreaZoomRequested);
 
     // Init sizes
-    setCurrentSizes(60, 30, 4);
+    setCurrentSizes(60, 30, qRecordCData.currentQuantize);
     setBlankSections(1);
 }
 
