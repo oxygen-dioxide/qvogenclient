@@ -161,18 +161,22 @@ void VogenTab::handleSpecificAction(ActionImpl::Action a) {
     case ActionImpl::Edit_Cut: {
         QEventImpl::SceneActionRequestEvent e(QEventImpl::SceneActionRequestEvent::Cut);
         qApp->sendEvent(d->piano->notesArea(), &e);
+        break;
     }
     case ActionImpl::Edit_Copy: {
         QEventImpl::SceneActionRequestEvent e(QEventImpl::SceneActionRequestEvent::Copy);
         qApp->sendEvent(d->piano->notesArea(), &e);
+        break;
     }
     case ActionImpl::Edit_Paste: {
         QEventImpl::SceneActionRequestEvent e(QEventImpl::SceneActionRequestEvent::Paste);
         qApp->sendEvent(d->piano->notesArea(), &e);
+        break;
     }
     case ActionImpl::Edit_Remove: {
         QEventImpl::SceneActionRequestEvent e(QEventImpl::SceneActionRequestEvent::Remove);
         qApp->sendEvent(d->piano->notesArea(), &e);
+        break;
     }
     case ActionImpl::Modify_InsertLyrics: {
         d->inputLyrics();

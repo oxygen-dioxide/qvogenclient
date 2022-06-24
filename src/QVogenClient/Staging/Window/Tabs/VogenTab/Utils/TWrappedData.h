@@ -4,6 +4,9 @@
 #include <QList>
 #include <QString>
 
+#include <QJsonArray>
+#include <QJsonObject>
+
 class TWProject {
 public:
     TWProject();
@@ -65,6 +68,9 @@ namespace TWNote {
         QString lyric;
 
         quint64 gid;
+
+        QJsonObject toJson() const;
+        static NoteAll fromJson(const QJsonObject &obj);
     };
 
 } // namespace TWNote

@@ -18,7 +18,13 @@
 #include "MathHelper.h"
 #include "ViewHelper.h"
 
+#include "Namespace.h"
+
 #include <QApplication>
+#include <QClipboard>
+#include <QMimeData>
+
+#include <QJsonDocument>
 
 static const char MAIN_GROUP_NAME[] = "%MAIN%";
 
@@ -727,44 +733,115 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
 
         case QEventImpl::SceneActionRequest: {
             auto e = static_cast<QEventImpl::SceneActionRequestEvent *>(event);
-            switch (e->action()) {
-            case QEventImpl::SceneActionRequestEvent::Cut: {
-                break;
-            }
-            case QEventImpl::SceneActionRequestEvent::Copy: {
-                break;
-            }
+            auto act = e->action();
+            switch (act) {
             case QEventImpl::SceneActionRequestEvent::Paste: {
+                auto board = QApplication::clipboard();
+                auto mime = board->mimeData();
+                if (mime->hasFormat(Qs::MIME_CLIPBOARD_NOTE)) {
+                    // From system clipboard
+                    QByteArray data = mime->data(Qs::MIME_CLIPBOARD_NOTE);
+                    QJsonParseError parseError;
+                    QJsonDocument jsonDoc = QJsonDocument::fromJson(data, &parseError);
+                    if (parseError.error == QJsonParseError::NoError) {
+                        QJsonArray arr = jsonDoc.array();
+
+                        QList<TNRectNote *> ptrs;
+                        for (auto it = arr.begin(); it != arr.end(); ++it) {
+                            auto note = TWNote::NoteAll::fromJson(it->toObject());
+                            if (note.id != 0) {
+                                // Add New Notes (New id and gid)
+                                auto p = createNote(0, note.start, note.length, note.noteNum,
+                                                    note.lyric, m_currentGroup);
+                                adjustGeometry(p);
+                                ptrs.append(p);
+                            }
+                        }
+
+                        adjustCanvas();
+
+                        QList<TONoteInsDel::NoteData> notes;
+                        for (auto note : qAsConst(ptrs)) {
+                            notes.append(TONoteInsDel::NoteData{
+                                note->id,        // Id
+                                note->start,     // Start
+                                note->length,    // Length
+                                note->tone,      // Tone
+                                note->lyric,     // Lyric
+                                note->group->id, // Gid
+                            });
+                        }
+
+                        if (!notes.isEmpty()) {
+                            // New Operation
+                            auto op = new TONoteInsDel(TONoteInsDel::Create);
+                            op->data = std::move(notes);
+
+                            // Dispatch
+                            TOperateEvent e;
+                            e.setData(op);
+                            e.dispatch(a);
+                        }
+                    }
+                }
                 break;
             }
+            case QEventImpl::SceneActionRequestEvent::Cut:
+            case QEventImpl::SceneActionRequestEvent::Copy:
             case QEventImpl::SceneActionRequestEvent::Remove: {
-                // Remove Notes
                 QList<TONoteInsDel::NoteData> notes;
+                QJsonArray arr;
                 const auto &selection = m_selection->begins();
                 for (const auto &pair : selection) {
                     const auto &set = pair.second;
                     for (auto note : set) {
-                        notes.append(TONoteInsDel::NoteData{
-                            note->id,        // Id
-                            note->start,     // Start
-                            note->length,    // Length
-                            note->tone,      // Tone
-                            note->lyric,     // Lyric
-                            note->group->id, // Gid
-                        });
-                        removeNote(note);
+                        if (act != QEventImpl::SceneActionRequestEvent::Remove) {
+                            arr.append(TWNote::NoteAll{
+                                note->id,        // Id
+                                note->start,     // Start
+                                note->length,    // Length
+                                note->tone,      // Tone
+                                note->lyric,     // Lyric
+                                note->group->id, // Gid
+                            }
+                                           .toJson());
+                        }
+                        if (act != QEventImpl::SceneActionRequestEvent::Copy) {
+                            // Remove Notes
+                            notes.append(TONoteInsDel::NoteData{
+                                note->id,        // Id
+                                note->start,     // Start
+                                note->length,    // Length
+                                note->tone,      // Tone
+                                note->lyric,     // Lyric
+                                note->group->id, // Gid
+                            });
+                            removeNote(note);
+                        }
                     }
                 }
+                if (act != QEventImpl::SceneActionRequestEvent::Copy) {
+                    qDebug() << act << QEventImpl::SceneActionRequestEvent::Copy;
+                    if (!notes.isEmpty()) {
+                        // New Operation
+                        auto op = new TONoteInsDel(TONoteInsDel::Remove);
+                        op->data = std::move(notes);
 
-                if (!notes.isEmpty()) {
-                    // New Operation
-                    auto op = new TONoteInsDel(TONoteInsDel::Remove);
-                    op->data = std::move(notes);
+                        // Dispatch
+                        TOperateEvent e;
+                        e.setData(op);
+                        e.dispatch(a);
+                    }
+                }
+                if (act != QEventImpl::SceneActionRequestEvent::Remove) {
+                    if (!arr.isEmpty()) {
+                        // Append to system clipboard
+                        QMimeData *data = new QMimeData();
+                        data->setData(Qs::MIME_CLIPBOARD_NOTE, QJsonDocument(arr).toJson());
 
-                    // Dispatch
-                    TOperateEvent e;
-                    e.setData(op);
-                    e.dispatch(a);
+                        auto board = QApplication::clipboard();
+                        board->setMimeData(data);
+                    }
                 }
                 break;
             }
