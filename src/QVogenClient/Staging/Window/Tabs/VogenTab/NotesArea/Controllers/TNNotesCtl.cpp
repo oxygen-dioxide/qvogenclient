@@ -35,11 +35,11 @@ TNNotesCtl::TNNotesCtl(TNotesArea *parent) : TNController(parent) {
     m_timeBounds = new TNNoteList(this);
     m_selection = new TNNoteList(this);
 
-    m_mainGroup = new TNNoteGroup(this);
-    m_currentGroup = m_mainGroup;
-
     m_maxNoteId = 0;
-    m_maxGroupId = 1;
+    m_maxGroupId = 0;
+
+    m_mainGroup = createGroup(0);
+    m_currentGroup = m_mainGroup;
 
     m_editing = false;
 }
@@ -131,11 +131,10 @@ void TNNotesCtl::changeLyrics(const QList<TWNote::Lyric> &lyrics) {
 
 void TNNotesCtl::addNotes(const QList<TWNote::NoteAll> &notes) {
     for (const auto &note : qAsConst(notes)) {
-        auto it = m_noteGroups.find(note.gid);
-        if (it == m_noteGroups.end()) {
+        auto g = findGroup(note.gid);
+        if (!g) {
             continue;
         }
-        auto g = it.value();
         auto p = createNote(note.id, note.start, note.length, note.noteNum, note.lyric, g);
         adjustGeometry(p);
     }
@@ -167,6 +166,10 @@ void TNNotesCtl::deselect() {
         }
     }
     m_selection->clear();
+
+    // Update Menu
+    TSelectEvent e;
+    e.dispatch(a);
 }
 
 void TNNotesCtl::switchGroup(TNNoteGroup *group) {
@@ -183,12 +186,27 @@ void TNNotesCtl::switchGroup(TNNoteGroup *group) {
     setGroupEnabled(m_currentGroup, true);
 }
 
+TNNoteGroup *TNNotesCtl::findGroup(quint64 gid) const {
+    if (gid == m_mainGroup->id) {
+        return m_mainGroup;
+    }
+    auto it = m_noteGroups.find(gid);
+    if (it == m_noteGroups.end()) {
+        return nullptr;
+    }
+    return it.value();
+}
+
 bool TNNotesCtl::isMoving() const {
     return !m_movingData.isEmpty();
 }
 
 bool TNNotesCtl::isStretching() const {
     return !m_stretchingData.isEmpty();
+}
+
+bool TNNotesCtl::isDrawing() const {
+    return !m_drawingData.isEmpty();
 }
 
 bool TNNotesCtl::isLyricsEditing() const {
@@ -456,7 +474,6 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                         const auto &set = pair.second;
                         for (auto note : set) {
                             m_movingData.append(MovingData{note, note->pos(), 0, 0});
-                            m_startPoint = e->scenePos();
                         }
                     }
                 } else if (toStretch) {
@@ -467,62 +484,103 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                         for (auto note : set) {
                             m_stretchingData.append(
                                 StretchingData{note, note->pos(), note->size(), 0});
-                            m_startPoint = e->scenePos();
                         }
                     }
                 }
             } else if (modifiers != data.selectS) {
                 deselect();
             }
+            m_startPoint = e->scenePos();
             break;
         }
 
         // Mouse Move Event
         case QEvent::GraphicsSceneMouseMove: {
             auto e = static_cast<QGraphicsSceneMouseEvent *>(event);
-            QPointF offset = e->scenePos() - m_startPoint;
+            auto item = a->itemUnderMouse();
+            if (e->buttons() & Qt::LeftButton) {
+                if (a->mouseMoving()) {
+                    QPointF offset = e->scenePos() - m_startPoint;
 
-            int fx = offset.x() < 0 ? -1 : 1;
-            int fy = offset.y() < 0 ? -1 : 1;
+                    int fx = offset.x() < 0 ? -1 : 1;
+                    int fy = offset.y() < 0 ? -1 : 1;
 
-            int q = a->currentQuantize();
-            double w = double(a->currentWidth()) / q;
-            double h = a->currentHeight();
-            int tw = 480 / q;
+                    int q = a->currentQuantize();
+                    double w = double(a->currentWidth()) / q;
+                    double h = a->currentHeight();
+                    int tw = 480 / q;
 
-            int dx = offset.x() / w + fx * 0.5;
-            int dy = offset.y() / h + fy * 0.5;
+                    int dx = offset.x() / w + fx * 0.5;
+                    int dy = offset.y() / h + fy * 0.5;
 
-            offset.setX(dx * w);
-            offset.setY(dy * h);
+                    offset.setX(dx * w);
+                    offset.setY(dy * h);
 
-            if (!m_movingData.isEmpty()) {
-                for (auto &m : m_movingData) {
-                    auto note = m.note;
+                    if (!m_movingData.isEmpty()) {
+                        for (auto &m : m_movingData) {
+                            auto note = m.note;
 
-                    int dx2 = dx * tw;
-                    dx2 = int((note->start + dx2) / tw) * tw - note->start;
-                    dx2 = qMax(0, note->start + dx2) - note->start;
+                            int dx2 = dx * tw;
+                            dx2 = int((note->start + dx2) / tw) * tw - note->start;
+                            dx2 = qMax(0, note->start + dx2) - note->start;
 
-                    int dy2 = -dy;
-                    dy2 = qMin(qMax(24, note->tone + dy2), 107) - note->tone;
+                            int dy2 = -dy;
+                            dy2 = qMin(qMax(24, note->tone + dy2), 107) - note->tone;
 
-                    note->setPos(a->convertValueToPosition(note->start + dx2, note->tone + dy2));
-                    m.dx = dx2;
-                    m.dy = dy2;
-                }
-            } else if (!m_stretchingData.isEmpty()) {
-                for (auto &s : m_stretchingData) {
-                    auto note = s.note;
-                    int end = note->start + note->length;
+                            note->setPos(
+                                a->convertValueToPosition(note->start + dx2, note->tone + dy2));
+                            m.dx = dx2;
+                            m.dy = dy2;
+                        }
+                    } else if (!m_stretchingData.isEmpty()) {
+                        for (auto &s : m_stretchingData) {
+                            auto note = s.note;
+                            int end = note->start + note->length;
 
-                    int dw = dx * tw;
-                    dw = int((end + dw) / tw) * tw - end;
-                    dw = qMax(-(note->length - 15), dw);
+                            int dw = dx * tw;
+                            dw = int((end + dw) / tw) * tw - end;
+                            dw = qMax(-(note->length - 15), dw);
 
-                    note->setSize(double(note->length + dw) / 480 * a->currentWidth(),
-                                  note->height());
-                    s.dw = dw;
+                            note->setSize(double(note->length + dw) / 480 * a->currentWidth(),
+                                          note->height());
+                            s.dw = dw;
+                        }
+                    } else if (!m_drawingData.isEmpty()) {
+                        auto &s = m_drawingData.front();
+                        auto note = s.note;
+
+                        int end = note->start + note->length;
+
+                        int dw = dx * tw;
+                        dw = int((end + dw) / tw) * tw - end;
+                        dw = qMax(-(note->length - 15), dw);
+
+                        note->setSize(double(note->length + dw) / 480 * a->currentWidth(),
+                                      note->height());
+                        s.dw = dw;
+                    }
+                } else if (!a->isSelecting() && !item && a->drawMode() == TNotesArea::DrawNote) {
+                    int q = a->currentQuantize();
+                    double h = a->currentHeight();
+                    int tw = 480 / q;
+
+                    auto val =
+                        a->convertPositionToValue(QPointF(m_startPoint.x(), m_startPoint.y() - h));
+                    auto val2 = a->convertPositionToValue(e->scenePos());
+
+                    int tick1 = int(val.first / tw) * tw;
+                    int tick2 = val2.first;
+                    int len = tick2 - tick1;
+
+                    auto newPoint = a->convertValueToPosition(tick1, val.second);
+                    m_startPoint = newPoint;
+
+                    auto p = createNote(0, tick1, len, val.second, "a", m_currentGroup);
+
+                    p->setPos(a->convertValueToPosition(tick1, val.second));
+                    p->setSize(double(len) / 480 * a->currentWidth(), h);
+
+                    m_drawingData.append(DrawingData{p, 0});
                 }
             }
             break;
@@ -580,6 +638,37 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                     // New Operation
                     auto op = new TONoteStretch();
                     op->data = std::move(stretches);
+
+                    // Dispatch
+                    TOperateEvent e;
+                    e.setData(op);
+                    e.dispatch(a);
+                }
+            } else if (!m_drawingData.isEmpty()) {
+                auto &s = m_drawingData.front();
+                auto note = s.note;
+
+                // Update note
+                note->length += s.dw;
+                adjustGeometry(note);
+
+                m_drawingData.clear();
+                adjustCanvas();
+
+                // Save new note
+                {
+                    QList<TONoteInsDel::NoteData> notes{TONoteInsDel::NoteData{
+                        note->id,        // Id
+                        note->start,     // Start
+                        note->length,    // Length
+                        note->tone,      // Tone
+                        note->lyric,     // Lyric
+                        note->group->id, // Gid
+                    }};
+
+                    // New Operation
+                    auto op = new TONoteInsDel(TONoteInsDel::Create);
+                    op->data = std::move(notes);
 
                     // Dispatch
                     TOperateEvent e;

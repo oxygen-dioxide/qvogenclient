@@ -30,6 +30,7 @@ public:
 
     bool isMoving() const;
     bool isStretching() const;
+    bool isDrawing() const;
     bool isLyricsEditing() const;
 
     bool hasSelection() const;
@@ -49,10 +50,16 @@ protected:
         int dw;
     };
 
+    struct DrawingData {
+        TNRectNote *note;
+        int dw;
+    };
+
     QPointF m_startPoint;
 
     QList<MovingData> m_movingData;
     QList<StretchingData> m_stretchingData;
+    QList<DrawingData> m_drawingData;
 
 protected:
     quint64 m_maxNoteId;
@@ -71,6 +78,7 @@ protected:
     QList<QPair<TNRectNote *, QString>> m_cachedLyrics;
 
     void switchGroup(TNNoteGroup *group);
+    TNNoteGroup *findGroup(quint64 gid) const;
 
     // Note Variations
     TNRectNote *createNote(quint64 id, int start, int len, int tone, const QString &lrc,

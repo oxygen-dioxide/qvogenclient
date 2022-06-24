@@ -36,13 +36,15 @@ bool TNSelectCtl::eventFilter(QObject *obj, QEvent *event) {
     if (obj == a) {
         switch (event->type()) {
 
-            // Mouse Press Event
-            case QEvent::GraphicsSceneMousePress: {
-                break;
-            }
+        // Mouse Press Event
+        case QEvent::GraphicsSceneMousePress: {
+            break;
+        }
 
-                // Mouse Move Event
-            case QEvent::GraphicsSceneMouseMove: {
+            // Mouse Move Event
+        case QEvent::GraphicsSceneMouseMove: {
+            auto e = static_cast<QGraphicsSceneMouseEvent *>(event);
+            if (e->buttons() & Qt::LeftButton) {
                 auto item = a->itemUnderMouse();
                 // No Item Under Mouse
                 if (!item) {
@@ -58,12 +60,12 @@ bool TNSelectCtl::eventFilter(QObject *obj, QEvent *event) {
                                 selecting = true;
                             } else if (modifiers == Qt::NoModifier) {
                                 switch (a->drawMode()) {
-                                    case TNotesArea::PlainSelect: {
-                                        selecting = true;
-                                        break;
-                                    }
-                                    default:
-                                        break;
+                                case TNotesArea::PlainSelect: {
+                                    selecting = true;
+                                    break;
+                                }
+                                default:
+                                    break;
                                 }
                             }
                             if (selecting) {
@@ -81,19 +83,20 @@ bool TNSelectCtl::eventFilter(QObject *obj, QEvent *event) {
                         // Mouse Moving
                     }
                 }
-                break;
             }
+            break;
+        }
 
-            // Mouse Release Event
-            case QEvent::GraphicsSceneMouseRelease: {
-                if (m_rubber->active()) {
-                    stopSelecting();
-                }
-                break;
+        // Mouse Release Event
+        case QEvent::GraphicsSceneMouseRelease: {
+            if (m_rubber->active()) {
+                stopSelecting();
             }
+            break;
+        }
 
-            default:
-                break;
+        default:
+            break;
         }
     }
     return TNController::eventFilter(obj, event);

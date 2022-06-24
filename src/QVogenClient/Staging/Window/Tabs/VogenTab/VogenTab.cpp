@@ -178,6 +178,18 @@ void VogenTab::handleSpecificAction(ActionImpl::Action a) {
         qApp->sendEvent(d->piano->notesArea(), &e);
         break;
     }
+    case ActionImpl::View_Cursor_Select: {
+        d->piano->notesArea()->setDrawMode(TNotesArea::PlainSelect);
+        break;
+    }
+    case ActionImpl::View_Cursor_Sketch: {
+        d->piano->notesArea()->setDrawMode(TNotesArea::DrawNote);
+        break;
+    }
+    case ActionImpl::View_Cursor_Freehand: {
+        d->piano->notesArea()->setDrawMode(TNotesArea::DrawCurves);
+        break;
+    }
     case ActionImpl::Modify_InsertLyrics: {
         d->inputLyrics();
         break;

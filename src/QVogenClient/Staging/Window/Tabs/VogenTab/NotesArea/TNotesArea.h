@@ -151,6 +151,7 @@ public:
 
     bool itemMoving() const;
     bool itemStretching() const;
+    bool itemDrawing() const;
 
     bool hasSelection() const;
 

@@ -34,7 +34,7 @@ SceneRubberSelectEvent::~SceneRubberSelectEvent() {
 }
 
 PianoRollChangeEvent::PianoRollChangeEvent(int t)
-    : QEvent(static_cast<QEvent::Type>(PianoRollChange)), t(t) {
+    : QEvent(static_cast<QEvent::Type>(PianoRollChange)), ct(t) {
 }
 
 PianoRollChangeEvent::~PianoRollChangeEvent() {
@@ -47,11 +47,18 @@ StdinRequestEvent::StdinRequestEvent(InputType type, InputProcess process)
 StdinRequestEvent::~StdinRequestEvent() {
 }
 
-SceneActionRequestEvent::SceneActionRequestEvent(Action a)
+SceneActionRequestEvent::SceneActionRequestEvent(int a)
     : QEvent(static_cast<QEvent::Type>(SceneActionRequest)), a(a) {
 }
 
 SceneActionRequestEvent::~SceneActionRequestEvent() {
+}
+
+SceneStateChangeEvent::SceneStateChangeEvent(int type)
+    : QEvent(static_cast<QEvent::Type>(SceneStateChange)), ct(type) {
+}
+
+SceneStateChangeEvent::~SceneStateChangeEvent() {
 }
 
 void QEventImpl::Register() {
@@ -62,4 +69,5 @@ void QEventImpl::Register() {
     QEvent::registerEventType(PianoRollChange);
     QEvent::registerEventType(StdinRequest);
     QEvent::registerEventType(SceneActionRequest);
+    QEvent::registerEventType(SceneStateChange);
 }

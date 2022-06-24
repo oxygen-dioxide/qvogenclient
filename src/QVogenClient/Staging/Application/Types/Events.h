@@ -19,6 +19,8 @@ namespace QEventImpl {
 
         SceneActionRequest,
 
+        SceneStateChange,
+
         // LayoutRequest
     };
 
@@ -79,11 +81,11 @@ namespace QEventImpl {
         };
 
         inline int cType() const {
-            return t;
+            return ct;
         }
 
     protected:
-        int t;
+        int ct;
     };
 
     // Stdin Request
@@ -128,7 +130,7 @@ namespace QEventImpl {
             Digital,
         };
 
-        SceneActionRequestEvent(Action a);
+        SceneActionRequestEvent(int a);
         ~SceneActionRequestEvent();
 
         inline int action() const {
@@ -137,6 +139,24 @@ namespace QEventImpl {
 
     protected:
         int a;
+    };
+
+    // Scene Action Request
+    class SceneStateChangeEvent : public QEvent {
+    public:
+        SceneStateChangeEvent(int type);
+        ~SceneStateChangeEvent();
+
+        enum ChangeType {
+            CursorMode,
+        };
+
+        inline int cType() const {
+            return ct;
+        }
+
+    protected:
+        int ct;
     };
 
     void Register();

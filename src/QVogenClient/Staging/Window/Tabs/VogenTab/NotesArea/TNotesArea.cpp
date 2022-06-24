@@ -4,6 +4,9 @@
 
 #include "Logs/CRecordHolder.h"
 
+#include "Types/Events.h"
+
+#include <QApplication>
 #include <QPainter>
 
 TNotesArea::StyleData::StyleData() {
@@ -141,6 +144,9 @@ TNotesArea::DrawMode TNotesArea::drawMode() const {
 
 void TNotesArea::setDrawMode(DrawMode drawMode) {
     m_drawMode = drawMode;
+
+    QEventImpl::SceneStateChangeEvent e(QEventImpl::SceneStateChangeEvent::CursorMode);
+    QApplication::sendEvent(view()->window(), &e);
 }
 
 TNotesArea::AddPointMode TNotesArea::pointMode() const {
@@ -258,7 +264,8 @@ bool TNotesArea::visionMoving() const {
 }
 
 bool TNotesArea::scrollZoomAllowed() const {
-    return !isSelecting() && !visionMoving() && !itemMoving() && !itemStretching();
+    return !isSelecting() && !visionMoving() && !itemMoving() && !itemStretching() &&
+           !itemDrawing();
 }
 
 bool TNotesArea::itemMoving() const {
@@ -267,6 +274,10 @@ bool TNotesArea::itemMoving() const {
 
 bool TNotesArea::itemStretching() const {
     return m_notesCtl->isStretching();
+}
+
+bool TNotesArea::itemDrawing() const {
+    return m_notesCtl->isDrawing();
 }
 
 bool TNotesArea::hasSelection() const {

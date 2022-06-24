@@ -61,4 +61,11 @@ void CentralToolBarPrivate::init() {
     layout->addStretch();
 
     q->setLayout(layout);
+
+    q->connect(m_cursorButton, &QAbstractButton::clicked, q, &CentralToolBar::_q_buttonClicked);
+    q->connect(m_noteButton, &QAbstractButton::clicked, q, &CentralToolBar::_q_buttonClicked);
+    q->connect(m_freehandButton, &QAbstractButton::clicked, q, &CentralToolBar::_q_buttonClicked);
+    q->connect(m_playButton, &QAbstractButton::clicked, q, &CentralToolBar::_q_buttonClicked);
+    q->connect(m_stopButton, &QAbstractButton::clicked, q, &CentralToolBar::_q_buttonClicked);
+    q->connect(m_replayButton, &QAbstractButton::clicked, q, &CentralToolBar::_q_buttonClicked);
 }

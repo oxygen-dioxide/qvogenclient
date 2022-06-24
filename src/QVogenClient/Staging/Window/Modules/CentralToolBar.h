@@ -3,6 +3,7 @@
 
 #include <QWidget>
 
+class MainWindow;
 class CentralToolBarPrivate;
 
 class CentralToolBar : public QWidget {
@@ -19,10 +20,15 @@ public:
         Free,
     };
 
+    MainWindow *mainWindow() const;
+
 protected:
     CentralToolBar(CentralToolBarPrivate &d, QWidget *parent = nullptr);
 
     QScopedPointer<CentralToolBarPrivate> d_ptr;
+
+private:
+    void _q_buttonClicked();
 };
 
 #endif // CENTRALTOOLBAR_H

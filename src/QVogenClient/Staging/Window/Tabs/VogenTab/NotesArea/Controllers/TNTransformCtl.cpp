@@ -125,32 +125,33 @@ bool TNTransformCtl::eventFilter(QObject *obj, QEvent *event) {
     if (obj == a) {
         switch (event->type()) {
 
-            // Mouse Press Event
-            case QEvent::GraphicsSceneMousePress: {
-                auto item = a->itemUnderMouse();
-                if (!item) {
-                    // No Item Under Mouse
-                    auto e = static_cast<QGraphicsSceneMouseEvent *>(event);
-                    auto button = e->button();
-                    const auto &data = a->view()->controlData();
-                    const auto &modifiers = qApp->keyboardModifiers();
+        // Mouse Press Event
+        case QEvent::GraphicsSceneMousePress: {
+            auto item = a->itemUnderMouse();
+            if (!item) {
+                // No Item Under Mouse
+                auto e = static_cast<QGraphicsSceneMouseEvent *>(event);
+                auto button = e->button();
+                const auto &data = a->view()->controlData();
+                const auto &modifiers = qApp->keyboardModifiers();
 
-                    if (button == Qt::LeftButton) {
-                        if (modifiers == data.dragM) {
-                            // Decision: Move
-                            setScrollDrag(true);
-                        } else if (modifiers == data.dragZ) {
-                            // Decision: Zoom
-                            setZoomDrag(true);
-                        }
+                if (button == Qt::LeftButton) {
+                    if (modifiers == data.dragM) {
+                        // Decision: Move
+                        setScrollDrag(true);
+                    } else if (modifiers == data.dragZ) {
+                        // Decision: Zoom
+                        setZoomDrag(true);
                     }
                 }
-                break;
             }
+            break;
+        }
 
-                // Mouse Move Event
-            case QEvent::GraphicsSceneMouseMove: {
-                auto e = static_cast<QGraphicsSceneMouseEvent *>(event);
+            // Mouse Move Event
+        case QEvent::GraphicsSceneMouseMove: {
+            auto e = static_cast<QGraphicsSceneMouseEvent *>(event);
+            if (e->buttons() & Qt::LeftButton) {
                 if (!a->mouseMoving()) {
                     // Mouse About To Move
                 } else {
@@ -170,22 +171,23 @@ bool TNTransformCtl::eventFilter(QObject *obj, QEvent *event) {
                         // return true; // Intercept
                     }
                 }
-                break;
             }
+            break;
+        }
 
-                // Mouse Release Event / Focus Out Event
-            case QEvent::GraphicsSceneMouseRelease: {
-                if (m_scrollDrag) {
-                    setScrollDrag(false);
-                }
-                if (m_zoomDrag) {
-                    setZoomDrag(false);
-                }
-                break;
+            // Mouse Release Event / Focus Out Event
+        case QEvent::GraphicsSceneMouseRelease: {
+            if (m_scrollDrag) {
+                setScrollDrag(false);
             }
+            if (m_zoomDrag) {
+                setZoomDrag(false);
+            }
+            break;
+        }
 
-            default:
-                break;
+        default:
+            break;
         }
     }
     return TNController::eventFilter(obj, event);

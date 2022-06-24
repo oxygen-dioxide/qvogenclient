@@ -29,25 +29,28 @@ QGraphicsItem *TNPriorCtl::itemUnderMouse() const {
 bool TNPriorCtl::eventFilter(QObject *obj, QEvent *event) {
     if (obj == a) {
         switch (event->type()) {
-            case QEvent::GraphicsSceneMousePress: {
-                if (m_pressed) {
-                    // Stop spreading event when virtual pressing state is set
-                    qDebug() << "Press filtered";
-                    return true;
-                }
-                m_pressed = true;
+        case QEvent::GraphicsSceneMousePress: {
+            if (m_pressed) {
+                // Stop spreading event when virtual pressing state is set
+                qDebug() << "Press filtered";
+                return true;
+            }
+            m_pressed = true;
 
-                auto e = static_cast<QGraphicsSceneMouseEvent *>(event);
-                m_itemUnderMouse = a->itemAt(e->scenePos(), QTransform());
-                break;
-            }
-            case QEvent::GraphicsSceneMouseMove: {
-            }
-            case QEvent::GraphicsSceneMouseRelease: {
-                m_pressed = false;
-            }
-            default:
-                break;
+            auto e = static_cast<QGraphicsSceneMouseEvent *>(event);
+            m_itemUnderMouse = a->itemAt(e->scenePos(), QTransform());
+            break;
+        }
+        case QEvent::GraphicsSceneMouseMove: {
+//            auto e = static_cast<QGraphicsSceneMouseEvent *>(event);
+//            if (e->buttons() == Qt::LeftButton) {
+//            }
+        }
+        case QEvent::GraphicsSceneMouseRelease: {
+            m_pressed = false;
+        }
+        default:
+            break;
         }
     }
     return TNController::eventFilter(obj, event);
