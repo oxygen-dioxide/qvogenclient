@@ -4,6 +4,7 @@
 
 CentralTabPrivate::CentralTabPrivate() {
     edited = false;
+    selectionFlags = 0;
 }
 
 CentralTabPrivate::~CentralTabPrivate() {

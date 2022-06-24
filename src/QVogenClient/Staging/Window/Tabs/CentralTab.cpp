@@ -43,6 +43,11 @@ bool CentralTab::canRedo() const {
     return !d->latest();
 }
 
+int CentralTab::selectionFlags() const {
+    Q_D(const CentralTab);
+    return d->selectionFlags;
+}
+
 void CentralTab::setTabName(const QString &tabName) {
     Q_D(CentralTab);
     BaseTab::setTabName(d->setTabNameProxy(tabName));

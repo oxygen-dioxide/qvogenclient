@@ -14,6 +14,8 @@ public:
     ~TNNoteGroup();
 
 public:
+    quint64 id;
+
     QString name;
     QString singer;
     QString rom;

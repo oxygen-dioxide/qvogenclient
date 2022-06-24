@@ -57,6 +57,16 @@ namespace TWNote {
         QString lyric;
     };
 
+    struct NoteAll {
+        quint64 id;
+        int start;
+        int length;
+        int noteNum;
+        QString lyric;
+
+        quint64 gid;
+    };
+
 } // namespace TWNote
 
 #endif // TWRAPPEDDATA_H

@@ -269,6 +269,10 @@ bool TNotesArea::itemStretching() const {
     return m_notesCtl->isStretching();
 }
 
+bool TNotesArea::hasSelection() const {
+    return m_notesCtl->hasSelection();
+}
+
 QGraphicsItem *TNotesArea::itemUnderMouse() const {
     return m_priorCtl->itemUnderMouse();
 }

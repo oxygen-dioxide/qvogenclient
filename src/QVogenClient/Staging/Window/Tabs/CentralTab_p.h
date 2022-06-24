@@ -16,6 +16,8 @@ public:
     bool edited;
     QString filename;
 
+    int selectionFlags;
+
     virtual bool earliest() const;
     virtual bool latest() const;
 

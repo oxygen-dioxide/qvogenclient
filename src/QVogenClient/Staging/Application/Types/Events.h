@@ -17,6 +17,8 @@ namespace QEventImpl {
 
         StdinRequest,
 
+        SceneActionRequest,
+
         // LayoutRequest
     };
 
@@ -73,6 +75,7 @@ namespace QEventImpl {
 
         enum ChangeType {
             Operate,
+            Select,
         };
 
         inline int cType() const {
@@ -112,6 +115,27 @@ namespace QEventImpl {
     protected:
         int it;
         int ip;
+    };
+
+    // Scene Action Request
+    class SceneActionRequestEvent : public QEvent {
+    public:
+        enum Action {
+            Cut,
+            Copy,
+            Paste,
+            Remove,
+        };
+
+        SceneActionRequestEvent(Action a);
+        ~SceneActionRequestEvent();
+
+        inline int action() const {
+            return a;
+        }
+
+    protected:
+        int a;
     };
 
     void Register();

@@ -21,6 +21,8 @@ public:
     void moveNotes(const QList<TWNote::Movement> &moves);
     void stretchNotes(const QList<TWNote::Stretch> &stretches);
     void changeLyrics(const QList<TWNote::Lyric> &lyrics);
+    void addNotes(const QList<TWNote::NoteAll> &notes);
+    void removeNotes(const QList<quint64> &ids);
 
 public:
     void selectAll();
@@ -29,6 +31,8 @@ public:
     bool isMoving() const;
     bool isStretching() const;
     bool isLyricsEditing() const;
+
+    bool hasSelection() const;
 
 protected:
     struct MovingData {
@@ -51,9 +55,10 @@ protected:
     QList<StretchingData> m_stretchingData;
 
 protected:
-    quint64 m_noteMaxId;
+    quint64 m_maxNoteId;
+    quint64 m_maxGroupId;
 
-    QList<TNNoteGroup *> m_noteGroups; // Utterances
+    QMap<quint64, TNNoteGroup *> m_noteGroups; // Utterances
     TNNoteGroup *m_mainGroup;
     TNNoteGroup *m_currentGroup;
 
@@ -67,7 +72,14 @@ protected:
 
     void switchGroup(TNNoteGroup *group);
 
-    TNRectNote *createNote(quint64 id = 0);
+    // Note Variations
+    TNRectNote *createNote(quint64 id, int start, int len, int tone, const QString &lrc,
+                           TNNoteGroup *g);
+    void removeNote(TNRectNote *p);
+
+    // Group Variations
+    TNNoteGroup *createGroup(quint64 id);
+    void removeGroup(TNNoteGroup *g);
 
     void adjustGeometry(TNRectNote *note);
     void adjustGroupGeometry(const TNNoteGroup *group);

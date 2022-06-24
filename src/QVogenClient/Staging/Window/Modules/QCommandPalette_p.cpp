@@ -80,11 +80,13 @@ void QCommandPalettePrivate::activateItem(QListWidgetItem *item) {
     emit q->activated(item);
 }
 
-void QCommandPalettePrivate::removeAllItems() {
+void QCommandPalettePrivate::reset() {
     // Remove all items
     while (listWidget->count() > 0) {
         listWidget->takeItem(0);
     }
+    lineEdit->clear();
+    lineEdit->setPlaceholderText(QString());
 }
 
 QListWidgetItem *QCommandPalettePrivate::createItem(const QIcon &icon, const QSize &size, int type,

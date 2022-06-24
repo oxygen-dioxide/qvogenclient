@@ -3,11 +3,15 @@
 #include "../TNotesArea.h"
 #include "../TNotesScroll.h"
 
+#include "Types/Actions.h"
 #include "Types/Events.h"
 #include "Types/Graphics.h"
 
 #include "../../Utils/Events/TOperateEvent.h"
+#include "../../Utils/Events/TSelectEvent.h"
+
 #include "../../Utils/Operations/TOLyricsChange.h"
+#include "../../Utils/Operations/TONoteInsDel.h"
 #include "../../Utils/Operations/TONoteMove.h"
 #include "../../Utils/Operations/TONoteStretch.h"
 
@@ -27,7 +31,8 @@ TNNotesCtl::TNNotesCtl(TNotesArea *parent) : TNController(parent) {
     m_mainGroup = new TNNoteGroup(this);
     m_currentGroup = m_mainGroup;
 
-    m_noteMaxId = 0;
+    m_maxNoteId = 0;
+    m_maxGroupId = 1;
 
     m_editing = false;
 }
@@ -41,7 +46,7 @@ void TNNotesCtl::install() {
 
 void TNNotesCtl::setUtterances(const QList<TWProject::Utterance> &utters) {
     for (const auto &utter : utters) {
-        auto g = (utter.name == MAIN_GROUP_NAME) ? m_mainGroup : new TNNoteGroup(this);
+        auto g = (utter.name == MAIN_GROUP_NAME) ? m_mainGroup : createGroup(0);
 
         g->name = utter.name;
         g->singer = utter.singer;
@@ -49,27 +54,13 @@ void TNNotesCtl::setUtterances(const QList<TWProject::Utterance> &utters) {
 
         const auto &notes = utter.notes;
         for (const auto &note : notes) {
-            auto p = createNote();
-
-            p->start = note.start;
-            p->length = note.length;
-            p->tone = note.noteNum;
-            p->lyric = note.rom;
-            p->group = g;
-
-            p->setEnabled(g == m_currentGroup);
-
-            // Insert to group
-            g->insert(p);
-
-            // Insert to all notes
-            m_timeBounds->insert(p);
-            m_noteMap.insert(p->id, p);
+            auto p = createNote(0, note.start, note.length, note.noteNum, note.rom, g);
+            Q_UNUSED(p);
         }
 
         // Insert to groups
         if (g != m_mainGroup) {
-            m_noteGroups.append(g);
+            m_noteGroups.insert(g->id, g);
         }
     }
 
@@ -131,6 +122,31 @@ void TNNotesCtl::changeLyrics(const QList<TWNote::Lyric> &lyrics) {
     }
 }
 
+void TNNotesCtl::addNotes(const QList<TWNote::NoteAll> &notes) {
+    for (const auto &note : qAsConst(notes)) {
+        auto it = m_noteGroups.find(note.gid);
+        if (it == m_noteGroups.end()) {
+            continue;
+        }
+        auto g = it.value();
+        auto p = createNote(note.id, note.start, note.length, note.noteNum, note.lyric, g);
+        adjustGeometry(p);
+    }
+    adjustCanvas();
+}
+
+void TNNotesCtl::removeNotes(const QList<quint64> &ids) {
+    for (quint64 id : qAsConst(ids)) {
+        auto it = m_noteMap.find(id);
+        if (it == m_noteMap.end()) {
+            continue;
+        }
+        auto p = it.value();
+        removeNote(p);
+    }
+    adjustCanvas();
+}
+
 void TNNotesCtl::selectAll() {
     setGroupSelected(m_currentGroup, true);
 }
@@ -172,14 +188,66 @@ bool TNNotesCtl::isLyricsEditing() const {
     return m_editing;
 }
 
-TNRectNote *TNNotesCtl::createNote(quint64 id) {
-    auto p = new TNRectNote(a);
-    p->id = (id == 0) ? (++m_noteMaxId) : id;
+bool TNNotesCtl::hasSelection() const {
+    return !m_selection->isEmpty();
+}
 
+TNRectNote *TNNotesCtl::createNote(quint64 id, int start, int len, int tone, const QString &lrc,
+                                   TNNoteGroup *g) {
+    auto p = new TNRectNote(a);
+
+    p->id = (id == 0) ? (++m_maxNoteId) : id;
+
+    p->start = start;
+    p->length = len;
+    p->tone = tone;
+    p->lyric = lrc;
+    p->group = g;
+
+    p->setEnabled(g == m_currentGroup);
+
+    // Insert to group
+    g->insert(p);
+
+    // Insert to all notes
+    m_timeBounds->insert(p);
+    m_noteMap.insert(p->id, p);
+
+    // Add to scene
     a->addItem(p);
     p->setZValue(a->Note);
 
     return p;
+}
+
+void TNNotesCtl::removeNote(TNRectNote *p) {
+    auto g = p->group;
+
+    // Remove from selection if selected
+    if (p->isSelected()) {
+        deselectOne(p);
+    }
+
+    // Remove from group
+    g->remove(p);
+
+    // Remove from all notes
+    m_timeBounds->remove(p);
+    m_noteMap.remove(p->id);
+
+    p->deleteLater();
+}
+
+TNNoteGroup *TNNotesCtl::createGroup(quint64 id) {
+    auto g = new TNNoteGroup(this);
+    g->id = (id == 0) ? (++m_maxGroupId) : id;
+
+    return g;
+}
+
+void TNNotesCtl::removeGroup(TNNoteGroup *g) {
+    m_noteGroups.remove(g->id);
+    g->deleteLater();
 }
 
 void TNNotesCtl::adjustGeometry(TNRectNote *note) {
@@ -223,6 +291,10 @@ void TNNotesCtl::selectOne(TNRectNote *p) {
     if (!p->isSelected() && p->isEnabled()) {
         p->setSelected(true);
         m_selection->insert(p);
+
+        // Update Menu
+        TSelectEvent e;
+        e.dispatch(a);
     }
 }
 
@@ -230,6 +302,10 @@ void TNNotesCtl::deselectOne(TNRectNote *p) {
     if (p->isSelected()) {
         p->setSelected(false);
         m_selection->remove(p);
+
+        // Update Menu
+        TSelectEvent e;
+        e.dispatch(a);
     }
 }
 
@@ -256,6 +332,7 @@ void TNNotesCtl::setGroupEnabled(TNNoteGroup *group, bool enabled) {
 QList<TNRectNote *> TNNotesCtl::tryApplyLyrics(int len) {
     QList<TNRectNote *> res;
     TNRectNote *lastNote = nullptr;
+    TNNoteGroup *g = nullptr;
 
     if (len == 0) {
         return res;
@@ -266,6 +343,9 @@ QList<TNRectNote *> TNNotesCtl::tryApplyLyrics(int len) {
     for (const auto &pair : selection) {
         const auto &set = pair.second;
         auto note = *set.begin();
+        if (!g) {
+            g = note->group;
+        }
         res.append(note);
         len--;
         lastNote = note;
@@ -274,10 +354,15 @@ QList<TNRectNote *> TNNotesCtl::tryApplyLyrics(int len) {
         }
     }
 
+    if (!g) {
+        Q_ASSERT(0);
+        return res;
+    }
+
     // Fill Following Notes
     if (len > 0) {
-        const auto &all = m_timeBounds->begins();
-        int index = m_timeBounds->findBegin(lastNote);
+        const auto &all = g->begins();
+        int index = g->findBegin(lastNote);
         for (int i = index + 1; i < all.size(); ++i) {
             auto note = *all.at(i).second.begin();
             res.append(note);
@@ -363,10 +448,8 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                     for (const auto &pair : selection) {
                         const auto &set = pair.second;
                         for (auto note : set) {
-                            if (note->isEnabled()) {
-                                m_movingData.append(MovingData{note, note->pos(), 0, 0});
-                                m_startPoint = e->scenePos();
-                            }
+                            m_movingData.append(MovingData{note, note->pos(), 0, 0});
+                            m_startPoint = e->scenePos();
                         }
                     }
                 } else if (toStretch) {
@@ -375,11 +458,9 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                     for (const auto &pair : selection) {
                         const auto &set = pair.second;
                         for (auto note : set) {
-                            if (note->isEnabled()) {
-                                m_stretchingData.append(
-                                    StretchingData{note, note->pos(), note->size(), 0});
-                                m_startPoint = e->scenePos();
-                            }
+                            m_stretchingData.append(
+                                StretchingData{note, note->pos(), note->size(), 0});
+                            m_startPoint = e->scenePos();
                         }
                     }
                 }
@@ -463,7 +544,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
 
                 if (!moves.isEmpty()) {
                     // New Operation
-                    TONoteMove *op = new TONoteMove();
+                    auto op = new TONoteMove();
                     op->data = std::move(moves);
 
                     // Dispatch
@@ -490,7 +571,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
 
                 if (!stretches.isEmpty()) {
                     // New Operation
-                    TONoteStretch *op = new TONoteStretch();
+                    auto op = new TONoteStretch();
                     op->data = std::move(stretches);
 
                     // Dispatch
@@ -511,7 +592,6 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
             }
             break;
         }
-
 
         case QEventImpl::SceneRectChange: {
             auto e = static_cast<QEventImpl::SceneRectChangeEvent *>(event);
@@ -577,6 +657,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                         // Change new notes
                         m_cachedLyrics.clear();
                         QList<TNRectNote *> curNotes = tryApplyLyrics(lyrics.size());
+
                         for (int i = 0; i < curNotes.size(); ++i) {
                             auto note = curNotes.at(i);
                             m_cachedLyrics.append(qMakePair(note, note->lyric));
@@ -609,7 +690,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
 
                         if (!changes.isEmpty()) {
                             // New Operation
-                            TOLyricsChange *op = new TOLyricsChange();
+                            auto op = new TOLyricsChange();
                             op->data = std::move(changes);
 
                             // Dispatch
@@ -637,10 +718,59 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                 default:
                     break;
                 }
+                break;
             }
             default:
                 break;
             }
+        }
+
+        case QEventImpl::SceneActionRequest: {
+            auto e = static_cast<QEventImpl::SceneActionRequestEvent *>(event);
+            switch (e->action()) {
+            case QEventImpl::SceneActionRequestEvent::Cut: {
+                break;
+            }
+            case QEventImpl::SceneActionRequestEvent::Copy: {
+                break;
+            }
+            case QEventImpl::SceneActionRequestEvent::Paste: {
+                break;
+            }
+            case QEventImpl::SceneActionRequestEvent::Remove: {
+                // Remove Notes
+                QList<TONoteInsDel::NoteData> notes;
+                const auto &selection = m_selection->begins();
+                for (const auto &pair : selection) {
+                    const auto &set = pair.second;
+                    for (auto note : set) {
+                        notes.append(TONoteInsDel::NoteData{
+                            note->id,        // Id
+                            note->start,     // Start
+                            note->length,    // Length
+                            note->tone,      // Tone
+                            note->lyric,     // Lyric
+                            note->group->id, // Gid
+                        });
+                        removeNote(note);
+                    }
+                }
+
+                if (!notes.isEmpty()) {
+                    // New Operation
+                    auto op = new TONoteInsDel(TONoteInsDel::Remove);
+                    op->data = std::move(notes);
+
+                    // Dispatch
+                    TOperateEvent e;
+                    e.setData(op);
+                    e.dispatch(a);
+                }
+                break;
+            }
+            }
+
+            break;
         }
 
         default:

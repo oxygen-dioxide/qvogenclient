@@ -10,7 +10,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Application Information
 set(APP_DEPLOY ON)
-set(APP_VERSION 0.2.17)
+set(APP_VERSION 0.2.18)
 
 # Set Directories
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)

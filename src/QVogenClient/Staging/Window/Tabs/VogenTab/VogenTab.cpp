@@ -10,6 +10,7 @@
 
 #include "Utils/TWrappedData.h"
 
+#include <QApplication>
 #include <QDir>
 #include <QFileInfo>
 #include <QMessageBox>
@@ -119,6 +120,7 @@ void VogenTab::undo() {
         case TBaseOperation::NoteMove:
         case TBaseOperation::NoteStretch:
         case TBaseOperation::LyricsChange:
+        case TBaseOperation::NoteAddDelete:
             success = d->piano->notesArea()->processOperation(op, true);
             break;
         default:
@@ -140,6 +142,7 @@ void VogenTab::redo() {
         case TBaseOperation::NoteMove:
         case TBaseOperation::NoteStretch:
         case TBaseOperation::LyricsChange:
+        case TBaseOperation::NoteAddDelete:
             success = d->piano->notesArea()->processOperation(op, false);
             break;
         default:
@@ -155,6 +158,22 @@ void VogenTab::redo() {
 void VogenTab::handleSpecificAction(ActionImpl::Action a) {
     Q_D(VogenTab);
     switch (a) {
+    case ActionImpl::Edit_Cut: {
+        QEventImpl::SceneActionRequestEvent e(QEventImpl::SceneActionRequestEvent::Cut);
+        qApp->sendEvent(d->piano->notesArea(), &e);
+    }
+    case ActionImpl::Edit_Copy: {
+        QEventImpl::SceneActionRequestEvent e(QEventImpl::SceneActionRequestEvent::Copy);
+        qApp->sendEvent(d->piano->notesArea(), &e);
+    }
+    case ActionImpl::Edit_Paste: {
+        QEventImpl::SceneActionRequestEvent e(QEventImpl::SceneActionRequestEvent::Paste);
+        qApp->sendEvent(d->piano->notesArea(), &e);
+    }
+    case ActionImpl::Edit_Remove: {
+        QEventImpl::SceneActionRequestEvent e(QEventImpl::SceneActionRequestEvent::Remove);
+        qApp->sendEvent(d->piano->notesArea(), &e);
+    }
     case ActionImpl::Modify_InsertLyrics: {
         d->inputLyrics();
         break;

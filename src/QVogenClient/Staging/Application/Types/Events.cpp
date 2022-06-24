@@ -1,48 +1,57 @@
 #include "Events.h"
 
-QEventImpl::MenuUpdateRequestEvent::MenuUpdateRequestEvent(int menuIndex)
+using namespace QEventImpl;
+
+MenuUpdateRequestEvent::MenuUpdateRequestEvent(int menuIndex)
     : QEvent(static_cast<QEvent::Type>(MenuUpdateRequest)), m_menuIndex(menuIndex) {
 }
 
-QEventImpl::MenuUpdateRequestEvent::~MenuUpdateRequestEvent() {
+MenuUpdateRequestEvent::~MenuUpdateRequestEvent() {
 }
 
-int QEventImpl::MenuUpdateRequestEvent::menuIndex() const {
+int MenuUpdateRequestEvent::menuIndex() const {
     return m_menuIndex;
 }
 
-QEventImpl::SceneRectChangeEvent::SceneRectChangeEvent(const QPair<QSize, int> &cur,
-                                                       const QPair<QSize, int> &org)
+SceneRectChangeEvent::SceneRectChangeEvent(const QPair<QSize, int> &cur,
+                                           const QPair<QSize, int> &org)
     : QResizeEvent(cur.first, org.first), sec(cur.second), oldSec(org.second) {
     this->t = static_cast<QEvent::Type>(SceneRectChange);
 }
 
-QEventImpl::SceneRectChangeEvent::~SceneRectChangeEvent() {
+SceneRectChangeEvent::~SceneRectChangeEvent() {
 }
 
-bool QEventImpl::SceneRectChangeEvent::sizeChanged() const {
+bool SceneRectChangeEvent::sizeChanged() const {
     return s != olds;
 }
 
-QEventImpl::SceneRubberSelectEvent::SceneRubberSelectEvent(const QRectF &rect)
+SceneRubberSelectEvent::SceneRubberSelectEvent(const QRectF &rect)
     : QEvent(static_cast<QEvent::Type>(SceneRubberSelect)), r(rect) {
 }
 
-QEventImpl::SceneRubberSelectEvent::~SceneRubberSelectEvent() {
+SceneRubberSelectEvent::~SceneRubberSelectEvent() {
 }
 
-QEventImpl::PianoRollChangeEvent::PianoRollChangeEvent(int t)
+PianoRollChangeEvent::PianoRollChangeEvent(int t)
     : QEvent(static_cast<QEvent::Type>(PianoRollChange)), t(t) {
 }
 
-QEventImpl::PianoRollChangeEvent::~PianoRollChangeEvent() {
+PianoRollChangeEvent::~PianoRollChangeEvent() {
 }
 
-QEventImpl::StdinRequestEvent::StdinRequestEvent(InputType type, InputProcess process)
+StdinRequestEvent::StdinRequestEvent(InputType type, InputProcess process)
     : QEvent(static_cast<QEvent::Type>(StdinRequest)), it(type), ip(process) {
 }
 
-QEventImpl::StdinRequestEvent::~StdinRequestEvent() {
+StdinRequestEvent::~StdinRequestEvent() {
+}
+
+SceneActionRequestEvent::SceneActionRequestEvent(Action a)
+    : QEvent(static_cast<QEvent::Type>(SceneActionRequest)), a(a) {
+}
+
+SceneActionRequestEvent::~SceneActionRequestEvent() {
 }
 
 void QEventImpl::Register() {
@@ -52,4 +61,5 @@ void QEventImpl::Register() {
     QEvent::registerEventType(ItemGeometryUpdate);
     QEvent::registerEventType(PianoRollChange);
     QEvent::registerEventType(StdinRequest);
+    QEvent::registerEventType(SceneActionRequest);
 }

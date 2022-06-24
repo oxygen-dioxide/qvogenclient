@@ -12,6 +12,7 @@ public:
         NoteMove,
         NoteStretch,
         LyricsChange,
+        NoteAddDelete,
     };
 
 public:

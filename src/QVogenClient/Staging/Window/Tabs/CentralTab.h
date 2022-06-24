@@ -47,6 +47,8 @@ public:
     bool canUndo() const;
     bool canRedo() const;
 
+    int selectionFlags() const;
+
 protected:
     void setTabName(const QString &tabName) override final; // Set the title of tab
     void updateTabName() override final;

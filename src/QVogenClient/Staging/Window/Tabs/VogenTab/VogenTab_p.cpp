@@ -75,11 +75,18 @@ void VogenTabPrivate::clearHistory() {
 }
 
 void VogenTabPrivate::dispatchEvent(QEventImpl::PianoRollChangeEvent *event) {
+    Q_Q(VogenTab);
+
     switch (event->cType()) {
     case QEventImpl::PianoRollChangeEvent::Operate: {
         auto e = static_cast<TOperateEvent *>(event);
         addHistory(e->takeData());
         break;
+    }
+    case QEventImpl::PianoRollChangeEvent::Select: {
+        selectionFlags = piano->notesArea()->hasSelection();
+        QEventImpl::MenuUpdateRequestEvent e(ActionImpl::SelectState);
+        qApp->sendEvent(q->window(), &e);
     }
     default:
         break;

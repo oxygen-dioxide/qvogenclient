@@ -27,7 +27,7 @@ QCommandPalette::~QCommandPalette() {
 void QCommandPalette::showCommands(QCommandPalette::CommandType type) {
     Q_D(QCommandPalette);
 
-    d->removeAllItems();
+    d->reset();
     d->curCmdType = type;
 
     switch (type) {
@@ -61,6 +61,7 @@ void QCommandPalette::showCommands(QCommandPalette::CommandType type) {
 
 void QCommandPalette::showLineEdit(const QString &hint, const QString &placeholder) {
     Q_D(QCommandPalette);
+    d->reset();
     d->lineEdit->setPlaceholderText(placeholder);
     d->lineEdit->setText(hint);
     d->listWidget->hide();
@@ -71,8 +72,7 @@ void QCommandPalette::finish() {
     Q_D(QCommandPalette);
 
     hide();
-    d->removeAllItems();
-    d->lineEdit->setPlaceholderText(QString());
+    d->reset();
 }
 
 int QCommandPalette::count() const {

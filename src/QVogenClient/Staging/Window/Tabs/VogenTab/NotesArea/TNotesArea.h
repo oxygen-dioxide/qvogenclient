@@ -152,6 +152,8 @@ public:
     bool itemMoving() const;
     bool itemStretching() const;
 
+    bool hasSelection() const;
+
     QGraphicsItem *itemUnderMouse() const;
 
     void setVisionFitToItem(QGraphicsItem *item, Qt::AnchorPoint side, bool tween = false);
