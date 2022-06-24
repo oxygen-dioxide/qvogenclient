@@ -7,6 +7,7 @@
 #include "Types/Events.h"
 #include "Types/Graphics.h"
 
+#include "../../Utils/Events/TDigitalEvent.h"
 #include "../../Utils/Events/TOperateEvent.h"
 #include "../../Utils/Events/TSelectEvent.h"
 
@@ -821,7 +822,6 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                     }
                 }
                 if (act != QEventImpl::SceneActionRequestEvent::Copy) {
-                    qDebug() << act << QEventImpl::SceneActionRequestEvent::Copy;
                     if (!notes.isEmpty()) {
                         // New Operation
                         auto op = new TONoteInsDel(TONoteInsDel::Remove);
@@ -845,6 +845,44 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                 }
                 break;
             }
+            case QEventImpl::SceneActionRequestEvent::Digital: {
+                auto e2 = static_cast<TDigitalEvent *>(e);
+                switch (e2->dType()) {
+                case TDigitalEvent::Transpose: {
+                    QList<TONoteMove::MoveData> moves;
+                    const auto &selection = m_selection->begins();
+                    for (const auto &pair : selection) {
+                        const auto &set = pair.second;
+                        for (auto note : set) {
+                            int dy = e2->digit;
+                            dy = qMin(qMax(24, note->tone + dy), 107) - note->tone;
+
+                            note->tone += dy;
+                            adjustGeometry(note);
+
+                            if (dy != 0) {
+                                moves.append(TONoteMove::MoveData{note->id, 0, dy});
+                            }
+                        }
+                    }
+                    if (!moves.isEmpty()) {
+                        // New Operation
+                        auto op = new TONoteMove();
+                        op->data = std::move(moves);
+
+                        // Dispatch
+                        TOperateEvent e;
+                        e.setData(op);
+                        e.dispatch(a);
+                    }
+                    break;
+                }
+                default:
+                    break;
+                }
+            }
+            default:
+                break;
             }
 
             break;

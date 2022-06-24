@@ -41,6 +41,7 @@ public:
 
     int count() const;
     bool asStdin() const;
+    QString text() const;
 
 signals:
     void activated(QListWidgetItem *item);

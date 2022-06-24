@@ -41,7 +41,8 @@ public:
     int showCommands(QCommandPalette::CommandType type);
 
     template <class P>
-    int showLineEdit(const QString &hint, P *previewer = 0, const QString &placeholder = QString());
+    int showLineEdit(const QString &hint, P previewer, const QString &placeholder = QString(),
+                     QString *res = nullptr);
 
 protected:
     // UI
@@ -73,15 +74,12 @@ private:
 };
 
 template <class P>
-int MainWindow::showLineEdit(const QString &hint, P *previewer, const QString &placeholder) {
+int MainWindow::showLineEdit(const QString &hint, P previewer, const QString &placeholder,
+                             QString *res) {
     int result = -1;
     QEventLoop loop;
 
-    auto slot1 = [&previewer](const QString &text) mutable {
-        if (previewer) {
-            (*previewer)(text);
-        }
-    };
+    auto slot1 = [&previewer](const QString &text) mutable { previewer(text); };
 
     auto slot2 = [&loop]() mutable { loop.quit(); };
     auto slot3 = [&result, &loop](QListWidgetItem *item) mutable {
@@ -104,6 +102,10 @@ int MainWindow::showLineEdit(const QString &hint, P *previewer, const QString &p
     disconnect(conn1);
     disconnect(conn2);
     disconnect(conn3);
+
+    if (res) {
+        *res = m_cp->text();
+    }
 
     m_cp->finish();
 

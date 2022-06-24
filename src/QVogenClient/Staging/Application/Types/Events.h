@@ -125,6 +125,7 @@ namespace QEventImpl {
             Copy,
             Paste,
             Remove,
+            Digital,
         };
 
         SceneActionRequestEvent(Action a);

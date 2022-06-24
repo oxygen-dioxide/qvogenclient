@@ -85,6 +85,11 @@ bool QCommandPalette::asStdin() const {
     return !d->listWidget->isVisible();
 }
 
+QString QCommandPalette::text() const {
+    Q_D(const QCommandPalette);
+    return d->lineEdit->text();
+}
+
 void QCommandPalette::showEvent(QShowEvent *event) {
     Q_UNUSED(event);
     setFocus();

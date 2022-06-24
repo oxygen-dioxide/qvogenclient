@@ -182,6 +182,18 @@ void VogenTab::handleSpecificAction(ActionImpl::Action a) {
         d->inputLyrics();
         break;
     }
+    case ActionImpl::Modify_Transpose: {
+        d->inputTranspose();
+        break;
+    }
+    case ActionImpl::Modify_OctaveUp: {
+        d->transpose(12);
+        break;
+    }
+    case ActionImpl::Modify_OctaveDown: {
+        d->transpose(-12);
+        break;
+    }
     default:
         break;
     }

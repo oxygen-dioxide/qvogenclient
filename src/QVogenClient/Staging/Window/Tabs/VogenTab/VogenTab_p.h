@@ -50,6 +50,9 @@ public:
 
     void inputLyrics();
 
+    void inputTranspose();
+    void transpose(int val);
+
     QString setTabNameProxy(const QString &tabName) override;
 };
 

@@ -2,6 +2,7 @@
 
 #include "DataManager.h"
 
+#include "Utils/Events/TDigitalEvent.h"
 #include "Utils/Events/TOperateEvent.h"
 
 #include "MainWindow.h"
@@ -105,19 +106,44 @@ void VogenTabPrivate::inputLyrics() {
     }
 
     auto w = qobject_cast<MainWindow *>(q->window());
-    auto pipe = [=](const QString &text) {
+    auto pipe = [=](const QString &text) -> void {
         // Call editor to update stdin
         StdinRequestEvent e2(StdinRequestEvent::Lyrics, StdinRequestEvent::InputUpdate);
         e2.text = text;
         qApp->sendEvent(piano->notesArea(), &e2);
     };
 
-    int res = w->showLineEdit(e1.text, &pipe);
+    int res = w->showLineEdit(e1.text, pipe);
 
     // Call editor to finish stdin
     StdinRequestEvent e3(StdinRequestEvent::Lyrics, (res == 0) ? StdinRequestEvent::InputCommit
                                                                : StdinRequestEvent::InputAbort);
     qApp->sendEvent(piano->notesArea(), &e3);
+}
+
+void VogenTabPrivate::inputTranspose() {
+    Q_Q(VogenTab);
+
+    auto w = qobject_cast<MainWindow *>(q->window());
+
+    auto pipe = [](const QString &text) { Q_UNUSED(text); };
+
+    QString str;
+    int res =
+        w->showLineEdit(QString(), pipe, QObject::tr("Input transpose offset (0 ~ 84)"), &str);
+    if (res == 0) {
+        bool ok;
+        int val = str.toInt(&ok);
+        if (ok) {
+            transpose(val);
+        }
+    }
+}
+
+void VogenTabPrivate::transpose(int val) {
+    TDigitalEvent e(TDigitalEvent::Transpose);
+    e.digit = val;
+    qApp->sendEvent(piano->notesArea(), &e);
 }
 
 QString VogenTabPrivate::setTabNameProxy(const QString &tabName) {
