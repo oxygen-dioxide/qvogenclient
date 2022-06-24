@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Application Information
-set(APP_DEPLOY OFF)
+set(APP_DEPLOY ON)
 set(APP_VERSION 0.2.17)
 
 # Set Directories

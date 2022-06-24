@@ -17,7 +17,7 @@ public:
         int vMove;
     };
 
-    QList<MoveData> moves;
+    QList<MoveData> data;
 };
 
 #endif // TONOTEMOVE_H

@@ -34,6 +34,7 @@ public:
     };
 
     void activateItem(QListWidgetItem *item);
+    void removeAllItems();
 
     // Item Manager
     QListWidgetItem *createItem(const QIcon &icon, const QSize &size, int type,

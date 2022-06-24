@@ -16,7 +16,7 @@ public:
         int hStretch;
     };
 
-    QList<StretchData> stretches;
+    QList<StretchData> data;
 };
 
 #endif // TONOTESTRETCH_H

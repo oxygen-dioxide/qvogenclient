@@ -566,7 +566,6 @@ CentralToolBar>CToolButton#replay-button {
 QCommandPalette {
     background-color: transparent;
     min-width: 600px;
-    min-height: 400px;
     qproperty-layoutMargins: 10px;
     qproperty-layoutSpacing: 10px;
     qproperty-wallpaper: #252526;

@@ -155,10 +155,10 @@ bool TabManager::closeAll() {
     return res;
 }
 
-void TabManager::triggerCurrent(ActionImpl::Action action) {
+void TabManager::triggerCurrent(ActionImpl::Action a) {
     Q_D(TabManager);
     auto tab = currentTab();
-    switch (action) {
+    switch (a) {
     case File_New: {
         break;
     }
@@ -205,7 +205,7 @@ void TabManager::triggerCurrent(ActionImpl::Action action) {
         }
         break;
     }
-    case View_Quantization:{
+    case View_Quantization: {
         d->w->showCommands(QCommandPalette::Quantization);
         break;
     }
@@ -226,8 +226,12 @@ void TabManager::triggerCurrent(ActionImpl::Action action) {
         QMessageBox::aboutQt(d->w, tr("About %1").arg("Qt"));
         break;
     }
-    default:
+    default: {
+        if (tab) {
+            tab->handleSpecificAction(a);
+        }
         break;
+    }
     }
 }
 

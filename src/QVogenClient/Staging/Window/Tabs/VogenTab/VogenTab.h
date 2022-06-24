@@ -27,6 +27,8 @@ public:
     void undo() override;
     void redo() override;
 
+    void handleSpecificAction(ActionImpl::Action a) override;
+
     void makeUntitled(const QString &name = QString());
 
 protected:

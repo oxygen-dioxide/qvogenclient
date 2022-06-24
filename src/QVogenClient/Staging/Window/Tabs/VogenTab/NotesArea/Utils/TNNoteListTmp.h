@@ -31,6 +31,9 @@ public:
     int firstBegin() const;
     int lastEnd() const;
 
+    bool isBeginSerialized() const;
+    bool isEndSerialized() const;
+
 signals:
     void beginChanged(int index, int val);
     void endChanged(int index, int val);

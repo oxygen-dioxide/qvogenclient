@@ -7,6 +7,8 @@
 #include "BaseTab.h"
 #include "Macros.h"
 
+#include "Types/Actions.h"
+
 class CentralTabPrivate;
 
 class CentralTab : public BaseTab {
@@ -72,6 +74,8 @@ public:
     virtual void change();
 
     virtual bool acceptClose();
+
+    virtual void handleSpecificAction(ActionImpl::Action a);
 
 public:
     static QString TypeToString(Type type);

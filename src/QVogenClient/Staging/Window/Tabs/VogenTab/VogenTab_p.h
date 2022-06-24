@@ -48,6 +48,8 @@ public:
     // Events
     void dispatchEvent(QEventImpl::PianoRollChangeEvent *event);
 
+    void inputLyrics();
+
     QString setTabNameProxy(const QString &tabName) override;
 };
 

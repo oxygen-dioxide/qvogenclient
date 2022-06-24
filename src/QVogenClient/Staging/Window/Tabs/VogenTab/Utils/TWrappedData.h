@@ -40,6 +40,7 @@ public:
 };
 
 namespace TWNote {
+
     struct Movement {
         quint64 id;
         int hMove;
@@ -49,6 +50,11 @@ namespace TWNote {
     struct Stretch {
         quint64 id;
         int hStretch;
+    };
+
+    struct Lyric {
+        quint64 id;
+        QString lyric;
     };
 
 } // namespace TWNote

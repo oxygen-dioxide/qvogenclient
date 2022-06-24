@@ -4,6 +4,12 @@
 
 #include "Utils/Events/TOperateEvent.h"
 
+#include "MainWindow.h"
+
+#include <QApplication>
+
+using namespace QEventImpl;
+
 int VogenTabPrivate::s_untitledIndex = 0;
 
 VogenTabPrivate::VogenTabPrivate() {
@@ -78,6 +84,33 @@ void VogenTabPrivate::dispatchEvent(QEventImpl::PianoRollChangeEvent *event) {
     default:
         break;
     }
+}
+
+void VogenTabPrivate::inputLyrics() {
+    Q_Q(VogenTab);
+
+    // Call editor to start accepting stdin
+    StdinRequestEvent e1(StdinRequestEvent::Lyrics, StdinRequestEvent::InputStart);
+    qApp->sendEvent(piano->notesArea(), &e1);
+
+    if (!e1.isAccepted()) {
+        return;
+    }
+
+    auto w = qobject_cast<MainWindow *>(q->window());
+    auto pipe = [=](const QString &text) {
+        // Call editor to update stdin
+        StdinRequestEvent e2(StdinRequestEvent::Lyrics, StdinRequestEvent::InputUpdate);
+        e2.text = text;
+        qApp->sendEvent(piano->notesArea(), &e2);
+    };
+
+    int res = w->showLineEdit(e1.text, &pipe);
+
+    // Call editor to finish stdin
+    StdinRequestEvent e3(StdinRequestEvent::Lyrics, (res == 0) ? StdinRequestEvent::InputCommit
+                                                               : StdinRequestEvent::InputAbort);
+    qApp->sendEvent(piano->notesArea(), &e3);
 }
 
 QString VogenTabPrivate::setTabNameProxy(const QString &tabName) {

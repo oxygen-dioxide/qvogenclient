@@ -65,17 +65,26 @@ void QCommandPalettePrivate::init() {
 void QCommandPalettePrivate::activateItem(QListWidgetItem *item) {
     Q_Q(QCommandPalette);
 
-    switch (curCmdType) {
-    case QCommandPalette::Quantization: {
-        int quantize = item->data(CommandItemTypes::Quantization).toInt();
-        qRecord->commitEState(CRecordHolder::Quantization, quantize);
-        break;
-    }
-    default:
-        break;
+    if (item) {
+        switch (curCmdType) {
+        case QCommandPalette::Quantization: {
+            int quantize = item->data(CommandItemTypes::Quantization).toInt();
+            qRecord->commitEState(CRecordHolder::Quantization, quantize);
+            break;
+        }
+        default:
+            break;
+        }
     }
 
     emit q->activated(item);
+}
+
+void QCommandPalettePrivate::removeAllItems() {
+    // Remove all items
+    while (listWidget->count() > 0) {
+        listWidget->takeItem(0);
+    }
 }
 
 QListWidgetItem *QCommandPalettePrivate::createItem(const QIcon &icon, const QSize &size, int type,

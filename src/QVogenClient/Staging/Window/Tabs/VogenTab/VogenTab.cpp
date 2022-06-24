@@ -118,6 +118,7 @@ void VogenTab::undo() {
         switch (op->type()) {
         case TBaseOperation::NoteMove:
         case TBaseOperation::NoteStretch:
+        case TBaseOperation::LyricsChange:
             success = d->piano->notesArea()->processOperation(op, true);
             break;
         default:
@@ -138,6 +139,7 @@ void VogenTab::redo() {
         switch (op->type()) {
         case TBaseOperation::NoteMove:
         case TBaseOperation::NoteStretch:
+        case TBaseOperation::LyricsChange:
             success = d->piano->notesArea()->processOperation(op, false);
             break;
         default:
@@ -147,6 +149,18 @@ void VogenTab::redo() {
             d->historyIndex++;
             setEdited(d->savedHistoryIndex != d->historyIndex);
         }
+    }
+}
+
+void VogenTab::handleSpecificAction(ActionImpl::Action a) {
+    Q_D(VogenTab);
+    switch (a) {
+    case ActionImpl::Modify_InsertLyrics: {
+        d->inputLyrics();
+        break;
+    }
+    default:
+        break;
     }
 }
 

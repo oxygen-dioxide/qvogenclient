@@ -362,8 +362,8 @@ void FilesActionEnginePrivate::reloadStrings() {
     displayMenu->setTitle(QObject::tr("Note Display"));
     cursorMenu->setTitle(QObject::tr("Cursor Mode"));
 
-    view_quantization->setText(QObject::tr("Quantization"));
-    view_playhead->setText(QObject::tr("Playhead"));
+    view_quantization->setText(QObject::tr("Quantization..."));
+    view_playhead->setText(QObject::tr("Playhead..."));
 
     appearance_toolBar->setText(QObject::tr("Tool Bar"));
     appearance_navBar->setText(QObject::tr("Navigation Bar"));

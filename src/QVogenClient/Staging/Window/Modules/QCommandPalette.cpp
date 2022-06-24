@@ -27,6 +27,7 @@ QCommandPalette::~QCommandPalette() {
 void QCommandPalette::showCommands(QCommandPalette::CommandType type) {
     Q_D(QCommandPalette);
 
+    d->removeAllItems();
     d->curCmdType = type;
 
     switch (type) {
@@ -53,12 +54,16 @@ void QCommandPalette::showCommands(QCommandPalette::CommandType type) {
     default:
         break;
     }
+
+    d->listWidget->show();
     show();
 }
 
-void QCommandPalette::showLineEdit(const QString &hint) {
+void QCommandPalette::showLineEdit(const QString &hint, const QString &placeholder) {
     Q_D(QCommandPalette);
+    d->lineEdit->setPlaceholderText(placeholder);
     d->lineEdit->setText(hint);
+    d->listWidget->hide();
     show();
 }
 
@@ -66,16 +71,18 @@ void QCommandPalette::finish() {
     Q_D(QCommandPalette);
 
     hide();
-
-    // Remove all items
-    while (d->listWidget->count() > 0) {
-        d->listWidget->takeItem(0);
-    }
+    d->removeAllItems();
+    d->lineEdit->setPlaceholderText(QString());
 }
 
 int QCommandPalette::count() const {
     Q_D(const QCommandPalette);
     return d->listWidget->count();
+}
+
+bool QCommandPalette::asStdin() const {
+    Q_D(const QCommandPalette);
+    return !d->listWidget->isVisible();
 }
 
 void QCommandPalette::showEvent(QShowEvent *event) {
@@ -96,9 +103,7 @@ bool QCommandPalette::eventFilter(QObject *obj, QEvent *event) {
             }
         } else if (key == Qt::Key_Return || key == Qt::Key_Enter) {
             auto item = d->listWidget->currentItem();
-            if (item) {
-                d->activateItem(item);
-            }
+            d->activateItem(item);
             return true;
         } else if (key == Qt::Key_Tab) {
             return true;

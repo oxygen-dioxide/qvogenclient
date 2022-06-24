@@ -285,14 +285,22 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../Staging/MainWindow.cpp" line="98"/>
+        <location filename="../../Staging/MainWindow.cpp" line="103"/>
         <source>Control</source>
         <translation type="unfinished">控制</translation>
     </message>
     <message>
-        <location filename="../../Staging/MainWindow.cpp" line="99"/>
+        <location filename="../../Staging/MainWindow.cpp" line="104"/>
         <source>Utterances</source>
         <translation type="unfinished">乐句</translation>
+    </message>
+</context>
+<context>
+    <name>QCommandPalette</name>
+    <message>
+        <location filename="../../Staging/Window/Modules/QCommandPalette.cpp" line="51"/>
+        <source>Select quantization (Up/down keys to preview)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -503,14 +511,12 @@
         <translation type="unfinished">工具面板</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="365"/>
         <source>Quantization</source>
-        <translation type="unfinished">量化</translation>
+        <translation type="obsolete">量化</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="366"/>
         <source>Playhead</source>
-        <translation type="unfinished">播放头</translation>
+        <translation type="obsolete">播放头</translation>
     </message>
     <message>
         <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="362"/>
@@ -521,6 +527,16 @@
         <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="363"/>
         <source>Cursor Mode</source>
         <translation type="unfinished">指针模式</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="365"/>
+        <source>Quantization...</source>
+        <translation type="unfinished">量化...</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="366"/>
+        <source>Playhead...</source>
+        <translation type="unfinished">播放头...</translation>
     </message>
     <message>
         <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="368"/>
@@ -614,6 +630,10 @@
         <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="387"/>
         <source>Freehand Mode</source>
         <translation type="unfinished">自由模式</translation>
+    </message>
+    <message>
+        <source>Insert Lyrics</source>
+        <translation type="obsolete">插入歌词</translation>
     </message>
     <message>
         <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="396"/>
@@ -772,41 +792,56 @@
         <source>Default</source>
         <translation type="unfinished">默认</translation>
     </message>
+    <message>
+        <location filename="../../Staging/Window/Modules/QCommandPalette_p.cpp" line="49"/>
+        <source>None</source>
+        <translation type="unfinished">无</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Modules/QCommandPalette_p.cpp" line="52"/>
+        <source>Quarter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Modules/QCommandPalette_p.cpp" line="55"/>
+        <source>%1 Quarter</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>TabManager</name>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="222"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="226"/>
         <source>About %1</source>
         <translation type="unfinished">关于 %1</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="304"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="308"/>
         <source>Close</source>
         <translation type="unfinished">关闭</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="305"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="309"/>
         <source>Close Others</source>
         <translation type="unfinished">关闭其他</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="306"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="310"/>
         <source>Close Saved</source>
         <translation type="unfinished">关闭已保存</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="307"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="311"/>
         <source>Close All</source>
         <translation type="unfinished">全部关闭</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="316"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="320"/>
         <source>Show in %1(&amp;S)</source>
         <translation type="unfinished">在%1中显示(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="320"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="324"/>
         <source>Open in %1(&amp;S)</source>
         <translation type="unfinished">在%1中打开(&amp;S)</translation>
     </message>

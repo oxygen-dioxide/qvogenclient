@@ -110,6 +110,10 @@ bool CentralTab::acceptClose() {
     return true;
 }
 
+void CentralTab::handleSpecificAction(ActionImpl::Action a) {
+    Q_UNUSED(a);
+}
+
 QString CentralTab::TypeToString(CentralTab::Type type) {
     QString res;
     switch (type) {

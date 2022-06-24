@@ -16,9 +16,11 @@ public:
     void install() override;
 
     void setUtterances(const QList<TWProject::Utterance> &utters);
+    QList<TWProject::Utterance> utterances() const;
 
     void moveNotes(const QList<TWNote::Movement> &moves);
     void stretchNotes(const QList<TWNote::Stretch> &stretches);
+    void changeLyrics(const QList<TWNote::Lyric> &lyrics);
 
 public:
     void selectAll();
@@ -26,6 +28,7 @@ public:
 
     bool isMoving() const;
     bool isStretching() const;
+    bool isLyricsEditing() const;
 
 protected:
     struct MovingData {
@@ -59,6 +62,9 @@ protected:
 
     TNNoteList *m_selection; // Index
 
+    bool m_editing;
+    QList<QPair<TNRectNote *, QString>> m_cachedLyrics;
+
     void switchGroup(TNNoteGroup *group);
 
     TNRectNote *createNote(quint64 id = 0);
@@ -73,6 +79,8 @@ protected:
 
     void setGroupSelected(TNNoteGroup *group, bool selected);
     void setGroupEnabled(TNNoteGroup *group, bool enabled);
+
+    QList<TNRectNote *> tryApplyLyrics(int len);
 
     bool eventFilter(QObject *obj, QEvent *event) override;
 

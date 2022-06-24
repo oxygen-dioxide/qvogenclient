@@ -35,7 +35,7 @@ public:
     bool closeSaved();
     bool closeAll();
 
-    void triggerCurrent(ActionImpl::Action action);
+    void triggerCurrent(ActionImpl::Action a);
     ActionImpl::States actionStates() const;
 
 protected:

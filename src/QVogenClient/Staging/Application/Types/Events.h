@@ -15,6 +15,8 @@ namespace QEventImpl {
 
         PianoRollChange,
 
+        StdinRequest,
+
         // LayoutRequest
     };
 
@@ -79,6 +81,37 @@ namespace QEventImpl {
 
     protected:
         int t;
+    };
+
+    // Stdin Request
+    class StdinRequestEvent : public QEvent {
+    public:
+        enum InputType {
+            Lyrics,
+        };
+
+        enum InputProcess {
+            InputStart,
+            InputUpdate,
+            InputCommit,
+            InputAbort,
+        };
+
+        StdinRequestEvent(InputType type, InputProcess process = InputUpdate);
+        ~StdinRequestEvent();
+
+        inline int iType() const {
+            return it;
+        }
+        inline int iProcess() const {
+            return ip;
+        }
+
+        QString text;
+
+    protected:
+        int it;
+        int ip;
     };
 
     void Register();

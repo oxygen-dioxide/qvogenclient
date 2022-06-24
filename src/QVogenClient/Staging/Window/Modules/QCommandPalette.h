@@ -36,10 +36,11 @@ public:
 
 public:
     void showCommands(CommandType type);
-    void showLineEdit(const QString &hint);
+    void showLineEdit(const QString &hint, const QString &placeholder);
     void finish();
 
     int count() const;
+    bool asStdin() const;
 
 signals:
     void activated(QListWidgetItem *item);

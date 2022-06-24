@@ -169,43 +169,6 @@ int MainWindow::showCommands(QCommandPalette::CommandType type) {
     return result;
 }
 
-int MainWindow::showLineEdit(const QString &hint, void previewer(const QString &)) {
-    int result = -1;
-    QEventLoop loop;
-
-    auto slot1 = [&previewer](const QString &text) mutable {
-        if (previewer) {
-            previewer(text);
-        }
-    };
-
-    auto slot2 = [&loop]() mutable { loop.quit(); };
-    auto slot3 = [&result, &loop](QListWidgetItem *item) mutable {
-        Q_UNUSED(item);
-        result = 0;
-        loop.quit();
-    };
-
-    auto conn1 = connect(m_cp, &QCommandPalette::textChanged, this, slot1);
-    auto conn2 = connect(m_cp, &QCommandPalette::abandoned, this, slot2);
-    auto conn3 = connect(m_cp, &QCommandPalette::activated, this, slot3);
-
-    m_cp->showLineEdit(hint);
-
-    adjustSelector();
-
-    loop.exec();
-
-    // Don't use obj->disconnect() casually because it's really dangerous!
-    disconnect(conn1);
-    disconnect(conn2);
-    disconnect(conn3);
-
-    m_cp->finish();
-
-    return result;
-}
-
 void MainWindow::resizeEvent(QResizeEvent *event) {
     BasicWindow::resizeEvent(event);
 
@@ -216,7 +179,7 @@ void MainWindow::adjustSelector() {
     if (m_cp->isVisible()) {
         auto w = centralWidget();
         m_cp->adjustSize();
-        m_cp->resize(w->width() / 2, w->height() / 2);
+        m_cp->resize(w->width() / 2, m_cp->asStdin() ? m_cp->height() : (w->height() / 2));
         m_cp->move((width() - m_cp->width()) / 2, w->y());
     }
 }

@@ -7,14 +7,18 @@
 #include "Types/Graphics.h"
 
 #include "../../Utils/Events/TOperateEvent.h"
+#include "../../Utils/Operations/TOLyricsChange.h"
 #include "../../Utils/Operations/TONoteMove.h"
 #include "../../Utils/Operations/TONoteStretch.h"
 
+#include "MathHelper.h"
 #include "ViewHelper.h"
 
 #include <QApplication>
 
 static const char MAIN_GROUP_NAME[] = "%MAIN%";
+
+static const char LYRICS_SEPARATOR = ' ';
 
 TNNotesCtl::TNNotesCtl(TNotesArea *parent) : TNController(parent) {
     m_timeBounds = new TNNoteList(this);
@@ -24,6 +28,8 @@ TNNotesCtl::TNNotesCtl(TNotesArea *parent) : TNController(parent) {
     m_currentGroup = m_mainGroup;
 
     m_noteMaxId = 0;
+
+    m_editing = false;
 }
 
 TNNotesCtl::~TNNotesCtl() {
@@ -82,6 +88,10 @@ void TNNotesCtl::setUtterances(const QList<TWProject::Utterance> &utters) {
     }
 }
 
+QList<TWProject::Utterance> TNNotesCtl::utterances() const {
+    return {};
+}
+
 void TNNotesCtl::moveNotes(const QList<TWNote::Movement> &moves) {
     for (const auto &move : qAsConst(moves)) {
         auto it = m_noteMap.find(move.id);
@@ -107,6 +117,18 @@ void TNNotesCtl::stretchNotes(const QList<TWNote::Stretch> &stretches) {
         adjustGeometry(note);
     }
     adjustCanvas();
+}
+
+void TNNotesCtl::changeLyrics(const QList<TWNote::Lyric> &lyrics) {
+    for (const auto &lrc : qAsConst(lyrics)) {
+        auto it = m_noteMap.find(lrc.id);
+        if (it == m_noteMap.end()) {
+            return;
+        }
+        auto note = it.value();
+        note->lyric = lrc.lyric;
+        note->update();
+    }
 }
 
 void TNNotesCtl::selectAll() {
@@ -144,6 +166,10 @@ bool TNNotesCtl::isMoving() const {
 
 bool TNNotesCtl::isStretching() const {
     return !m_stretchingData.isEmpty();
+}
+
+bool TNNotesCtl::isLyricsEditing() const {
+    return m_editing;
 }
 
 TNRectNote *TNNotesCtl::createNote(quint64 id) {
@@ -225,6 +251,43 @@ void TNNotesCtl::setGroupEnabled(TNNoteGroup *group, bool enabled) {
             note->setEnabled(enabled);
         }
     }
+}
+
+QList<TNRectNote *> TNNotesCtl::tryApplyLyrics(int len) {
+    QList<TNRectNote *> res;
+    TNRectNote *lastNote = nullptr;
+
+    if (len == 0) {
+        return res;
+    }
+
+    // Fill Selected Notes
+    const auto &selection = m_selection->begins();
+    for (const auto &pair : selection) {
+        const auto &set = pair.second;
+        auto note = *set.begin();
+        res.append(note);
+        len--;
+        lastNote = note;
+        if (len == 0) {
+            break;
+        }
+    }
+
+    // Fill Following Notes
+    if (len > 0) {
+        const auto &all = m_timeBounds->begins();
+        int index = m_timeBounds->findBegin(lastNote);
+        for (int i = index + 1; i < all.size(); ++i) {
+            auto note = *all.at(i).second.begin();
+            res.append(note);
+            len--;
+            if (len == 0) {
+                break;
+            }
+        }
+    }
+    return res;
 }
 
 bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
@@ -401,7 +464,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                 if (!moves.isEmpty()) {
                     // New Operation
                     TONoteMove *op = new TONoteMove();
-                    op->moves = std::move(moves);
+                    op->data = std::move(moves);
 
                     // Dispatch
                     TOperateEvent e;
@@ -428,7 +491,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                 if (!stretches.isEmpty()) {
                     // New Operation
                     TONoteStretch *op = new TONoteStretch();
-                    op->stretches = std::move(stretches);
+                    op->data = std::move(stretches);
 
                     // Dispatch
                     TOperateEvent e;
@@ -471,6 +534,113 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                 }
             }
             break;
+        }
+
+        case QEventImpl::StdinRequest: {
+            auto e = static_cast<QEventImpl::StdinRequestEvent *>(event);
+            switch (e->iType()) {
+            case QEventImpl::StdinRequestEvent::Lyrics: {
+                // Handle Lyrics Input
+                switch (e->iProcess()) {
+                case QEventImpl::StdinRequestEvent::InputStart: {
+                    if (m_selection->isEmpty() || !m_selection->isBeginSerialized()) {
+                        // Ignore if there's more than one note sharing same time
+                        e->ignore();
+                    } else {
+                        // Arrange lyrics
+                        m_cachedLyrics.clear();
+
+                        QStringList lyrics;
+                        const auto &selection = m_selection->begins();
+                        for (const auto &pair : selection) {
+                            const auto &set = pair.second;
+                            auto note = *set.begin();
+                            lyrics.append(note->lyric.isEmpty() ? "\\" : note->lyric);
+                            m_cachedLyrics.append(qMakePair(note, note->lyric));
+                        }
+                        e->text = lyrics.join(LYRICS_SEPARATOR);
+                        m_editing = true;
+                    }
+                    break;
+                }
+                case QEventImpl::StdinRequestEvent::InputUpdate: {
+                    if (m_editing) {
+                        auto lyrics = Math::splitAll(e->text, QChar(LYRICS_SEPARATOR));
+
+                        // Recover cached notes
+                        for (const auto &pair : qAsConst(m_cachedLyrics)) {
+                            auto note = pair.first;
+                            note->lyric = pair.second;
+                            note->update();
+                        }
+
+                        // Change new notes
+                        m_cachedLyrics.clear();
+                        QList<TNRectNote *> curNotes = tryApplyLyrics(lyrics.size());
+                        for (int i = 0; i < curNotes.size(); ++i) {
+                            auto note = curNotes.at(i);
+                            m_cachedLyrics.append(qMakePair(note, note->lyric));
+
+                            QString lrc = lyrics.at(i);
+                            if (lrc.front() == '\\') {
+                                lrc = lrc.mid(1);
+                            }
+                            note->lyric = lrc;
+                            note->update();
+                        }
+                    }
+                    break;
+                }
+                case QEventImpl::StdinRequestEvent::InputCommit: {
+                    if (m_editing) {
+                        QList<TOLyricsChange::LyricsData> changes;
+
+                        // Save note lyrics change
+                        for (const auto &pair : qAsConst(m_cachedLyrics)) {
+                            auto note = pair.first;
+                            if (note->lyric != pair.second) {
+                                changes.append(TOLyricsChange::LyricsData{
+                                    note->id,    // Id
+                                    note->lyric, // New
+                                    pair.second  // Old
+                                });
+                            }
+                        }
+
+                        if (!changes.isEmpty()) {
+                            // New Operation
+                            TOLyricsChange *op = new TOLyricsChange();
+                            op->data = std::move(changes);
+
+                            // Dispatch
+                            TOperateEvent e;
+                            e.setData(op);
+                            e.dispatch(a);
+                        }
+
+                        m_editing = false;
+                    }
+                    break;
+                }
+                case QEventImpl::StdinRequestEvent::InputAbort: {
+                    if (m_editing) {
+                        // Recover cached notes
+                        for (const auto &pair : qAsConst(m_cachedLyrics)) {
+                            auto note = pair.first;
+                            note->lyric = pair.second;
+                            note->update();
+                        }
+                        m_editing = false;
+                    }
+                    break;
+                }
+                default:
+                    break;
+                }
+            }
+            default:
+                break;
+            }
         }
 
         default:

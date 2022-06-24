@@ -115,6 +115,30 @@ int TNNoteList::lastEnd() const {
     return m_ends.back().first;
 }
 
+bool TNNoteList::isBeginSerialized() const {
+    bool res = true;
+    for (const auto &pair : qAsConst(m_begins)) {
+        const auto &set = pair.second;
+        if (set.size() > 1) {
+            res = false;
+            break;
+        }
+    }
+    return res;
+}
+
+bool TNNoteList::isEndSerialized() const {
+    bool res = true;
+    for (const auto &pair : qAsConst(m_ends)) {
+        const auto &set = pair.second;
+        if (set.size() > 1) {
+            res = false;
+            break;
+        }
+    }
+    return res;
+}
+
 int TNNoteList::lowerBound_begin(int val) const {
     int i, j, mid;
     i = 0;

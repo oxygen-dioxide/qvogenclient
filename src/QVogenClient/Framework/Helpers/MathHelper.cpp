@@ -89,3 +89,23 @@ QColor Math::CssStringToColor(const QString &str) {
 double Math::euclideanDistance(const QPoint &p1, const QPoint &p2) {
     return qSqrt(qPow(p1.x() - p2.x(), 2) + qPow(p1.y() - p2.y(), 2));
 }
+
+QStringList Math::splitAll(const QString &str, const QChar &delim) {
+    QStringList res;
+    QString buf;
+    for (int i = 0; i < str.size(); ++i) {
+        auto cur = str.at(i);
+        if (cur == delim) {
+            if (!buf.isEmpty()) {
+                res.append(buf);
+                buf.clear();
+            }
+            continue;
+        }
+        buf += cur;
+    }
+    if (!buf.isEmpty()) {
+        res.append(buf);
+    }
+    return res;
+}

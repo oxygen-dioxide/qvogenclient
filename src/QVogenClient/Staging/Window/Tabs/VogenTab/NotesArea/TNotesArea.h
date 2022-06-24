@@ -174,6 +174,7 @@ public:
     // ----------------------------------------  Notes  ----------------------------------------
 public:
     void setProjectData(const TWProject &data);
+    TWProject projectData() const;
 
     bool processOperation(TBaseOperation *op, bool undo);
 

@@ -11,6 +11,7 @@ public:
     enum OperateType {
         NoteMove,
         NoteStretch,
+        LyricsChange,
     };
 
 public:
