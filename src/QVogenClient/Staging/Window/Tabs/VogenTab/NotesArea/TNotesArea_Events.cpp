@@ -9,6 +9,9 @@
 
 #include "../Utils/Events/SceneStateQuery/TSSQCursorModeEvent.h"
 #include "../Utils/Events/TDigitTimeSigEvent.h"
+#include "../Utils/Events/TOperateEvent.h"
+
+#include "../Utils/Operations/TOTempoTimeSig.h"
 
 #include "Logs/CRecordHolder.h"
 
@@ -67,15 +70,27 @@ void TNotesArea::customEvent(QEvent *event) {
             switch (e2->dType()) {
             case TDigitalEvent::TimeSig: {
                 auto e3 = static_cast<TDigitTimeSigEvent *>(e2);
-                m_timeSig = qMakePair(e3->a, e3->b);
-                QEventImpl::SceneStateChangeEvent e(QEventImpl::SceneStateChangeEvent::TimeSig);
-                QApplication::sendEvent(view()->window(), &e);
+                auto oldTimeSig = m_timeSig;
+                setTimeSig(e3->a, e3->b);
+
+                auto op = new TOTempoTimeSig();
+                op->val = TOTempoTimeSig::Data{m_tempo, m_timeSig};
+                op->oldVal = TOTempoTimeSig::Data{m_tempo, oldTimeSig};
+                TOperateEvent oe;
+                oe.setData(op);
+                oe.dispatch(this);
                 break;
             }
             case TDigitalEvent::Tempo: {
-                m_tempo = e2->digitF;
-                QEventImpl::SceneStateChangeEvent e(QEventImpl::SceneStateChangeEvent::Tempo);
-                QApplication::sendEvent(view()->window(), &e);
+                auto oldTempo = m_tempo;
+                setTempo(e2->digitF);
+
+                auto op = new TOTempoTimeSig();
+                op->val = TOTempoTimeSig::Data{m_tempo, m_timeSig};
+                op->oldVal = TOTempoTimeSig::Data{oldTempo, m_timeSig};
+                TOperateEvent oe;
+                oe.setData(op);
+                oe.dispatch(this);
                 break;
             }
             default:

@@ -257,6 +257,20 @@ void TNotesArea::adjustBackground() {
     setBackgroundBrush(pixmap);
 }
 
+void TNotesArea::setTempo(double tempo) {
+    m_tempo = tempo;
+
+    QEventImpl::SceneStateChangeEvent e(QEventImpl::SceneStateChangeEvent::Tempo);
+    QApplication::sendEvent(view()->window(), &e);
+}
+
+void TNotesArea::setTimeSig(int a, int b) {
+    m_timeSig = qMakePair(a, b);
+
+    QEventImpl::SceneStateChangeEvent e(QEventImpl::SceneStateChangeEvent::TimeSig);
+    QApplication::sendEvent(view()->window(), &e);
+}
+
 bool TNotesArea::isSelecting() const {
     return m_selectCtl->isSelecting();
 }

@@ -107,6 +107,9 @@ protected:
 
     void adjustBackground();
 
+    void setTempo(double tempo);
+    void setTimeSig(int a, int b);
+
     // ----------------------------------------  Transform  ----------------------------------------
 public:
     int sectionCount() const;

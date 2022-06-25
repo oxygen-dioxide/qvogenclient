@@ -6,6 +6,7 @@
 #include "../Utils/Operations/TONoteInsDel.h"
 #include "../Utils/Operations/TONoteMove.h"
 #include "../Utils/Operations/TONoteStretch.h"
+#include "../Utils/Operations/TOTempoTimeSig.h"
 
 #include "Types/Events.h"
 
@@ -42,15 +43,8 @@ void TNotesArea::setSpriteAlpha(double spriteAlpha) {
 void TNotesArea::setProjectData(const TWProject &data) {
     m_notesCtl->setUtterances(data.utterances);
 
-    m_timeSig = qMakePair(data.beat.x(), data.beat.y());
-    m_tempo = data.tempo;
-
-    // Update section area
-    QEventImpl::SceneStateChangeEvent e1(QEventImpl::SceneStateChangeEvent::TimeSig);
-    QApplication::sendEvent(view()->window(), &e1);
-
-    QEventImpl::SceneStateChangeEvent e2(QEventImpl::SceneStateChangeEvent::Tempo);
-    QApplication::sendEvent(view()->window(), &e2);
+    setTimeSig(data.beat.x(), data.beat.y());
+    setTempo(data.tempo);
 }
 
 TWProject TNotesArea::projectData() const {
@@ -127,6 +121,14 @@ bool TNotesArea::processOperation(TBaseOperation *op, bool undo) {
     case TBaseOperation::GroupChange: {
         auto op1 = static_cast<TOGroupChange *>(op);
         m_notesCtl->changeGroup(op1->ids, undo ? op1->oldGid : op1->gid);
+        break;
+    }
+    case TBaseOperation::TempoTimeSig: {
+        auto op1 = static_cast<TOTempoTimeSig *>(op);
+        const auto &val = undo ? op1->oldVal : op1->val;
+        setTimeSig(val.timeSig.first, val.timeSig.second);
+        setTempo(val.tempo);
+        break;
     }
     default:
         break;

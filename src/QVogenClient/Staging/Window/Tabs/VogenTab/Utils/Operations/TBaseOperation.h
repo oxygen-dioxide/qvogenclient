@@ -14,6 +14,7 @@ public:
         LyricsChange,
         NoteAddDelete,
         GroupChange,
+        TempoTimeSig,
     };
 
 public:
