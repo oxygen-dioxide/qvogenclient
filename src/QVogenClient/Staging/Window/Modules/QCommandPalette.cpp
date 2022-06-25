@@ -8,26 +8,21 @@
 #include <QEvent>
 #include <QKeyEvent>
 
-class QCommandPalette::NotifyFilter : public CAppNotifyFilter {
-public:
-    NotifyFilter(QCommandPalette *cp) : CAppNotifyFilter(cp){};
-    bool notifyFilter(QObject *obj, QEvent *event) override {
-        return qobject_cast<QCommandPalette *>(this->obj)->notifyFilter(obj, event);
-    };
-};
-
 QCommandPalette::QCommandPalette(QWidget *parent)
     : QCommandPalette(*new QCommandPalettePrivate(), parent) {
 }
 
 QCommandPalette::~QCommandPalette() {
-    qApp->removeNotifyFilter(this);
 }
 
 void QCommandPalette::showCommands(QCommandPalette::CommandType type) {
     Q_D(QCommandPalette);
 
-    d->reset();
+    if (isVisible()) {
+        emit abandoned();
+        d->reset();
+    }
+
     d->curCmdType = type;
 
     switch (type) {
@@ -61,7 +56,11 @@ void QCommandPalette::showCommands(QCommandPalette::CommandType type) {
 
 void QCommandPalette::showLineEdit(const QString &hint, const QString &placeholder) {
     Q_D(QCommandPalette);
-    d->reset();
+    if (isVisible()) {
+        emit abandoned();
+        d->reset();
+    }
+
     d->lineEdit->setPlaceholderText(placeholder);
     d->lineEdit->setText(hint);
     d->listWidget->hide();
@@ -98,53 +97,41 @@ void QCommandPalette::showEvent(QShowEvent *event) {
 bool QCommandPalette::eventFilter(QObject *obj, QEvent *event) {
     if (event->type() == QEvent::KeyPress || event->type() == QEvent::ShortcutOverride) {
         Q_D(QCommandPalette);
-        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-        int key = keyEvent->key();
-        if (key == Qt::Key_Up || key == Qt::Key_Down) {
-            if (obj != d->listWidget) {
-                d->listWidget->setFocus();
-                QApplication::sendEvent(d->listWidget, keyEvent);
+        if (isVisible()) {
+            auto keyEvent = static_cast<QKeyEvent *>(event);
+            int key = keyEvent->key();
+            if (key == Qt::Key_Up || key == Qt::Key_Down) {
+                if (obj != d->listWidget) {
+                    d->listWidget->setFocus();
+                    QApplication::sendEvent(d->listWidget, keyEvent);
+                    return true;
+                }
+            } else if (key == Qt::Key_Return || key == Qt::Key_Enter) {
+                auto item = d->listWidget->currentItem();
+                d->activateItem(item);
                 return true;
-            }
-        } else if (key == Qt::Key_Return || key == Qt::Key_Enter) {
-            auto item = d->listWidget->currentItem();
-            d->activateItem(item);
-            return true;
-        } else if (key == Qt::Key_Tab) {
-            return true;
-        } else if (key == Qt::Key_Escape) {
-            emit abandoned();
-            return true;
-        } else {
-            if (obj != d->lineEdit) {
-                d->lineEdit->setFocus();
-                QApplication::sendEvent(d->lineEdit, keyEvent);
+            } else if (key == Qt::Key_Tab) {
                 return true;
-            }
-        }
-    }
-    return QWidget::eventFilter(obj, event);
-}
-
-bool QCommandPalette::notifyFilter(QObject *obj, QEvent *event) {
-    Q_UNUSED(obj)
-    if (obj->isWidgetType()) {
-        if (event->type() == QEvent::MouseButtonPress) {
-            QMouseEvent *e = static_cast<QMouseEvent *>(event);
-            if (isVisible() && !rect().contains(mapFromGlobal(e->globalPos()))) {
+            } else if (key == Qt::Key_Escape) {
                 emit abandoned();
+                return true;
+            } else {
+                if (obj != d->lineEdit) {
+                    d->lineEdit->setFocus();
+                    QApplication::sendEvent(d->lineEdit, keyEvent);
+                    return true;
+                }
             }
         }
     }
-    return false;
+
+    return QWidget::eventFilter(obj, event);
 }
 
 QCommandPalette::QCommandPalette(QCommandPalettePrivate &d, QWidget *parent)
     : BaseContainer(parent), d_ptr(&d) {
     d.q_ptr = this;
     d.init();
-
-    qApp->installNotifyFilter(new NotifyFilter(this));
 }
 
 void QCommandPalette::_q_textChanged(const QString &text) {

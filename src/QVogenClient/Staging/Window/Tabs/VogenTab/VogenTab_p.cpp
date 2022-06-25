@@ -113,7 +113,8 @@ void VogenTabPrivate::inputLyrics() {
         qApp->sendEvent(piano->notesArea(), &e2);
     };
 
-    int res = w->showLineEdit(e1.text, pipe);
+    int res = w->showLineEdit(e1.text, pipe, //
+                              QObject::tr("Enter the lyrics, separated by white space"));
 
     // Call editor to finish stdin
     StdinRequestEvent e3(StdinRequestEvent::Lyrics, (res == 0) ? StdinRequestEvent::InputCommit
@@ -130,7 +131,7 @@ void VogenTabPrivate::inputTranspose() {
 
     QString str;
     int res =
-        w->showLineEdit(QString(), pipe, QObject::tr("Input transpose offset (0 ~ 84)"), &str);
+        w->showLineEdit(QString(), pipe, QObject::tr("Enter the transpose offset (0 ~ 84)"), &str);
     if (res == 0) {
         bool ok;
         int val = str.toInt(&ok);

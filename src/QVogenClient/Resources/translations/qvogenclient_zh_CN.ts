@@ -207,22 +207,22 @@
 <context>
     <name>EventManager</name>
     <message>
-        <location filename="../../Staging/Window/Managers/EventManager.cpp" line="49"/>
+        <location filename="../../Staging/Window/Managers/EventManager.cpp" line="58"/>
         <source>Open</source>
         <translation type="unfinished">打开</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/EventManager.cpp" line="65"/>
+        <location filename="../../Staging/Window/Managers/EventManager.cpp" line="74"/>
         <source>Import</source>
         <translation type="unfinished">导入</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/EventManager.cpp" line="88"/>
+        <location filename="../../Staging/Window/Managers/EventManager.cpp" line="97"/>
         <source>Append</source>
         <translation type="unfinished">追加导入</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/EventManager.cpp" line="99"/>
+        <location filename="../../Staging/Window/Managers/EventManager.cpp" line="108"/>
         <source>Save As</source>
         <translation type="unfinished">另存为</translation>
     </message>
@@ -807,45 +807,54 @@
         <translation type="unfinished">%1 个四分音符</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="133"/>
         <source>Input transpose offset (0 ~ 84)</source>
+        <translation type="obsolete">输入变调偏移量（0~84）</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="117"/>
+        <source>Enter the lyrics, separated by white space</source>
+        <translation type="unfinished">输入歌词，使用空格分隔</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="134"/>
+        <source>Enter the transpose offset (0 ~ 84)</source>
         <translation type="unfinished">输入变调偏移量（0~84）</translation>
     </message>
 </context>
 <context>
     <name>TabManager</name>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="226"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="228"/>
         <source>About %1</source>
         <translation type="unfinished">关于 %1</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="312"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="345"/>
         <source>Close</source>
         <translation type="unfinished">关闭</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="313"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="346"/>
         <source>Close Others</source>
         <translation type="unfinished">关闭其他</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="314"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="347"/>
         <source>Close Saved</source>
         <translation type="unfinished">关闭已保存</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="315"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="348"/>
         <source>Close All</source>
         <translation type="unfinished">全部关闭</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="324"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="357"/>
         <source>Show in %1(&amp;S)</source>
         <translation type="unfinished">在%1中显示(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="328"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="361"/>
         <source>Open in %1(&amp;S)</source>
         <translation type="unfinished">在%1中打开(&amp;S)</translation>
     </message>

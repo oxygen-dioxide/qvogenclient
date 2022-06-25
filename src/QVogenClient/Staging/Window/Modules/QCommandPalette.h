@@ -31,9 +31,6 @@ public:
         Plugins,
     };
 
-    class NotifyFilter;
-    friend class QCommandPalette::NotifyFilter;
-
 public:
     void showCommands(CommandType type);
     void showLineEdit(const QString &hint, const QString &placeholder);
@@ -53,8 +50,6 @@ signals:
 protected:
     void showEvent(QShowEvent *event) override;
     bool eventFilter(QObject *obj, QEvent *event) override;
-
-    bool notifyFilter(QObject *obj, QEvent *event);
 
 protected:
     QCommandPalette(QCommandPalettePrivate &d, QWidget *parent = nullptr);

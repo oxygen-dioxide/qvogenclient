@@ -7,8 +7,9 @@
 #include <QWidget>
 #include <QtGlobal>
 
-#include "QCommandPalette.h"
+#include "CommandPaletteImpl/CommandPaletteEventGuard.h"
 #include "CommandPaletteImpl/CommandPaletteListWidget.h"
+#include "QCommandPalette.h"
 
 class QCommandPalettePrivate {
     Q_DECLARE_PUBLIC(QCommandPalette)
@@ -41,6 +42,9 @@ public:
                                 const QString &filename, const QString &location,
                                 const QString &date);
     QList<QListWidgetItem *> cachedItems;
+
+    // Event Guard
+    CommandPaletteEventGuard *guard;
 };
 
 #endif // QCOMMANDPALETTEPRIVATE_H

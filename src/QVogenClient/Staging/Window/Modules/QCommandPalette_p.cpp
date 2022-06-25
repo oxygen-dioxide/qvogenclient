@@ -40,6 +40,9 @@ void QCommandPalettePrivate::init() {
                &QCommandPalette::_q_currentRowChanged);
     q->connect(listWidget, &QListWidget::itemClicked, q, &QCommandPalette::_q_itemClicked);
 
+    // Init Event Guard
+    guard = new CommandPaletteEventGuard(q);
+
     // Init Actions
     QList<int> quantizes{1, 2, 4, 6, 8, 12, 16, 24, 32 /*, 0*/};
     for (auto quantize : qAsConst(quantizes)) {

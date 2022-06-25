@@ -49,6 +49,7 @@ protected:
 signals:
 };
 
+// This feature has been deprecated
 class CAppNotifyFilter {
 public:
     QObject *obj;
