@@ -57,6 +57,7 @@ protected:
 
     QPointF m_startPoint;
 
+    int m_movedNoteIndex;
     QList<MovingData> m_movingData;
     QList<StretchingData> m_stretchingData;
     QList<DrawingData> m_drawingData;

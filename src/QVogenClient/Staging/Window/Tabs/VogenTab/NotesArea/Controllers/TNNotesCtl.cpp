@@ -38,6 +38,8 @@ TNNotesCtl::TNNotesCtl(TNotesArea *parent) : TNController(parent) {
     m_maxNoteId = 0;
     m_maxGroupId = 0;
 
+    m_movedNoteIndex = -1;
+
     m_mainGroup = createGroup(0);
     m_currentGroup = m_mainGroup;
 
@@ -483,11 +485,18 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                         if (noteItem->movable()) {
                             // Start Movement
                             const auto &selection = m_selection->begins();
+                            m_movedNoteIndex = -1;
                             for (const auto &pair : selection) {
                                 const auto &set = pair.second;
                                 for (auto note : set) {
                                     m_movingData.append(MovingData{note, note->pos(), 0, 0});
+                                    if (note == noteItem) {
+                                        m_movedNoteIndex = m_movingData.size() - 1;
+                                    }
                                 }
+                            }
+                            if (m_movedNoteIndex < 0) {
+                                m_movingData.clear();
                             }
                         }
                     } else if (toStretch) {
@@ -532,20 +541,49 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                     offset.setY(dy * h);
 
                     if (!m_movingData.isEmpty()) {
+                        // Adjust delta
+                        int dx1 = dx * tw;
+                        int dy1 = -dy;
+                        {
+                            // Dominated By Central Note
+                            {
+                                auto &m = m_movingData[m_movedNoteIndex];
+                                auto note = m.note;
+
+                                // Adjust dx
+                                dx1 = int((note->start + dx1) / tw) * tw - note->start;
+                                dx1 = qMax(0, note->start + dx1) - note->start;
+
+                                // Adjust dy
+                                dy1 = qMin(qMax(24, note->tone + dy1), 107) - note->tone;
+                            }
+
+                            // Consider Other Notes
+                            for (int i = 0; i < m_movingData.size(); ++i) {
+                                if (i == m_movedNoteIndex) {
+                                    continue;
+                                }
+                                auto &m = m_movingData[i];
+                                auto note = m.note;
+
+                                int dx2 = dx1;
+                                dx2 = qMax(0, note->start + dx2) - note->start;
+
+                                int dy2 = -dy;
+                                dy2 = qMin(qMax(24, note->tone + dy2), 107) - note->tone;
+
+                                dx1 = (dx1 < 0) ? qMax(dx1, dx2) : qMin(dx1, dx2);
+                                dy1 = (dy1 < 0) ? qMax(dy1, dy2) : qMin(dy1, dy2);
+                            }
+                        }
+
+                        // Modify
                         for (auto &m : m_movingData) {
                             auto note = m.note;
-
-                            int dx2 = dx * tw;
-                            dx2 = int((note->start + dx2) / tw) * tw - note->start;
-                            dx2 = qMax(0, note->start + dx2) - note->start;
-
-                            int dy2 = -dy;
-                            dy2 = qMin(qMax(24, note->tone + dy2), 107) - note->tone;
-
                             note->setPos(
-                                a->convertValueToPosition(note->start + dx2, note->tone + dy2));
-                            m.dx = dx2;
-                            m.dy = dy2;
+                                a->convertValueToPosition(note->start + dx1, note->tone + dy1));
+                            m.dx = dx1;
+                            m.dy = dy1;
                         }
                     } else if (!m_stretchingData.isEmpty()) {
                         for (auto &s : m_stretchingData) {
