@@ -298,9 +298,13 @@
 <context>
     <name>QCommandPalette</name>
     <message>
-        <location filename="../../Staging/Window/Modules/QCommandPalette.cpp" line="51"/>
         <source>Select quantization (Up/down keys to preview)</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">选择量化单位（按上下键预览）</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Modules/QCommandPalette.cpp" line="51"/>
+        <source>Select quantization unit</source>
+        <translation type="unfinished">选择量化单位</translation>
     </message>
 </context>
 <context>
@@ -738,11 +742,6 @@
         <translation type="unfinished">关于 %1</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="421"/>
-        <source>Ctrl+Shift+N</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="546"/>
         <source>Null</source>
         <translation type="unfinished">无</translation>
@@ -800,12 +799,17 @@
     <message>
         <location filename="../../Staging/Window/Modules/QCommandPalette_p.cpp" line="52"/>
         <source>Quarter</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">四分音符</translation>
     </message>
     <message>
         <location filename="../../Staging/Window/Modules/QCommandPalette_p.cpp" line="55"/>
         <source>%1 Quarter</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 个四分音符</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="133"/>
+        <source>Input transpose offset (0 ~ 84)</source>
+        <translation type="unfinished">输入变调偏移量（0~84）</translation>
     </message>
 </context>
 <context>
@@ -816,32 +820,32 @@
         <translation type="unfinished">关于 %1</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="308"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="312"/>
         <source>Close</source>
         <translation type="unfinished">关闭</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="309"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="313"/>
         <source>Close Others</source>
         <translation type="unfinished">关闭其他</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="310"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="314"/>
         <source>Close Saved</source>
         <translation type="unfinished">关闭已保存</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="311"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="315"/>
         <source>Close All</source>
         <translation type="unfinished">全部关闭</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="320"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="324"/>
         <source>Show in %1(&amp;S)</source>
         <translation type="unfinished">在%1中显示(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="324"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="328"/>
         <source>Open in %1(&amp;S)</source>
         <translation type="unfinished">在%1中打开(&amp;S)</translation>
     </message>
@@ -849,13 +853,13 @@
 <context>
     <name>VogenTab</name>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab.cpp" line="44"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab.cpp" line="45"/>
         <source>Failed to open file &quot;%1&quot;!</source>
         <translation type="unfinished">无法打开文件“%1”！</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab.cpp" line="82"/>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab.cpp" line="101"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab.cpp" line="83"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab.cpp" line="102"/>
         <source>Failed to save file!</source>
         <translation type="unfinished">无法保存文件！</translation>
     </message>
@@ -888,12 +892,12 @@
     <message>
         <location filename="../../Staging/Window/Tabs/WelcomeTab/WelcomeTabContent.cpp" line="17"/>
         <source>Tuning Evoved</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">调音进化</translation>
     </message>
     <message>
         <location filename="../../Staging/Window/Tabs/WelcomeTab/WelcomeTabContent.cpp" line="19"/>
         <source>Start</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">启动</translation>
     </message>
     <message>
         <location filename="../../Staging/Window/Tabs/WelcomeTab/WelcomeTabContent.cpp" line="20"/>
@@ -903,7 +907,7 @@
     <message>
         <location filename="../../Staging/Window/Tabs/WelcomeTab/WelcomeTabContent.cpp" line="21"/>
         <source>More</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">更多</translation>
     </message>
 </context>
 </TS>

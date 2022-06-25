@@ -12,6 +12,8 @@
 
 #include "TabManager.h"
 
+#include "Types/Events.h"
+
 #include "DataManager.h"
 #include "WindowManager.h"
 
@@ -21,6 +23,7 @@ static const char FLAG_SAVE[] = "%SAVE%";
 static const char FLAG_IMPORT[] = "%IMPORT%";
 static const char FLAG_APPEND[] = "%APPEND%";
 
+#include <QApplication>
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QEvent>
@@ -33,6 +36,12 @@ EventManager::~EventManager() {
 }
 
 bool EventManager::load() {
+    Q_D(EventManager);
+
+    // Handle cursor mode
+    connect(d->w->toolBar(), &CentralToolBar::cursorModeChanged, this,
+            &EventManager::_q_cursorModeChanged);
+
     return true;
 }
 
@@ -190,4 +199,21 @@ bool EventManager::eventFilter(QObject *obj, QEvent *event) {
         }
     }
     return BaseManager::eventFilter(obj, event);
+}
+
+void EventManager::_q_cursorModeChanged(int mode) {
+    Q_D(EventManager);
+    switch (mode) {
+    case CentralToolBar::Select:
+        d->w->tabMgr()->triggerCurrent(ActionImpl::View_Cursor_Select);
+        break;
+    case CentralToolBar::Sketch:
+        d->w->tabMgr()->triggerCurrent(ActionImpl::View_Cursor_Sketch);
+        break;
+    case CentralToolBar::Free:
+        d->w->tabMgr()->triggerCurrent(ActionImpl::View_Cursor_Freehand);
+        break;
+    default:
+        break;
+    }
 }

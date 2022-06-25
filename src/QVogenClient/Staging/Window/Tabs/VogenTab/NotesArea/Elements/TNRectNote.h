@@ -21,6 +21,9 @@ public:
 
     TNNoteGroup *group;
 
+    bool movable() const;
+    void setMovable(bool movable);
+
     Behavior mousePressBehavior() const;
 
 protected:

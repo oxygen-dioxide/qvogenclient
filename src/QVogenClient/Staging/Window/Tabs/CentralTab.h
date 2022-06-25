@@ -77,6 +77,7 @@ public:
 
     virtual bool acceptClose();
 
+    virtual void initAfterLayout();
     virtual void handleSpecificAction(ActionImpl::Action a);
 
 public:

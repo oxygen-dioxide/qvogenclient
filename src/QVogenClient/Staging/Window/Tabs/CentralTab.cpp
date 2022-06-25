@@ -115,6 +115,9 @@ bool CentralTab::acceptClose() {
     return true;
 }
 
+void CentralTab::initAfterLayout() {
+}
+
 void CentralTab::handleSpecificAction(ActionImpl::Action a) {
     Q_UNUSED(a);
 }

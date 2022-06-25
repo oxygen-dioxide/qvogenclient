@@ -152,6 +152,7 @@ public:
     bool itemMoving() const;
     bool itemStretching() const;
     bool itemDrawing() const;
+    bool itemOperating() const;
 
     bool hasSelection() const;
 
@@ -190,6 +191,8 @@ protected:
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
 
     void focusOutEvent(QFocusEvent *event) override;
+
+    void customEvent(QEvent *event) override;
 
 private:
     void _q_sceneRectChanged(const QRectF &rect);

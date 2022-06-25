@@ -263,6 +263,16 @@ void TNNotesCtl::removeNote(TNRectNote *p) {
     p->deleteLater();
 }
 
+void TNNotesCtl::setNotesMovable(bool movable) {
+    const auto &all = m_timeBounds->begins();
+    for (const auto &pair : all) {
+        const auto &set = pair.second;
+        for (auto note : set) {
+            note->setMovable(movable);
+        }
+    }
+}
+
 TNNoteGroup *TNNotesCtl::createGroup(quint64 id) {
     auto g = new TNNoteGroup(this);
     g->id = (id == 0) ? (++m_maxGroupId) : id;
@@ -407,90 +417,95 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
         // Mouse Press Event
         case QEvent::GraphicsSceneMousePress: {
             auto e = static_cast<QGraphicsSceneMouseEvent *>(event);
-            auto item = a->itemUnderMouse();
-            auto modifiers = qApp->keyboardModifiers();
-            const auto &data = a->view()->controlData();
-            if (item && item->type() == GraphicsImpl::NoteItem) {
-                auto noteItem = static_cast<TNRectNote *>(item);
-                // Get Next Behavior of Mouse Press
-                TNRectSelectable::Behavior behavior = noteItem->mousePressBehavior();
-                bool toMove = false;
-                bool toStretch = false;
-                switch (behavior) {
-                case TNRectSelectable::SelectOne: {
-                    selectOne(noteItem);
-                    toMove = true;
-                    break;
-                }
-                case TNRectSelectable::SelectOnly: {
-                    deselect();
-                    selectOne(noteItem);
-                    toMove = true;
-                    break;
-                }
-                case TNRectSelectable::SelectContinuously: {
-                    selectOne(noteItem);
-                    const auto &starts = m_selection->begins();
-
-                    auto startItem = *starts.front().second.begin();
-                    auto endItem = *starts.back().second.begin();
-
-                    int startIndex = m_currentGroup->findBegin(startItem);
-                    int endIndex = m_currentGroup->findBegin(endItem);
-
-                    const auto &allStarts = m_currentGroup->begins();
-                    for (int i = startIndex; i <= endIndex; ++i) {
-                        const auto &set = allStarts.at(i).second;
-                        for (auto note : set) {
-                            selectOne(note);
-                        }
+            if (e->button() == Qt::LeftButton) {
+                auto item = a->itemUnderMouse();
+                auto modifiers = qApp->keyboardModifiers();
+                const auto &data = a->view()->controlData();
+                if (a->drawMode() != TNotesArea::DrawCurves && item &&
+                    item->type() == GraphicsImpl::NoteItem) {
+                    auto noteItem = static_cast<TNRectNote *>(item);
+                    // Get Next Behavior of Mouse Press
+                    TNRectSelectable::Behavior behavior = noteItem->mousePressBehavior();
+                    bool toMove = false;
+                    bool toStretch = false;
+                    switch (behavior) {
+                    case TNRectSelectable::SelectOne: {
+                        selectOne(noteItem);
+                        toMove = true;
+                        break;
                     }
-                    toMove = true;
-                    break;
-                }
-                case TNRectSelectable::DeselectOne: {
-                    deselectOne(noteItem);
-                    break;
-                }
-                case TNRectSelectable::IndependentStretch:
-                case TNRectSelectable::RelativeStretch:
-                case TNRectSelectable::AbsoluteStretch: {
-                    if (!noteItem->isSelected()) {
+                    case TNRectSelectable::SelectOnly: {
                         deselect();
                         selectOne(noteItem);
+                        toMove = true;
+                        break;
                     }
-                    toStretch = true;
-                    break;
-                }
-                default: {
-                    toMove = true;
-                    break;
-                }
-                }
-                if (toMove) {
-                    // Start Movement
-                    const auto &selection = m_selection->begins();
-                    for (const auto &pair : selection) {
-                        const auto &set = pair.second;
-                        for (auto note : set) {
-                            m_movingData.append(MovingData{note, note->pos(), 0, 0});
+                    case TNRectSelectable::SelectContinuously: {
+                        selectOne(noteItem);
+                        const auto &starts = m_selection->begins();
+
+                        auto startItem = *starts.front().second.begin();
+                        auto endItem = *starts.back().second.begin();
+
+                        int startIndex = m_currentGroup->findBegin(startItem);
+                        int endIndex = m_currentGroup->findBegin(endItem);
+
+                        const auto &allStarts = m_currentGroup->begins();
+                        for (int i = startIndex; i <= endIndex; ++i) {
+                            const auto &set = allStarts.at(i).second;
+                            for (auto note : set) {
+                                selectOne(note);
+                            }
+                        }
+                        toMove = true;
+                        break;
+                    }
+                    case TNRectSelectable::DeselectOne: {
+                        deselectOne(noteItem);
+                        break;
+                    }
+                    case TNRectSelectable::IndependentStretch:
+                    case TNRectSelectable::RelativeStretch:
+                    case TNRectSelectable::AbsoluteStretch: {
+                        if (!noteItem->isSelected()) {
+                            deselect();
+                            selectOne(noteItem);
+                        }
+                        toStretch = true;
+                        break;
+                    }
+                    default: {
+                        toMove = true;
+                        break;
+                    }
+                    }
+                    if (toMove) {
+                        if (noteItem->movable()) {
+                            // Start Movement
+                            const auto &selection = m_selection->begins();
+                            for (const auto &pair : selection) {
+                                const auto &set = pair.second;
+                                for (auto note : set) {
+                                    m_movingData.append(MovingData{note, note->pos(), 0, 0});
+                                }
+                            }
+                        }
+                    } else if (toStretch) {
+                        // Start Stretch
+                        const auto &selection = m_selection->begins();
+                        for (const auto &pair : selection) {
+                            const auto &set = pair.second;
+                            for (auto note : set) {
+                                m_stretchingData.append(
+                                    StretchingData{note, note->pos(), note->size(), 0});
+                            }
                         }
                     }
-                } else if (toStretch) {
-                    // Start Stretch
-                    const auto &selection = m_selection->begins();
-                    for (const auto &pair : selection) {
-                        const auto &set = pair.second;
-                        for (auto note : set) {
-                            m_stretchingData.append(
-                                StretchingData{note, note->pos(), note->size(), 0});
-                        }
-                    }
+                } else if (modifiers != data.selectS) {
+                    deselect();
                 }
-            } else if (modifiers != data.selectS) {
-                deselect();
+                m_startPoint = e->scenePos();
             }
-            m_startPoint = e->scenePos();
             break;
         }
 
@@ -559,28 +574,30 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                                       note->height());
                         s.dw = dw;
                     }
-                } else if (!a->isSelecting() && !item && a->drawMode() == TNotesArea::DrawNote) {
-                    int q = a->currentQuantize();
-                    double h = a->currentHeight();
-                    int tw = 480 / q;
+                } else {
+                    if (!a->isSelecting() && !item && a->drawMode() == TNotesArea::DrawNote) {
+                        int q = a->currentQuantize();
+                        double h = a->currentHeight();
+                        int tw = 480 / q;
 
-                    auto val =
-                        a->convertPositionToValue(QPointF(m_startPoint.x(), m_startPoint.y() - h));
-                    auto val2 = a->convertPositionToValue(e->scenePos());
+                        auto val = a->convertPositionToValue(
+                            QPointF(m_startPoint.x(), m_startPoint.y() - h));
+                        auto val2 = a->convertPositionToValue(e->scenePos());
 
-                    int tick1 = int(val.first / tw) * tw;
-                    int tick2 = val2.first;
-                    int len = tick2 - tick1;
+                        int tick1 = int(val.first / tw) * tw;
+                        int tick2 = val2.first;
+                        int len = tick2 - tick1;
 
-                    auto newPoint = a->convertValueToPosition(tick1, val.second);
-                    m_startPoint = newPoint;
+                        auto newPoint = a->convertValueToPosition(tick1, val.second);
+                        m_startPoint = newPoint;
 
-                    auto p = createNote(0, tick1, len, val.second, "a", m_currentGroup);
+                        auto p = createNote(0, tick1, len, val.second, "a", m_currentGroup);
 
-                    p->setPos(a->convertValueToPosition(tick1, val.second));
-                    p->setSize(double(len) / 480 * a->currentWidth(), h);
+                        p->setPos(a->convertValueToPosition(tick1, val.second));
+                        p->setSize(double(len) / 480 * a->currentWidth(), h);
 
-                    m_drawingData.append(DrawingData{p, 0});
+                        m_drawingData.append(DrawingData{p, 0});
+                    }
                 }
             }
             break;
@@ -589,91 +606,94 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
         // Mouse Release Event
         case QEvent::GraphicsSceneMouseRelease: {
 
-            if (!m_movingData.isEmpty()) {
-                QList<TONoteMove::MoveData> moves;
-                for (const auto &m : qAsConst(m_movingData)) {
-                    auto note = m.note;
+            auto e = static_cast<QGraphicsSceneMouseEvent *>(event);
+            if (e->button() == Qt::LeftButton) {
+                if (!m_movingData.isEmpty()) {
+                    QList<TONoteMove::MoveData> moves;
+                    for (const auto &m : qAsConst(m_movingData)) {
+                        auto note = m.note;
 
-                    // Update note
-                    note->start += m.dx;
-                    note->tone += m.dy;
-                    adjustGeometry(note);
+                        // Update note
+                        note->start += m.dx;
+                        note->tone += m.dy;
+                        adjustGeometry(note);
 
-                    // Save movement
-                    if (m.dx != 0 || m.dy != 0) {
-                        moves.append(TONoteMove::MoveData{note->id, m.dx, m.dy});
+                        // Save movement
+                        if (m.dx != 0 || m.dy != 0) {
+                            moves.append(TONoteMove::MoveData{note->id, m.dx, m.dy});
+                        }
                     }
-                }
-                m_movingData.clear();
-                adjustCanvas();
+                    m_movingData.clear();
+                    adjustCanvas();
 
-                if (!moves.isEmpty()) {
-                    // New Operation
-                    auto op = new TONoteMove();
-                    op->data = std::move(moves);
+                    if (!moves.isEmpty()) {
+                        // New Operation
+                        auto op = new TONoteMove();
+                        op->data = std::move(moves);
 
-                    // Dispatch
-                    TOperateEvent e;
-                    e.setData(op);
-                    e.dispatch(a);
-                }
-            } else if (!m_stretchingData.isEmpty()) {
-                QList<TONoteStretch::StretchData> stretches;
-                for (const auto &s : qAsConst(m_stretchingData)) {
+                        // Dispatch
+                        TOperateEvent e;
+                        e.setData(op);
+                        e.dispatch(a);
+                    }
+                } else if (!m_stretchingData.isEmpty()) {
+                    QList<TONoteStretch::StretchData> stretches;
+                    for (const auto &s : qAsConst(m_stretchingData)) {
+                        auto note = s.note;
+
+                        // Update note
+                        note->length += s.dw;
+                        adjustGeometry(note);
+
+                        // Save stretch
+                        if (s.dw != 0) {
+                            stretches.append(TONoteStretch::StretchData{note->id, s.dw});
+                        }
+                    }
+                    m_stretchingData.clear();
+                    adjustCanvas();
+
+                    if (!stretches.isEmpty()) {
+                        // New Operation
+                        auto op = new TONoteStretch();
+                        op->data = std::move(stretches);
+
+                        // Dispatch
+                        TOperateEvent e;
+                        e.setData(op);
+                        e.dispatch(a);
+                    }
+                } else if (!m_drawingData.isEmpty()) {
+                    auto &s = m_drawingData.front();
                     auto note = s.note;
 
                     // Update note
                     note->length += s.dw;
                     adjustGeometry(note);
 
-                    // Save stretch
-                    if (s.dw != 0) {
-                        stretches.append(TONoteStretch::StretchData{note->id, s.dw});
+                    m_drawingData.clear();
+                    adjustCanvas();
+
+                    // Save new note
+                    {
+                        QList<TONoteInsDel::NoteData> notes{TONoteInsDel::NoteData{
+                            note->id,        // Id
+                            note->start,     // Start
+                            note->length,    // Length
+                            note->tone,      // Tone
+                            note->lyric,     // Lyric
+                            note->group->id, // Gid
+                        }};
+
+                        // New Operation
+                        auto op = new TONoteInsDel(TONoteInsDel::Create);
+                        op->data = std::move(notes);
+
+                        // Dispatch
+                        TOperateEvent e;
+                        e.setData(op);
+                        e.dispatch(a);
                     }
-                }
-                m_stretchingData.clear();
-                adjustCanvas();
-
-                if (!stretches.isEmpty()) {
-                    // New Operation
-                    auto op = new TONoteStretch();
-                    op->data = std::move(stretches);
-
-                    // Dispatch
-                    TOperateEvent e;
-                    e.setData(op);
-                    e.dispatch(a);
-                }
-            } else if (!m_drawingData.isEmpty()) {
-                auto &s = m_drawingData.front();
-                auto note = s.note;
-
-                // Update note
-                note->length += s.dw;
-                adjustGeometry(note);
-
-                m_drawingData.clear();
-                adjustCanvas();
-
-                // Save new note
-                {
-                    QList<TONoteInsDel::NoteData> notes{TONoteInsDel::NoteData{
-                        note->id,        // Id
-                        note->start,     // Start
-                        note->length,    // Length
-                        note->tone,      // Tone
-                        note->lyric,     // Lyric
-                        note->group->id, // Gid
-                    }};
-
-                    // New Operation
-                    auto op = new TONoteInsDel(TONoteInsDel::Create);
-                    op->data = std::move(notes);
-
-                    // Dispatch
-                    TOperateEvent e;
-                    e.setData(op);
-                    e.dispatch(a);
                 }
             }
             break;
@@ -681,10 +701,13 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
 
         // Mouse Double Click Event
         case QEvent::GraphicsSceneMouseDoubleClick: {
-            auto item = a->itemUnderMouse();
-            if (item && item->type() == GraphicsImpl::NoteItem) {
-                auto noteItem = static_cast<TNRectNote *>(item);
-                switchGroup(noteItem->group);
+            auto e = static_cast<QGraphicsSceneMouseEvent *>(event);
+            if (e->button() == Qt::LeftButton) {
+                auto item = a->itemUnderMouse();
+                if (item && item->type() == GraphicsImpl::NoteItem) {
+                    auto noteItem = static_cast<TNRectNote *>(item);
+                    switchGroup(noteItem->group);
+                }
             }
             break;
         }
@@ -934,6 +957,14 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                 }
                 break;
             }
+            case QEventImpl::SceneActionRequestEvent::SelectAll: {
+                selectAll();
+                break;
+            }
+            case QEventImpl::SceneActionRequestEvent::Deselect: {
+                deselect();
+                break;
+            }
             case QEventImpl::SceneActionRequestEvent::Digital: {
                 auto e2 = static_cast<TDigitalEvent *>(e);
                 switch (e2->dType()) {
@@ -975,6 +1006,22 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
             }
 
             break;
+        }
+
+        case QEventImpl::SceneStateChange: {
+            auto e = static_cast<QEventImpl::SceneStateChangeEvent *>(event);
+            switch (e->cType()) {
+            case QEventImpl::SceneStateChangeEvent::CursorMode: {
+                if (a->drawMode() == TNotesArea::DrawCurves) {
+                    setNotesMovable(false);
+                } else {
+                    setNotesMovable(true);
+                }
+                break;
+            }
+            default:
+                break;
+            }
         }
 
         default:

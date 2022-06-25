@@ -155,6 +155,12 @@ void VogenTab::redo() {
     }
 }
 
+void VogenTab::initAfterLayout() {
+    Q_D(VogenTab);
+    // Init Scene States
+    d->piano->notesArea()->setDrawMode(TNotesArea::PlainSelect);
+}
+
 void VogenTab::handleSpecificAction(ActionImpl::Action a) {
     Q_D(VogenTab);
     switch (a) {
@@ -175,6 +181,16 @@ void VogenTab::handleSpecificAction(ActionImpl::Action a) {
     }
     case ActionImpl::Edit_Remove: {
         QEventImpl::SceneActionRequestEvent e(QEventImpl::SceneActionRequestEvent::Remove);
+        qApp->sendEvent(d->piano->notesArea(), &e);
+        break;
+    }
+    case ActionImpl::Edit_SelectAll: {
+        QEventImpl::SceneActionRequestEvent e(QEventImpl::SceneActionRequestEvent::SelectAll);
+        qApp->sendEvent(d->piano->notesArea(), &e);
+        break;
+    }
+    case ActionImpl::Edit_Deselect: {
+        QEventImpl::SceneActionRequestEvent e(QEventImpl::SceneActionRequestEvent::Deselect);
         qApp->sendEvent(d->piano->notesArea(), &e);
         break;
     }
@@ -235,14 +251,16 @@ void VogenTab::setDeleted(bool deleted) {
     DocumentTab::setDeleted(deleted);
 }
 
-bool VogenTab::event(QEvent *event) {
+void VogenTab::customEvent(QEvent *event) {
     Q_D(VogenTab);
     switch (event->type()) {
     case QEventImpl::PianoRollChange:
         d->dispatchEvent(static_cast<QEventImpl::PianoRollChangeEvent *>(event));
         break;
+    case QEventImpl::SceneStateQuery:
+        QApplication::sendEvent(d->piano->notesArea(), event);
+        break;
     default:
         break;
     }
-    return DocumentTab::event(event);
 }

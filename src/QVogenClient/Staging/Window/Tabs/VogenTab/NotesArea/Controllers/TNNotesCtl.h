@@ -85,6 +85,8 @@ protected:
                            TNNoteGroup *g);
     void removeNote(TNRectNote *p);
 
+    void setNotesMovable(bool movable);
+
     // Group Variations
     TNNoteGroup *createGroup(quint64 id);
     void removeGroup(TNNoteGroup *g);

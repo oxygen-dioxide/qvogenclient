@@ -20,7 +20,11 @@ public:
         Free,
     };
 
-    MainWindow *mainWindow() const;
+    CursorModes cursorMode() const;
+    void setCursorMode(CursorModes mode);
+
+signals:
+    void cursorModeChanged(int mode);
 
 protected:
     CentralToolBar(CentralToolBarPrivate &d, QWidget *parent = nullptr);

@@ -418,7 +418,7 @@ void FilesActionEnginePrivate::reloadStrings() {
 void FilesActionEnginePrivate::reloadShortcuts() {
     // File
     file_newFile->setShortcut(QKeySequence("Ctrl+N"));
-    file_newWindow->setShortcut(QObject::tr("Ctrl+Shift+N"));
+    file_newWindow->setShortcut(QKeySequence("Ctrl+Shift+N"));
     file_openFile->setShortcut(QKeySequence("Ctrl+O"));
     file_saveFile->setShortcut(QKeySequence("Ctrl+S"));
     file_saveAs->setShortcut(QKeySequence("Ctrl+Shift+S"));

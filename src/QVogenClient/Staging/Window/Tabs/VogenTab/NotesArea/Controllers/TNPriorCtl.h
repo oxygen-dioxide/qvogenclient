@@ -14,12 +14,9 @@ public:
 public:
     void install() override;
 
-    bool isMousePressed() const;
     QGraphicsItem *itemUnderMouse() const;
 
 protected:
-    bool m_pressed;
-
     QGraphicsItem *m_itemUnderMouse;
 
     bool eventFilter(QObject *obj, QEvent *event) override;

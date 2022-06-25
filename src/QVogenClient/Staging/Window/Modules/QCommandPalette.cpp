@@ -48,7 +48,7 @@ void QCommandPalette::showCommands(QCommandPalette::CommandType type) {
         }
 
         // Show hint
-        d->lineEdit->setPlaceholderText(tr("Select quantization (Up/down keys to preview)"));
+        d->lineEdit->setPlaceholderText(tr("Select quantization unit"));
         break;
     }
     default:
@@ -129,7 +129,7 @@ bool QCommandPalette::eventFilter(QObject *obj, QEvent *event) {
 bool QCommandPalette::notifyFilter(QObject *obj, QEvent *event) {
     Q_UNUSED(obj)
     if (obj->isWidgetType()) {
-        if (event->type() == QEvent::MouseButtonRelease) {
+        if (event->type() == QEvent::MouseButtonPress) {
             QMouseEvent *e = static_cast<QMouseEvent *>(event);
             if (isVisible() && !rect().contains(mapFromGlobal(e->globalPos()))) {
                 emit abandoned();

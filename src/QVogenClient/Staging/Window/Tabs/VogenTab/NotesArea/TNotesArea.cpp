@@ -4,7 +4,7 @@
 
 #include "Logs/CRecordHolder.h"
 
-#include "Types/Events.h"
+#include "../Utils/Events/SceneStateQuery/TSSQCursorModeEvent.h"
 
 #include <QApplication>
 #include <QPainter>
@@ -145,7 +145,10 @@ TNotesArea::DrawMode TNotesArea::drawMode() const {
 void TNotesArea::setDrawMode(DrawMode drawMode) {
     m_drawMode = drawMode;
 
+    m_notesCtl->deselect();
+
     QEventImpl::SceneStateChangeEvent e(QEventImpl::SceneStateChangeEvent::CursorMode);
+    QApplication::sendEvent(this, &e);
     QApplication::sendEvent(view()->window(), &e);
 }
 
@@ -264,8 +267,7 @@ bool TNotesArea::visionMoving() const {
 }
 
 bool TNotesArea::scrollZoomAllowed() const {
-    return !isSelecting() && !visionMoving() && !itemMoving() && !itemStretching() &&
-           !itemDrawing();
+    return !isSelecting() && !visionMoving() && !itemOperating();
 }
 
 bool TNotesArea::itemMoving() const {
@@ -278,6 +280,10 @@ bool TNotesArea::itemStretching() const {
 
 bool TNotesArea::itemDrawing() const {
     return m_notesCtl->isDrawing();
+}
+
+bool TNotesArea::itemOperating() const {
+    return itemMoving() || itemStretching() || itemDrawing();
 }
 
 bool TNotesArea::hasSelection() const {

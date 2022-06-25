@@ -39,6 +39,18 @@ TNRectNote::TNRectNote(TNotesArea *area, QGraphicsItem *parent) : TNRectSelectab
 TNRectNote::~TNRectNote() {
 }
 
+bool TNRectNote::movable() const {
+    return m_movable;
+}
+
+void TNRectNote::setMovable(bool movable) {
+    m_movable = movable;
+    if (!m_movable) {
+        setStretch(false);
+    }
+    update();
+}
+
 TNRectSelectable::Behavior TNRectNote::mousePressBehavior() const {
     Behavior res = NoBehavior;
 

@@ -11,8 +11,14 @@ CentralToolBar::CentralToolBar(QWidget *parent)
 CentralToolBar::~CentralToolBar() {
 }
 
-MainWindow *CentralToolBar::mainWindow() const {
-    return qobject_cast<MainWindow *>(window());
+CentralToolBar::CursorModes CentralToolBar::cursorMode() const {
+    Q_D(const CentralToolBar);
+    return static_cast<CursorModes>(d->m_cursorGroup->checkedId());
+}
+
+void CentralToolBar::setCursorMode(CursorModes mode) {
+    Q_D(CentralToolBar);
+    d->m_cursorGroup->button(mode)->setChecked(true);
 }
 
 CentralToolBar::CentralToolBar(CentralToolBarPrivate &d, QWidget *parent)
@@ -26,10 +32,10 @@ void CentralToolBar::_q_buttonClicked() {
     Q_D(CentralToolBar);
     auto button = qobject_cast<QAbstractButton *>(sender());
     if (button == d->m_cursorButton) {
-        mainWindow()->tabMgr()->triggerCurrent(ActionImpl::View_Cursor_Select);
+        emit cursorModeChanged(CursorModes::Select);
     } else if (button == d->m_noteButton) {
-        mainWindow()->tabMgr()->triggerCurrent(ActionImpl::View_Cursor_Sketch);
+        emit cursorModeChanged(CursorModes::Sketch);
     } else if (button == d->m_freehandButton) {
-        mainWindow()->tabMgr()->triggerCurrent(ActionImpl::View_Cursor_Freehand);
+        emit cursorModeChanged(CursorModes::Free);
     }
 }

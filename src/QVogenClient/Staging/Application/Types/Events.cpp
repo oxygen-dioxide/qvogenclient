@@ -61,6 +61,13 @@ SceneStateChangeEvent::SceneStateChangeEvent(int type)
 SceneStateChangeEvent::~SceneStateChangeEvent() {
 }
 
+SceneStateQueryEvent::SceneStateQueryEvent(int type) : SceneStateChangeEvent(type) {
+    t = static_cast<QEvent::Type>(SceneStateQuery);
+}
+
+SceneStateQueryEvent::~SceneStateQueryEvent() {
+}
+
 void QEventImpl::Register() {
     QEvent::registerEventType(MenuUpdateRequest);
     QEvent::registerEventType(SceneRectChange);
@@ -70,4 +77,5 @@ void QEventImpl::Register() {
     QEvent::registerEventType(StdinRequest);
     QEvent::registerEventType(SceneActionRequest);
     QEvent::registerEventType(SceneStateChange);
+    QEvent::registerEventType(SceneStateQuery);
 }

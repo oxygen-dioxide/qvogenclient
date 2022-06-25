@@ -7,6 +7,7 @@
 #include <QFocusEvent>
 #include <QGraphicsSceneMouseEvent>
 
+#include "../Utils/Events/SceneStateQuery/TSSQCursorModeEvent.h"
 #include "Types/Events.h"
 
 #include "Logs/CRecordHolder.h"
@@ -17,7 +18,7 @@ void TNotesArea::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
 void TNotesArea::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     // Ensure event triggered by real mouse moving
-    if (event->buttons() & Qt::LeftButton) {
+    if ((event->buttons() & Qt::LeftButton) || (event->button() & Qt::RightButton)) {
         // First movement after move
         if (!m_moving) {
             CGraphicsScene::mouseMoveEvent(event);
@@ -31,7 +32,9 @@ void TNotesArea::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 void TNotesArea::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
-    m_moving = false;
+    if (!QApplication::mouseButtons()) {
+        m_moving = false;
+    }
     CGraphicsScene::mouseReleaseEvent(event);
 }
 
@@ -42,6 +45,24 @@ void TNotesArea::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
 void TNotesArea::focusOutEvent(QFocusEvent *event) {
     m_moving = false;
     CGraphicsScene::focusOutEvent(event);
+}
+
+void TNotesArea::customEvent(QEvent *event) {
+    switch (event->type()) {
+    case QEventImpl::SceneStateQuery: {
+        auto e = static_cast<QEventImpl::SceneStateQueryEvent *>(event);
+        switch (e->cType()) {
+        case QEventImpl::SceneStateQueryEvent::CursorMode: {
+            auto e2 = static_cast<TSSQCursorModeEvent *>(event);
+            e2->mode = m_drawMode;
+            break;
+        }
+        }
+        break;
+    }
+    default:
+        break;
+    }
 }
 
 void TNotesArea::_q_sceneRectChanged(const QRectF &rect) {

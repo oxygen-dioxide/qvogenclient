@@ -21,6 +21,8 @@ namespace QEventImpl {
 
         SceneStateChange,
 
+        SceneStateQuery,
+
         // LayoutRequest
     };
 
@@ -127,6 +129,8 @@ namespace QEventImpl {
             Copy,
             Paste,
             Remove,
+            SelectAll,
+            Deselect,
             Digital,
         };
 
@@ -141,7 +145,7 @@ namespace QEventImpl {
         int a;
     };
 
-    // Scene Action Request
+    // Scene State Change
     class SceneStateChangeEvent : public QEvent {
     public:
         SceneStateChangeEvent(int type);
@@ -157,6 +161,13 @@ namespace QEventImpl {
 
     protected:
         int ct;
+    };
+
+    // Scene State Request
+    class SceneStateQueryEvent : public SceneStateChangeEvent {
+    public:
+        SceneStateQueryEvent(int type);
+        ~SceneStateQueryEvent();
     };
 
     void Register();

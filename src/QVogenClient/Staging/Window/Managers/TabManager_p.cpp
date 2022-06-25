@@ -106,6 +106,7 @@ VogenTab *TabManagerPrivate::createProjectTab(const QString &filename) {
     auto tab = new VogenTab();
     tab->setFilename(filename);
     w->tabWidget()->addTab(tab, QString());
+    tab->initAfterLayout();
     return tab;
 }
 
@@ -119,6 +120,7 @@ CentralTab *TabManagerPrivate::createUniqueTab(CentralTab::Type type) {
     }
     if (tab) {
         w->tabWidget()->addTab(tab, QString());
+        tab->initAfterLayout();
     }
     return tab;
 }

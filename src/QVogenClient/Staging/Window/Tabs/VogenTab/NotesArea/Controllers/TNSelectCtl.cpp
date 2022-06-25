@@ -41,47 +41,45 @@ bool TNSelectCtl::eventFilter(QObject *obj, QEvent *event) {
             break;
         }
 
-            // Mouse Move Event
+        // Mouse Move Event
         case QEvent::GraphicsSceneMouseMove: {
             auto e = static_cast<QGraphicsSceneMouseEvent *>(event);
-            if (e->buttons() & Qt::LeftButton) {
-                auto item = a->itemUnderMouse();
-                // No Item Under Mouse
-                if (!item) {
-                    auto e = static_cast<QGraphicsSceneMouseEvent *>(event);
-                    auto buttons = e->buttons();
-                    if (!a->mouseMoving()) {
-                        // Mouse About To Move
-                        if (!a->visionMoving()) {
-                            bool selecting = false;
-                            const auto &data = a->view()->controlData();
-                            const auto &modifiers = qApp->keyboardModifiers();
-                            if (modifiers == data.dragS) {
+            auto item = a->itemUnderMouse();
+            // No Item Under Mouse
+            if (!item && !a->itemOperating()) {
+                auto e = static_cast<QGraphicsSceneMouseEvent *>(event);
+                auto buttons = e->buttons();
+                if (!a->mouseMoving()) {
+                    // Mouse About To Move
+                    if (!a->visionMoving()) {
+                        bool selecting = false;
+                        const auto &data = a->view()->controlData();
+                        const auto &modifiers = qApp->keyboardModifiers();
+                        if (modifiers == data.dragS) {
+                            selecting = true;
+                        } else if (modifiers == Qt::NoModifier) {
+                            switch (a->drawMode()) {
+                            case TNotesArea::PlainSelect: {
                                 selecting = true;
-                            } else if (modifiers == Qt::NoModifier) {
-                                switch (a->drawMode()) {
-                                case TNotesArea::PlainSelect: {
-                                    selecting = true;
-                                    break;
-                                }
-                                default:
-                                    break;
-                                }
+                                break;
                             }
-                            if (selecting) {
-                                // Decision: Select
-                                if (!m_rubber->active()) {
-                                    if (buttons == Qt::LeftButton) {
-                                        m_rubber->start();
-                                    } else if (buttons == Qt::RightButton) {
-                                        m_rubber->start(true);
-                                    }
+                            default:
+                                break;
+                            }
+                        }
+                        if (selecting) {
+                            // Decision: Select
+                            if (!m_rubber->active()) {
+                                if (buttons == Qt::LeftButton) {
+                                    m_rubber->start();
+                                } else if (buttons == Qt::RightButton) {
+                                    m_rubber->start(true);
                                 }
                             }
                         }
-                    } else {
-                        // Mouse Moving
                     }
+                } else {
+                    // Mouse Moving
                 }
             }
             break;

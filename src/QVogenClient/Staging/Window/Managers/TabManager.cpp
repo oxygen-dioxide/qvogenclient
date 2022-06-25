@@ -11,7 +11,9 @@
 #include "WindowManager.h"
 
 #include "EventManager.h"
+
 #include "Types/Events.h"
+#include "VogenTab/Utils/Events/SceneStateQuery/TSSQCursorModeEvent.h"
 
 #include "Dialogs/VoiceManagerDialog.h"
 
@@ -267,11 +269,32 @@ bool TabManager::eventFilter(QObject *obj, QEvent *event) {
             event->setAccepted(closeAll());
             break;
         }
-        default:
-            if (event->type() == int(QEventImpl::MenuUpdateRequest)) {
-                auto e = static_cast<QEventImpl::MenuUpdateRequestEvent *>(event);
-                d->reloadActionStates(ActionImpl::StateTypes(e->menuIndex()));
+
+        case QEventImpl::MenuUpdateRequest: {
+            auto e = static_cast<QEventImpl::MenuUpdateRequestEvent *>(event);
+            d->reloadActionStates(ActionImpl::StateTypes(e->menuIndex()));
+        }
+
+        case QEventImpl::SceneStateChange: {
+            auto e = static_cast<QEventImpl::SceneStateChangeEvent *>(event);
+            switch (e->cType()) {
+            case QEventImpl::SceneStateChangeEvent::CursorMode: {
+                auto tab = d->w->tabMgr()->currentTab();
+                if (tab) {
+                    TSSQCursorModeEvent e2;
+                    // Query
+                    QApplication::sendEvent(tab, &e2);
+                    // Set
+                    d->w->toolBar()->setCursorMode(
+                        static_cast<CentralToolBar::CursorModes>(e2.mode));
+                }
+                break;
             }
+            default:
+                break;
+            }
+        }
+        default:
             break;
         }
     }
@@ -292,6 +315,16 @@ void TabManager::_q_tabIndexChanged(int index, int orgIndex) {
     // Update All Menus
     QEventImpl::MenuUpdateRequestEvent e(ActionImpl::StateMask);
     QApplication::sendEvent(d->w, &e);
+
+    // Get Scene State
+    auto tab = d->w->tabMgr()->currentTab();
+    if (tab && tab->type() == CentralTab::Tuning) {
+        TSSQCursorModeEvent e2;
+        // Query
+        QApplication::sendEvent(tab, &e2);
+        // Set
+        d->w->toolBar()->setCursorMode(static_cast<CentralToolBar::CursorModes>(e2.mode));
+    }
 }
 
 void TabManager::_q_tabTitleChanged(const QString &title) {

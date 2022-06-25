@@ -28,6 +28,9 @@ protected:
     EventManager(EventManagerPrivate &d, MainWindow *parent = nullptr);
 
     bool eventFilter(QObject *obj, QEvent *event) override;
+
+private:
+    void _q_cursorModeChanged(int mode);
 };
 
 #endif // EVENTMANAGER_H
