@@ -2,16 +2,14 @@
 #define TOPERATEEVENT_H
 
 #include "../Operations/TBaseOperation.h"
-#include "Types/Events.h"
+#include "TPianoRollEvent.h"
 
-class TOperateEvent : public QEventImpl::PianoRollChangeEvent {
+class TOperateEvent : public TPianoRollEvent {
 public:
     TOperateEvent();
     ~TOperateEvent();
 
 public:
-    void dispatch(QObject *current);
-
     TBaseOperation *data() const;
     void setData(TBaseOperation *data);
     TBaseOperation *takeData();

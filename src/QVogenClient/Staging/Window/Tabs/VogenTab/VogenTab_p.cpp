@@ -2,21 +2,26 @@
 
 #include "DataManager.h"
 
-#include "Utils/Events/TDigitalEvent.h"
+#include "Utils/Events/TDigitTimeSigEvent.h"
 #include "Utils/Events/TOperateEvent.h"
 
 #include "MainWindow.h"
 
 #include <QApplication>
 
+#include <cstdio>
+
 using namespace QEventImpl;
 
 int VogenTabPrivate::s_untitledIndex = 0;
+
+static const auto placeholder_pipe = [](const QString &text) { Q_UNUSED(text); };
 
 VogenTabPrivate::VogenTabPrivate() {
 }
 
 VogenTabPrivate::~VogenTabPrivate() {
+    clearHistory();
 }
 
 void VogenTabPrivate::init() {
@@ -75,19 +80,29 @@ void VogenTabPrivate::clearHistory() {
     savedHistoryIndex = 0;
 }
 
-void VogenTabPrivate::dispatchEvent(QEventImpl::PianoRollChangeEvent *event) {
+void VogenTabPrivate::dispatchEvent(TPianoRollEvent *event) {
     Q_Q(VogenTab);
 
-    switch (event->cType()) {
-    case QEventImpl::PianoRollChangeEvent::Operate: {
+    switch (event->pType()) {
+    case TPianoRollEvent::Operate: {
         auto e = static_cast<TOperateEvent *>(event);
         addHistory(e->takeData());
         break;
     }
-    case QEventImpl::PianoRollChangeEvent::Select: {
+    case TPianoRollEvent::Select: {
         selectionFlags = piano->notesArea()->hasSelection();
+
         QEventImpl::MenuUpdateRequestEvent e(ActionImpl::SelectState);
         qApp->sendEvent(q->window(), &e);
+        break;
+    }
+    case TPianoRollEvent::ChangeTimeSig: {
+        inputBeat();
+        break;
+    }
+    case TPianoRollEvent::ChangeTempo: {
+        inputTempo();
+        break;
     }
     default:
         break;
@@ -122,16 +137,60 @@ void VogenTabPrivate::inputLyrics() {
     qApp->sendEvent(piano->notesArea(), &e3);
 }
 
+void VogenTabPrivate::inputBeat() {
+    Q_Q(VogenTab);
+    auto w = qobject_cast<MainWindow *>(q->window());
+
+    const char fmt[] = "%d/%d";
+
+    auto timeSig = piano->notesArea()->timeSig();
+
+    QString str;
+    int res =
+        w->showLineEdit(QString::asprintf(fmt, timeSig.first, timeSig.second), placeholder_pipe,
+                        QObject::tr("Enter the new time signature, e.g. 3/4, 4/4"), &str);
+    if (res == 0) {
+        int a, b;
+        int n = ::sscanf(str.toUtf8().data(), fmt, &a, &b);
+        if (n == 2) {
+            TDigitTimeSigEvent e;
+            e.a = a;
+            e.b = b;
+            qApp->sendEvent(piano->notesArea(), &e);
+        }
+    }
+}
+
+void VogenTabPrivate::inputTempo() {
+    Q_Q(VogenTab);
+
+    auto w = qobject_cast<MainWindow *>(q->window());
+
+    QString str;
+    int res = w->showLineEdit(QString::number(piano->notesArea()->tempo()), placeholder_pipe,
+                              QObject::tr("Enter the new tempo (10 ~ 512)"), &str);
+    if (res == 0) {
+        bool ok;
+        double val = str.toDouble(&ok);
+        if (ok) {
+            // Check range
+            if (val >= 10 && val <= 512) {
+                TDigitalEvent e(TDigitalEvent::Tempo);
+                e.digitF = val;
+                qApp->sendEvent(piano->notesArea(), &e);
+            }
+        }
+    }
+}
+
 void VogenTabPrivate::inputTranspose() {
     Q_Q(VogenTab);
 
     auto w = qobject_cast<MainWindow *>(q->window());
 
-    auto pipe = [](const QString &text) { Q_UNUSED(text); };
-
     QString str;
-    int res =
-        w->showLineEdit(QString(), pipe, QObject::tr("Enter the transpose offset (0 ~ 84)"), &str);
+    int res = w->showLineEdit(QString(), placeholder_pipe,
+                              QObject::tr("Enter the transpose offset (0 ~ 84)"), &str);
     if (res == 0) {
         bool ok;
         int val = str.toInt(&ok);

@@ -41,6 +41,9 @@ TNotesArea::TNotesArea(TNotesAreaPrivate &d, TNotesScroll *parent)
     m_drawMode = PlainSelect;
     m_pointMode = SingleClick;
 
+    m_tempo = 120.0;
+    m_timeSig = qMakePair(4, 4);
+
     m_priorCtl = new TNPriorCtl(this);
     m_transCtl = new TNTransformCtl(this);
     m_selectCtl = new TNSelectCtl(this);
@@ -292,6 +295,14 @@ bool TNotesArea::hasSelection() const {
 
 quint64 TNotesArea::currentGroupId() const {
     return m_notesCtl->currentGroupId();
+}
+
+QPair<int, int> TNotesArea::timeSig() const {
+    return m_timeSig;
+}
+
+double TNotesArea::tempo() const {
+    return m_tempo;
 }
 
 QGraphicsItem *TNotesArea::itemUnderMouse() const {

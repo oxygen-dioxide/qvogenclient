@@ -125,7 +125,7 @@ void TNRectNote::layoutRequestEvent(QEvent *event) {
 }
 
 void TNRectNote::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
-    qDebug() << id << start << length << tone << lyric << group->id;
+    qDebug() << this;
     TNRectSelectable::mouseDoubleClickEvent(event);
 }
 
@@ -193,4 +193,20 @@ void TNRectNote::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     font.setPixelSize(font.pixelSize() * 3 / 4);
     painter->setFont(font);
     painter->drawText(textRect, Qt::AlignVCenter, lyric, &entityRect);
+}
+
+QDebug operator<<(QDebug debug, TNRectNote *p) {
+    debug.noquote() << QString("%1(%2)").arg(
+        p->staticMetaObject.className(),
+        p                                                              //
+            ? QString("id=%1,start=%2,len=%3,tone=%4,lyric=%5,gid=%6") //
+                  .arg(QString::number(p->id),                         //
+                       QString::number(p->start),                      //
+                       QString::number(p->length),                     //
+                       QString::number(p->tone),                       //
+                       p->lyric,                                       //
+                       QString::number(p->group->id))                  //
+            : "0x0"                                                    //
+    );
+    return debug;
 }

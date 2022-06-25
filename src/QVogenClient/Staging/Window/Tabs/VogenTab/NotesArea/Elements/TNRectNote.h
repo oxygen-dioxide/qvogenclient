@@ -48,6 +48,8 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget = nullptr) override;
 
+    friend QDebug operator<<(QDebug debug, TNRectNote *p);
+
 signals:
 };
 

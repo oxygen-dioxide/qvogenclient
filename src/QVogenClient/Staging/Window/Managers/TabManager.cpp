@@ -290,8 +290,14 @@ bool TabManager::eventFilter(QObject *obj, QEvent *event) {
                 }
                 break;
             }
-            default:
+            default: {
+                // Proxy event
+                auto tab = d->w->tabMgr()->currentTab();
+                if (tab) {
+                    QApplication::sendEvent(tab, e);
+                }
                 break;
+            }
             }
         }
         default:

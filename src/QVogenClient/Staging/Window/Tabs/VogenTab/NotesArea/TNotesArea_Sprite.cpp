@@ -7,6 +7,10 @@
 #include "../Utils/Operations/TONoteMove.h"
 #include "../Utils/Operations/TONoteStretch.h"
 
+#include "Types/Events.h"
+
+#include <QApplication>
+
 void TNotesArea::loadSprite(const QString &path) {
     m_spriteCtl->loadSprite(path);
 }
@@ -37,11 +41,23 @@ void TNotesArea::setSpriteAlpha(double spriteAlpha) {
 
 void TNotesArea::setProjectData(const TWProject &data) {
     m_notesCtl->setUtterances(data.utterances);
+
+    m_timeSig = qMakePair(data.beat.x(), data.beat.y());
+    m_tempo = data.tempo;
+
+    // Update section area
+    QEventImpl::SceneStateChangeEvent e1(QEventImpl::SceneStateChangeEvent::TimeSig);
+    QApplication::sendEvent(view()->window(), &e1);
+
+    QEventImpl::SceneStateChangeEvent e2(QEventImpl::SceneStateChangeEvent::Tempo);
+    QApplication::sendEvent(view()->window(), &e2);
 }
 
 TWProject TNotesArea::projectData() const {
     TWProject data;
     data.utterances = m_notesCtl->utterances();
+    data.beat = QPoint(m_timeSig.first, m_timeSig.second);
+    data.tempo = m_tempo;
     return data;
 }
 

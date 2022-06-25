@@ -40,6 +40,9 @@ public:
     QPoint beat() const;
     void setBeat(const QPoint &beat);
 
+    double tempo() const;
+    void setTempo(double tempo);
+
     int horizontalValue() const;
     void setHorizontalValue(int horizontalValue);
 
@@ -49,6 +52,8 @@ public:
 protected:
     Data m_styleData;
     int m_currentWidth;
+
+    double m_tempo;
     QPoint m_beat;
 
     int m_horizontalValue;
@@ -57,9 +62,11 @@ protected:
 
     QPixmap backgroundBrush() const;
 
+    QPair<QRect, QRect> textRects() const;
+
     void paintEvent(QPaintEvent *event) override;
 
-signals:
+    void mousePressEvent(QMouseEvent *event) override;
 };
 
 #endif // TSECTIONSAREA_H

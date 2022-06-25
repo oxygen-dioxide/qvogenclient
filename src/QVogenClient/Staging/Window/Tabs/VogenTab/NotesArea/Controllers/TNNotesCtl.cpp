@@ -9,7 +9,6 @@
 
 #include "../../Utils/Events/TDigitalEvent.h"
 #include "../../Utils/Events/TOperateEvent.h"
-#include "../../Utils/Events/TSelectEvent.h"
 
 #include "../../Utils/Operations/TOGroupChange.h"
 #include "../../Utils/Operations/TOLyricsChange.h"
@@ -197,7 +196,7 @@ void TNNotesCtl::deselect() {
     m_selection->clear();
 
     // Update Menu
-    TSelectEvent e;
+    TPianoRollEvent e(TPianoRollEvent::Select);
     e.dispatch(a);
 }
 
@@ -380,7 +379,7 @@ void TNNotesCtl::selectOne(TNRectNote *p) {
         m_selection->insert(p);
 
         // Update Menu
-        TSelectEvent e;
+        TPianoRollEvent e(TPianoRollEvent::Select);
         e.dispatch(a);
     }
 }
@@ -391,7 +390,7 @@ void TNNotesCtl::deselectOne(TNRectNote *p) {
         m_selection->remove(p);
 
         // Update Menu
-        TSelectEvent e;
+        TPianoRollEvent e(TPianoRollEvent::Select);
         e.dispatch(a);
     }
 }
@@ -664,27 +663,30 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                     }
                 } else {
                     if (!a->isSelecting() && !item && a->drawMode() == TNotesArea::DrawNote) {
-                        int q = a->currentQuantize();
-                        double h = a->currentHeight();
-                        int tw = 480 / q;
+                        // Start draw
+                        if (m_startPoint.x() >= a->zeroLine()) {
+                            int q = a->currentQuantize();
+                            double h = a->currentHeight();
+                            int tw = 480 / q;
 
-                        auto val = a->convertPositionToValue(
-                            QPointF(m_startPoint.x(), m_startPoint.y() - h));
-                        auto val2 = a->convertPositionToValue(e->scenePos());
+                            auto val = a->convertPositionToValue(
+                                QPointF(m_startPoint.x(), m_startPoint.y() - h));
+                            auto val2 = a->convertPositionToValue(e->scenePos());
 
-                        int tick1 = int(val.first / tw) * tw;
-                        int tick2 = val2.first;
-                        int len = tick2 - tick1;
+                            int tick1 = int(val.first / tw) * tw;
+                            int tick2 = val2.first;
+                            int len = tick2 - tick1;
 
-                        auto newPoint = a->convertValueToPosition(tick1, val.second);
-                        m_startPoint = newPoint;
+                            auto newPoint = a->convertValueToPosition(tick1, val.second);
+                            m_startPoint = newPoint;
 
-                        auto p = createNote(0, tick1, len, val.second, "a", m_currentGroup);
+                            auto p = createNote(0, tick1, len, val.second, "a", m_currentGroup);
 
-                        p->setPos(a->convertValueToPosition(tick1, val.second));
-                        p->setSize(double(len) / 480 * a->currentWidth(), h);
+                            p->setPos(a->convertValueToPosition(tick1, val.second));
+                            p->setSize(double(len) / 480 * a->currentWidth(), h);
 
-                        m_drawingData.append(DrawingData{p, 0});
+                            m_drawingData.append(DrawingData{p, 0});
+                        }
                     }
                 }
             }

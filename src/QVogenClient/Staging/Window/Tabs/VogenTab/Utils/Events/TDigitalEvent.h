@@ -14,9 +14,12 @@ public:
 
     enum DigitalType {
         Transpose,
+        Tempo,
+        TimeSig,
     };
 
     int digit;
+    double digitF;
 
 protected:
     int dt;

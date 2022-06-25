@@ -8,7 +8,7 @@
 
 #include "QVogenFile.h"
 
-#include "Types/Events.h"
+#include "Utils/Events/TPianoRollEvent.h"
 
 #include "Utils/Operations/TBaseOperation.h"
 
@@ -46,9 +46,11 @@ public:
     void updateSaveStatus();
 
     // Events
-    void dispatchEvent(QEventImpl::PianoRollChangeEvent *event);
+    void dispatchEvent(TPianoRollEvent *event);
 
     void inputLyrics();
+    void inputBeat();
+    void inputTempo();
 
     void inputTranspose();
     void transpose(int val);

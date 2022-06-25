@@ -13,7 +13,7 @@ namespace QEventImpl {
 
         ItemGeometryUpdate,
 
-        PianoRollChange,
+        EditorUpdate,
 
         StdinRequest,
 
@@ -72,22 +72,21 @@ namespace QEventImpl {
     };
 
     // Piano Roll Change
-    class PianoRollChangeEvent : public QEvent {
+    class EditorUpdateEvent : public QEvent {
     public:
-        PianoRollChangeEvent(int type);
-        ~PianoRollChangeEvent();
+        EditorUpdateEvent(int type);
+        ~EditorUpdateEvent();
 
-        enum ChangeType {
-            Operate,
-            Select,
+        enum UpdateType {
+            PianoRoll,
         };
 
-        inline int cType() const {
-            return ct;
+        inline int uType() const {
+            return ut;
         }
 
     protected:
-        int ct;
+        int ut;
     };
 
     // Stdin Request
@@ -155,6 +154,8 @@ namespace QEventImpl {
 
         enum ChangeType {
             CursorMode,
+            TimeSig,
+            Tempo,
         };
 
         inline int cType() const {

@@ -93,6 +93,7 @@ void TNPriorCtl::openContextMenu() {
 bool TNPriorCtl::eventFilter(QObject *obj, QEvent *event) {
     if (obj == a) {
         switch (event->type()) {
+        case QEvent::GraphicsSceneMouseDoubleClick:
         case QEvent::GraphicsSceneMousePress: {
             auto e = static_cast<QGraphicsSceneMouseEvent *>(event);
             if (m_downButton) {

@@ -148,7 +148,7 @@ bool TNTransformCtl::eventFilter(QObject *obj, QEvent *event) {
             break;
         }
 
-            // Mouse Move Event
+        // Mouse Move Event
         case QEvent::GraphicsSceneMouseMove: {
             auto e = static_cast<QGraphicsSceneMouseEvent *>(event);
             if (e->buttons() & Qt::LeftButton) {
@@ -175,7 +175,7 @@ bool TNTransformCtl::eventFilter(QObject *obj, QEvent *event) {
             break;
         }
 
-            // Mouse Release Event / Focus Out Event
+        // Mouse Release Event / Focus Out Event
         case QEvent::GraphicsSceneMouseRelease: {
             if (m_scrollDrag) {
                 setScrollDrag(false);

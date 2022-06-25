@@ -485,7 +485,7 @@ TPianoArea>TPianoKey[color=black]:hover {
 /* SectionsArea */
 
 TSectionsArea {
-    fix-height: 30px;
+    fix-height: 36px;
 }
 
 

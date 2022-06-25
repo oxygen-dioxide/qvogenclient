@@ -6,7 +6,7 @@
 #include "Macros.h"
 #include "QVogenFile.h"
 
-#include "Types/Events.h"
+#include "Utils/Events/TPianoRollEvent.h"
 
 #include "Utils/TWrappedData.h"
 
@@ -256,12 +256,39 @@ void VogenTab::setDeleted(bool deleted) {
 void VogenTab::customEvent(QEvent *event) {
     Q_D(VogenTab);
     switch (event->type()) {
-    case QEventImpl::PianoRollChange:
-        d->dispatchEvent(static_cast<QEventImpl::PianoRollChangeEvent *>(event));
+    case QEventImpl::EditorUpdate: {
+        auto e = static_cast<QEventImpl::EditorUpdateEvent *>(event);
+        switch (e->uType()) {
+        case QEventImpl::EditorUpdateEvent::PianoRoll:
+            d->dispatchEvent(static_cast<TPianoRollEvent *>(e));
+            break;
+        default:
+            break;
+        }
         break;
-    case QEventImpl::SceneStateQuery:
+    }
+    case QEventImpl::SceneStateQuery: {
         QApplication::sendEvent(d->piano->notesArea(), event);
         break;
+    }
+    case QEventImpl::SceneStateChange: {
+        auto e = static_cast<QEventImpl::SceneStateChangeEvent *>(event);
+        switch (e->cType()) {
+        case QEventImpl::SceneStateChangeEvent::TimeSig: {
+            auto pair = d->piano->notesArea()->timeSig();
+            d->piano->sectionsArea()->setBeat(QPoint(pair.first, pair.second));
+            break;
+        }
+        case QEventImpl::SceneStateChangeEvent::Tempo: {
+            auto tempo = d->piano->notesArea()->tempo();
+            d->piano->sectionsArea()->setTempo(tempo);
+            break;
+        }
+        default:
+            break;
+        }
+        break;
+    }
     default:
         break;
     }

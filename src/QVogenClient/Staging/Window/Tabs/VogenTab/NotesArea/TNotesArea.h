@@ -102,6 +102,9 @@ protected:
     bool m_moving;
     QPair<QSize, int> m_oldSizes;
 
+    double m_tempo;
+    QPair<int, int> m_timeSig;
+
     void adjustBackground();
 
     // ----------------------------------------  Transform  ----------------------------------------
@@ -156,6 +159,9 @@ public:
 
     bool hasSelection() const;
     quint64 currentGroupId() const;
+
+    QPair<int, int> timeSig() const;
+    double tempo() const;
 
     QGraphicsItem *itemUnderMouse() const;
 

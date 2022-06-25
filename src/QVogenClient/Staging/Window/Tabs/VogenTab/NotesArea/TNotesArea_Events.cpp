@@ -8,7 +8,7 @@
 #include <QGraphicsSceneMouseEvent>
 
 #include "../Utils/Events/SceneStateQuery/TSSQCursorModeEvent.h"
-#include "Types/Events.h"
+#include "../Utils/Events/TDigitTimeSigEvent.h"
 
 #include "Logs/CRecordHolder.h"
 
@@ -57,6 +57,34 @@ void TNotesArea::customEvent(QEvent *event) {
         }
         }
         break;
+    }
+    case QEventImpl::SceneActionRequest: {
+        auto e = static_cast<QEventImpl::SceneActionRequestEvent *>(event);
+        auto act = e->action();
+        switch (act) {
+        case QEventImpl::SceneActionRequestEvent::Digital: {
+            auto e2 = static_cast<TDigitalEvent *>(e);
+            switch (e2->dType()) {
+            case TDigitalEvent::TimeSig: {
+                auto e3 = static_cast<TDigitTimeSigEvent *>(e2);
+                m_timeSig = qMakePair(e3->a, e3->b);
+                QEventImpl::SceneStateChangeEvent e(QEventImpl::SceneStateChangeEvent::TimeSig);
+                QApplication::sendEvent(view()->window(), &e);
+                break;
+            }
+            case TDigitalEvent::Tempo: {
+                m_tempo = e2->digitF;
+                QEventImpl::SceneStateChangeEvent e(QEventImpl::SceneStateChangeEvent::Tempo);
+                QApplication::sendEvent(view()->window(), &e);
+                break;
+            }
+            default:
+                break;
+            }
+        }
+        default:
+            break;
+        }
     }
     default:
         break;

@@ -33,11 +33,11 @@ SceneRubberSelectEvent::SceneRubberSelectEvent(const QRectF &rect)
 SceneRubberSelectEvent::~SceneRubberSelectEvent() {
 }
 
-PianoRollChangeEvent::PianoRollChangeEvent(int t)
-    : QEvent(static_cast<QEvent::Type>(PianoRollChange)), ct(t) {
+EditorUpdateEvent::EditorUpdateEvent(int t)
+    : QEvent(static_cast<QEvent::Type>(EditorUpdate)), ut(t) {
 }
 
-PianoRollChangeEvent::~PianoRollChangeEvent() {
+EditorUpdateEvent::~EditorUpdateEvent() {
 }
 
 StdinRequestEvent::StdinRequestEvent(InputType type, InputProcess process)
@@ -73,7 +73,7 @@ void QEventImpl::Register() {
     QEvent::registerEventType(SceneRectChange);
     QEvent::registerEventType(SceneRubberSelect);
     QEvent::registerEventType(ItemGeometryUpdate);
-    QEvent::registerEventType(PianoRollChange);
+    QEvent::registerEventType(EditorUpdate);
     QEvent::registerEventType(StdinRequest);
     QEvent::registerEventType(SceneActionRequest);
     QEvent::registerEventType(SceneStateChange);

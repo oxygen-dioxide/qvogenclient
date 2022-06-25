@@ -815,14 +815,71 @@
         <translation type="obsolete">输入变调偏移量（0~84）</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="117"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="132"/>
         <source>Enter the lyrics, separated by white space</source>
         <translation type="unfinished">输入歌词，使用空格分隔</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="134"/>
+        <source>Enter the new time signature</source>
+        <translation type="obsolete">输入新的拍号</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="146"/>
+        <source>Enter the new time signature, e.g. 3/4, 4/4</source>
+        <translation type="unfinished">输入新的拍号，如3/4、4/4</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="166"/>
+        <source>Enter the new tempo (10 ~ 512)</source>
+        <translation type="unfinished">输入新的曲速（10 ~ 512）</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="188"/>
         <source>Enter the transpose offset (0 ~ 84)</source>
-        <translation type="unfinished">输入变调偏移量（0~84）</translation>
+        <translation type="unfinished">输入变调偏移量（0 ~ 84）</translation>
+    </message>
+</context>
+<context>
+    <name>TNPriorCtl</name>
+    <message>
+        <location filename="../../Staging/Window/Tabs/VogenTab/NotesArea/Controllers/TNPriorCtl.cpp" line="31"/>
+        <source>Move to New Utterance</source>
+        <translation type="unfinished">移至新音符组</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Tabs/VogenTab/NotesArea/Controllers/TNPriorCtl.cpp" line="32"/>
+        <source>Dissolve from Utterance</source>
+        <translation type="unfinished">从当前音符组分离</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Tabs/VogenTab/NotesArea/Controllers/TNPriorCtl.cpp" line="33"/>
+        <source>Cut</source>
+        <translation type="unfinished">剪切</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Tabs/VogenTab/NotesArea/Controllers/TNPriorCtl.cpp" line="34"/>
+        <source>Copy</source>
+        <translation type="unfinished">复制</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Tabs/VogenTab/NotesArea/Controllers/TNPriorCtl.cpp" line="35"/>
+        <source>Paste</source>
+        <translation type="unfinished">粘贴</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Tabs/VogenTab/NotesArea/Controllers/TNPriorCtl.cpp" line="36"/>
+        <source>Remove</source>
+        <translation type="unfinished">删除</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Tabs/VogenTab/NotesArea/Controllers/TNPriorCtl.cpp" line="37"/>
+        <source>Select All</source>
+        <translation type="unfinished">全选</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Tabs/VogenTab/NotesArea/Controllers/TNPriorCtl.cpp" line="38"/>
+        <source>Deselect</source>
+        <translation type="unfinished">取消选择</translation>
     </message>
 </context>
 <context>
@@ -833,32 +890,32 @@
         <translation type="unfinished">关于 %1</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="345"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="351"/>
         <source>Close</source>
         <translation type="unfinished">关闭</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="346"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="352"/>
         <source>Close Others</source>
         <translation type="unfinished">关闭其他</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="347"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="353"/>
         <source>Close Saved</source>
         <translation type="unfinished">关闭已保存</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="348"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="354"/>
         <source>Close All</source>
         <translation type="unfinished">全部关闭</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="357"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="363"/>
         <source>Show in %1(&amp;S)</source>
         <translation type="unfinished">在%1中显示(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="361"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="367"/>
         <source>Open in %1(&amp;S)</source>
         <translation type="unfinished">在%1中打开(&amp;S)</translation>
     </message>

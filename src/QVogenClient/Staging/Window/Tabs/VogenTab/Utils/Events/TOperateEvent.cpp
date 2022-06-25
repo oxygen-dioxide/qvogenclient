@@ -4,22 +4,13 @@
 
 using namespace QEventImpl;
 
-TOperateEvent::TOperateEvent() : PianoRollChangeEvent(PianoRollChangeEvent::Operate) {
+TOperateEvent::TOperateEvent() : TPianoRollEvent(Operate) {
 }
 
 TOperateEvent::~TOperateEvent() {
     if (m_data) {
         delete m_data;
     }
-}
-
-void TOperateEvent::dispatch(QObject *current) {
-    auto obj = current;
-    while (qstrcmp(obj->metaObject()->className(), "VogenTab") != 0) {
-        obj = obj->parent();
-        Q_ASSERT(obj);
-    }
-    qApp->sendEvent(obj, this);
 }
 
 TBaseOperation *TOperateEvent::data() const {
