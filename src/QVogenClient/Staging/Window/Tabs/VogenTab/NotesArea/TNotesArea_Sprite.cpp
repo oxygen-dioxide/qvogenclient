@@ -1,6 +1,7 @@
 #include "TNotesArea.h"
 #include "TNotesScroll.h"
 
+#include "../Utils/Operations/TOGroupChange.h"
 #include "../Utils/Operations/TOLyricsChange.h"
 #include "../Utils/Operations/TONoteInsDel.h"
 #include "../Utils/Operations/TONoteMove.h"
@@ -106,6 +107,10 @@ bool TNotesArea::processOperation(TBaseOperation *op, bool undo) {
             m_notesCtl->removeNotes(ids);
         }
         break;
+    }
+    case TBaseOperation::GroupChange: {
+        auto op1 = static_cast<TOGroupChange *>(op);
+        m_notesCtl->changeGroup(op1->ids, undo ? op1->oldGid : op1->gid);
     }
     default:
         break;

@@ -13,6 +13,7 @@ public:
         NoteStretch,
         LyricsChange,
         NoteAddDelete,
+        GroupChange,
     };
 
 public:

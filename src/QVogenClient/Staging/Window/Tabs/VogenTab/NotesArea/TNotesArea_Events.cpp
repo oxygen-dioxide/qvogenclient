@@ -18,7 +18,7 @@ void TNotesArea::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
 void TNotesArea::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
     // Ensure event triggered by real mouse moving
-    if ((event->buttons() & Qt::LeftButton) || (event->button() & Qt::RightButton)) {
+    if (event->buttons()) {
         // First movement after move
         if (!m_moving) {
             CGraphicsScene::mouseMoveEvent(event);
@@ -32,9 +32,7 @@ void TNotesArea::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 void TNotesArea::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
-    if (!QApplication::mouseButtons()) {
-        m_moving = false;
-    }
+    m_moving = false;
     CGraphicsScene::mouseReleaseEvent(event);
 }
 

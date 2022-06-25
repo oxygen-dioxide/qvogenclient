@@ -23,6 +23,7 @@ public:
     void changeLyrics(const QList<TWNote::Lyric> &lyrics);
     void addNotes(const QList<TWNote::NoteAll> &notes);
     void removeNotes(const QList<quint64> &ids);
+    void changeGroup(const QList<quint64> &ids, quint64 gid);
 
 public:
     void selectAll();
@@ -34,6 +35,7 @@ public:
     bool isLyricsEditing() const;
 
     bool hasSelection() const;
+    quint64 currentGroupId() const;
 
 protected:
     struct MovingData {
@@ -85,6 +87,7 @@ protected:
     TNRectNote *createNote(quint64 id, int start, int len, int tone, const QString &lrc,
                            TNNoteGroup *g);
     void removeNote(TNRectNote *p);
+    void changeNoteGroup(TNRectNote *p, TNNoteGroup *g);
 
     void setNotesMovable(bool movable);
 

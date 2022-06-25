@@ -124,6 +124,11 @@ void TNRectNote::layoutRequestEvent(QEvent *event) {
     update();
 }
 
+void TNRectNote::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
+    qDebug() << id << start << length << tone << lyric << group->id;
+    TNRectSelectable::mouseDoubleClickEvent(event);
+}
+
 void TNRectNote::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
     TNRectSelectable::hoverEnterEvent(event);
 }

@@ -55,7 +55,7 @@ void QCommandPalettePrivate::init() {
             desc = QObject::tr("Quarter");
             break;
         default:
-            desc = QObject::tr("%1 Quarter").arg(QString::number(quantize));
+            desc = QObject::tr("1/%1 Quarter").arg(QString::number(quantize));
             break;
         }
         auto item =

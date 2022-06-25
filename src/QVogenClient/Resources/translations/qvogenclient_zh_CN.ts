@@ -302,7 +302,7 @@
         <translation type="obsolete">选择量化单位（按上下键预览）</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Modules/QCommandPalette.cpp" line="51"/>
+        <location filename="../../Staging/Window/Modules/QCommandPalette.cpp" line="46"/>
         <source>Select quantization unit</source>
         <translation type="unfinished">选择量化单位</translation>
     </message>
@@ -792,19 +792,23 @@
         <translation type="unfinished">默认</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Modules/QCommandPalette_p.cpp" line="49"/>
+        <location filename="../../Staging/Window/Modules/QCommandPalette_p.cpp" line="52"/>
         <source>None</source>
         <translation type="unfinished">无</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Modules/QCommandPalette_p.cpp" line="52"/>
+        <location filename="../../Staging/Window/Modules/QCommandPalette_p.cpp" line="55"/>
         <source>Quarter</source>
         <translation type="unfinished">四分音符</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Modules/QCommandPalette_p.cpp" line="55"/>
+        <location filename="../../Staging/Window/Modules/QCommandPalette_p.cpp" line="58"/>
+        <source>1/%1 Quarter</source>
+        <translation type="unfinished">1/%1 个四分音符</translation>
+    </message>
+    <message>
         <source>%1 Quarter</source>
-        <translation type="unfinished">%1 个四分音符</translation>
+        <translation type="obsolete">%1 个四分音符</translation>
     </message>
     <message>
         <source>Input transpose offset (0 ~ 84)</source>

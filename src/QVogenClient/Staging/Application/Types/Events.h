@@ -131,6 +131,8 @@ namespace QEventImpl {
             Remove,
             SelectAll,
             Deselect,
+            Group,
+            Ungroup,
             Digital,
         };
 

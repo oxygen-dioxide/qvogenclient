@@ -155,6 +155,7 @@ public:
     bool itemOperating() const;
 
     bool hasSelection() const;
+    quint64 currentGroupId() const;
 
     QGraphicsItem *itemUnderMouse() const;
 

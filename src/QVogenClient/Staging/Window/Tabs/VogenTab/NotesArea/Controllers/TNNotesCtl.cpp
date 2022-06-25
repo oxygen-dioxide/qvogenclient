@@ -11,6 +11,7 @@
 #include "../../Utils/Events/TOperateEvent.h"
 #include "../../Utils/Events/TSelectEvent.h"
 
+#include "../../Utils/Operations/TOGroupChange.h"
 #include "../../Utils/Operations/TOLyricsChange.h"
 #include "../../Utils/Operations/TONoteInsDel.h"
 #include "../../Utils/Operations/TONoteMove.h"
@@ -40,7 +41,8 @@ TNNotesCtl::TNNotesCtl(TNotesArea *parent) : TNController(parent) {
 
     m_movedNoteIndex = -1;
 
-    m_mainGroup = createGroup(0);
+    createGroup(0); // main group is set
+
     m_currentGroup = m_mainGroup;
 
     m_editing = false;
@@ -65,11 +67,6 @@ void TNNotesCtl::setUtterances(const QList<TWProject::Utterance> &utters) {
         for (const auto &note : notes) {
             auto p = createNote(0, note.start, note.length, note.noteNum, note.rom, g);
             Q_UNUSED(p);
-        }
-
-        // Insert to groups
-        if (g != m_mainGroup) {
-            m_noteGroups.insert(g->id, g);
         }
     }
 
@@ -155,6 +152,36 @@ void TNNotesCtl::removeNotes(const QList<quint64> &ids) {
     adjustCanvas();
 }
 
+void TNNotesCtl::changeGroup(const QList<quint64> &ids, quint64 gid) {
+    auto g = findGroup(gid);
+    if (!g) {
+        g = createGroup(gid);
+    }
+
+    QSet<TNNoteGroup *> groups;
+    for (quint64 id : qAsConst(ids)) {
+        auto it = m_noteMap.find(id);
+        if (it == m_noteMap.end()) {
+            continue;
+        }
+        auto p = it.value();
+        auto oldGroup = p->group;
+
+        // Modify group
+        changeNoteGroup(p, g);
+
+        groups.insert(oldGroup);
+    }
+
+    switchGroup(g);
+
+    for (auto group : qAsConst(groups)) {
+        if (group != m_mainGroup && group->isEmpty()) {
+            removeGroup(group);
+        }
+    }
+}
+
 void TNNotesCtl::selectAll() {
     setGroupSelected(m_currentGroup, true);
 }
@@ -184,6 +211,10 @@ void TNNotesCtl::switchGroup(TNNoteGroup *group) {
             setGroupSelected(g, false);
             setGroupEnabled(g, false);
         }
+    }
+    if (m_mainGroup != m_currentGroup) {
+        setGroupSelected(m_mainGroup, false);
+        setGroupEnabled(m_mainGroup, false);
     }
     setGroupEnabled(m_currentGroup, true);
 }
@@ -217,6 +248,10 @@ bool TNNotesCtl::isLyricsEditing() const {
 
 bool TNNotesCtl::hasSelection() const {
     return !m_selection->isEmpty();
+}
+
+quint64 TNNotesCtl::currentGroupId() const {
+    return m_currentGroup->id;
 }
 
 TNRectNote *TNNotesCtl::createNote(quint64 id, int start, int len, int tone, const QString &lrc,
@@ -265,6 +300,13 @@ void TNNotesCtl::removeNote(TNRectNote *p) {
     p->deleteLater();
 }
 
+void TNNotesCtl::changeNoteGroup(TNRectNote *p, TNNoteGroup *g) {
+    p->group->remove(p);
+    g->insert(p);
+    p->group = g;
+    p->setEnabled(g == m_currentGroup);
+}
+
 void TNNotesCtl::setNotesMovable(bool movable) {
     const auto &all = m_timeBounds->begins();
     for (const auto &pair : all) {
@@ -279,10 +321,18 @@ TNNoteGroup *TNNotesCtl::createGroup(quint64 id) {
     auto g = new TNNoteGroup(this);
     g->id = (id == 0) ? (++m_maxGroupId) : id;
 
+    // Insert to groups
+    if (g->id > 1) {
+        m_noteGroups.insert(g->id, g);
+    } else {
+        m_mainGroup = g;
+    }
+
     return g;
 }
 
 void TNNotesCtl::removeGroup(TNNoteGroup *g) {
+    Q_ASSERT(g != m_mainGroup);
     m_noteGroups.remove(g->id);
     g->deleteLater();
 }
@@ -419,68 +469,68 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
         // Mouse Press Event
         case QEvent::GraphicsSceneMousePress: {
             auto e = static_cast<QGraphicsSceneMouseEvent *>(event);
-            if (e->button() == Qt::LeftButton) {
-                auto item = a->itemUnderMouse();
-                auto modifiers = qApp->keyboardModifiers();
-                const auto &data = a->view()->controlData();
-                if (a->drawMode() != TNotesArea::DrawCurves && item &&
-                    item->type() == GraphicsImpl::NoteItem) {
-                    auto noteItem = static_cast<TNRectNote *>(item);
-                    // Get Next Behavior of Mouse Press
-                    TNRectSelectable::Behavior behavior = noteItem->mousePressBehavior();
-                    bool toMove = false;
-                    bool toStretch = false;
-                    switch (behavior) {
-                    case TNRectSelectable::SelectOne: {
-                        selectOne(noteItem);
-                        toMove = true;
-                        break;
+            auto item = a->itemUnderMouse();
+            auto modifiers = qApp->keyboardModifiers();
+            const auto &data = a->view()->controlData();
+            if (a->drawMode() != TNotesArea::DrawCurves && item &&
+                item->type() == GraphicsImpl::NoteItem) {
+                auto noteItem = static_cast<TNRectNote *>(item);
+                // Get Next Behavior of Mouse Press
+                TNRectSelectable::Behavior behavior = noteItem->mousePressBehavior();
+                bool toMove = false;
+                bool toStretch = false;
+                switch (behavior) {
+                case TNRectSelectable::SelectOne: {
+                    selectOne(noteItem);
+                    toMove = true;
+                    break;
+                }
+                case TNRectSelectable::SelectOnly: {
+                    deselect();
+                    selectOne(noteItem);
+                    toMove = true;
+                    break;
+                }
+                case TNRectSelectable::SelectContinuously: {
+                    selectOne(noteItem);
+                    const auto &starts = m_selection->begins();
+
+                    auto startItem = *starts.front().second.begin();
+                    auto endItem = *starts.back().second.begin();
+
+                    int startIndex = m_currentGroup->findBegin(startItem);
+                    int endIndex = m_currentGroup->findBegin(endItem);
+
+                    const auto &allStarts = m_currentGroup->begins();
+                    for (int i = startIndex; i <= endIndex; ++i) {
+                        const auto &set = allStarts.at(i).second;
+                        for (auto note : set) {
+                            selectOne(note);
+                        }
                     }
-                    case TNRectSelectable::SelectOnly: {
+                    toMove = true;
+                    break;
+                }
+                case TNRectSelectable::DeselectOne: {
+                    deselectOne(noteItem);
+                    break;
+                }
+                case TNRectSelectable::IndependentStretch:
+                case TNRectSelectable::RelativeStretch:
+                case TNRectSelectable::AbsoluteStretch: {
+                    if (!noteItem->isSelected()) {
                         deselect();
                         selectOne(noteItem);
-                        toMove = true;
-                        break;
                     }
-                    case TNRectSelectable::SelectContinuously: {
-                        selectOne(noteItem);
-                        const auto &starts = m_selection->begins();
-
-                        auto startItem = *starts.front().second.begin();
-                        auto endItem = *starts.back().second.begin();
-
-                        int startIndex = m_currentGroup->findBegin(startItem);
-                        int endIndex = m_currentGroup->findBegin(endItem);
-
-                        const auto &allStarts = m_currentGroup->begins();
-                        for (int i = startIndex; i <= endIndex; ++i) {
-                            const auto &set = allStarts.at(i).second;
-                            for (auto note : set) {
-                                selectOne(note);
-                            }
-                        }
-                        toMove = true;
-                        break;
-                    }
-                    case TNRectSelectable::DeselectOne: {
-                        deselectOne(noteItem);
-                        break;
-                    }
-                    case TNRectSelectable::IndependentStretch:
-                    case TNRectSelectable::RelativeStretch:
-                    case TNRectSelectable::AbsoluteStretch: {
-                        if (!noteItem->isSelected()) {
-                            deselect();
-                            selectOne(noteItem);
-                        }
-                        toStretch = true;
-                        break;
-                    }
-                    default: {
-                        toMove = true;
-                        break;
-                    }
-                    }
+                    toStretch = true;
+                    break;
+                }
+                default: {
+                    toMove = true;
+                    break;
+                }
+                }
+                if (e->button() == Qt::LeftButton) {
                     if (toMove) {
                         if (noteItem->movable()) {
                             // Start Movement
@@ -510,11 +560,11 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                             }
                         }
                     }
-                } else if (modifiers != data.selectS) {
-                    deselect();
                 }
-                m_startPoint = e->scenePos();
+            } else if (modifiers != data.selectS) {
+                deselect();
             }
+            m_startPoint = e->scenePos();
             break;
         }
 
@@ -941,6 +991,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
             case QEventImpl::SceneActionRequestEvent::Copy:
             case QEventImpl::SceneActionRequestEvent::Remove: {
                 QList<TONoteInsDel::NoteData> notes;
+                QList<TNRectNote *> notesToRemove;
                 QJsonArray arr;
                 const auto &selection = m_selection->begins();
                 for (const auto &pair : selection) {
@@ -958,7 +1009,6 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                                            .toJson());
                         }
                         if (act != QEventImpl::SceneActionRequestEvent::Copy) {
-                            // Remove Notes
                             notes.append(TONoteInsDel::NoteData{
                                 note->id,        // Id
                                 note->start,     // Start
@@ -967,11 +1017,15 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                                 note->lyric,     // Lyric
                                 note->group->id, // Gid
                             });
-                            removeNote(note);
+                            notesToRemove.append(note);
                         }
                     }
                 }
                 if (act != QEventImpl::SceneActionRequestEvent::Copy) {
+                    // Remove Notes
+                    for (auto p : qAsConst(notesToRemove)) {
+                        removeNote(p);
+                    }
                     if (!notes.isEmpty()) {
                         // New Operation
                         auto op = new TONoteInsDel(TONoteInsDel::Remove);
@@ -1038,6 +1092,76 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                 default:
                     break;
                 }
+            }
+            case QEventImpl::SceneActionRequestEvent::Group: {
+                if (!m_selection->isEmpty()) {
+                    auto g = createGroup(0);
+                    QList<quint64> ids;
+
+                    // Move to new group
+                    const auto &selection = m_selection->begins();
+                    for (const auto &pair : selection) {
+                        const auto &set = pair.second;
+                        for (auto note : set) {
+                            changeNoteGroup(note, g);
+                            ids.append(note->id);
+                        }
+                    }
+
+                    // New Operation
+                    auto op = new TOGroupChange(TOGroupChange::Move);
+                    op->ids = std::move(ids);
+                    op->gid = g->id;
+                    op->oldGid = m_currentGroup->id;
+
+                    // Dispatch
+                    TOperateEvent e;
+                    e.setData(op);
+                    e.dispatch(a);
+
+                    auto oldGroup = m_currentGroup;
+                    switchGroup(g);
+
+                    if (oldGroup != m_mainGroup && oldGroup->isEmpty()) {
+                        removeGroup(oldGroup);
+                    }
+                }
+                break;
+            }
+            case QEventImpl::SceneActionRequestEvent::Ungroup: {
+                if (!m_selection->isEmpty() && m_currentGroup != m_mainGroup) {
+
+                    QList<quint64> ids;
+
+                    // Move to new group
+                    const auto &selection = m_selection->begins();
+                    for (const auto &pair : selection) {
+                        const auto &set = pair.second;
+                        for (auto note : set) {
+                            changeNoteGroup(note, m_mainGroup);
+                            ids.append(note->id);
+                        }
+                    }
+
+                    // New Operation
+                    auto op = new TOGroupChange(TOGroupChange::Move);
+                    op->ids = std::move(ids);
+                    op->gid = m_mainGroup->id;
+                    op->oldGid = m_currentGroup->id;
+
+                    // Dispatch
+                    TOperateEvent e;
+                    e.setData(op);
+                    e.dispatch(a);
+
+                    auto oldGroup = m_currentGroup;
+                    switchGroup(m_mainGroup);
+
+                    if (oldGroup->isEmpty()) {
+                        removeGroup(oldGroup);
+                    }
+                }
+                break;
             }
             default:
                 break;

@@ -36,6 +36,8 @@ protected:
 
     void layoutRequestEvent(QEvent *event) override;
 
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
+
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
     void hoverMoveEvent(QGraphicsSceneHoverEvent *event) override;
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;

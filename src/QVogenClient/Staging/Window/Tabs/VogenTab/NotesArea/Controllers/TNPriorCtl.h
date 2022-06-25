@@ -18,6 +18,9 @@ public:
 
 protected:
     QGraphicsItem *m_itemUnderMouse;
+    Qt::MouseButton m_downButton;
+
+    void openContextMenu();
 
     bool eventFilter(QObject *obj, QEvent *event) override;
 

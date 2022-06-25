@@ -121,6 +121,7 @@ void VogenTab::undo() {
         case TBaseOperation::NoteStretch:
         case TBaseOperation::LyricsChange:
         case TBaseOperation::NoteAddDelete:
+        case TBaseOperation::GroupChange:
             success = d->piano->notesArea()->processOperation(op, true);
             break;
         default:
@@ -143,6 +144,7 @@ void VogenTab::redo() {
         case TBaseOperation::NoteStretch:
         case TBaseOperation::LyricsChange:
         case TBaseOperation::NoteAddDelete:
+        case TBaseOperation::GroupChange:
             success = d->piano->notesArea()->processOperation(op, false);
             break;
         default:

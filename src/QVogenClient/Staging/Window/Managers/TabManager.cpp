@@ -363,7 +363,7 @@ void TabManager::_q_tabBarClicked(Qt::MouseButton button, int index) {
             menu.addAction(&revealAction);
         }
 
-        QAction *action = menu.exec(QCursor::pos());
+        auto action = menu.exec(QCursor::pos());
         d->w->tabWidget()->invalidateHover();
 
         if (action == &closeAction) {

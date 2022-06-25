@@ -290,6 +290,10 @@ bool TNotesArea::hasSelection() const {
     return m_notesCtl->hasSelection();
 }
 
+quint64 TNotesArea::currentGroupId() const {
+    return m_notesCtl->currentGroupId();
+}
+
 QGraphicsItem *TNotesArea::itemUnderMouse() const {
     return m_priorCtl->itemUnderMouse();
 }
