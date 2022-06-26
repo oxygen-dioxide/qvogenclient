@@ -45,7 +45,7 @@ void QCommandPaletteItemDelegate::paint(QPainter *painter, const QStyleOptionVie
     QRect rect = option.rect;
 
     // Fetch data
-    QString filename = index.data(Filename).toString();
+    QString filename = index.data(Qt::DisplayRole).toString();
     QString location = QDir::toNativeSeparators(index.data(Location).toString());
     QString date = index.data(Date).toString();
 

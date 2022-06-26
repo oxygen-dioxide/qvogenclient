@@ -69,6 +69,8 @@ protected:
     quint64 m_maxGroupId;
 
     QMap<quint64, TNNoteGroup *> m_noteGroups; // Utterances
+    QSet<QString> m_groupNames;
+
     TNNoteGroup *m_mainGroup;
     TNNoteGroup *m_currentGroup;
 

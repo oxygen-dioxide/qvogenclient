@@ -193,7 +193,8 @@ void VogenTabPrivate::inputBeat() {
         int a, b;
         int n = ::sscanf(str.toUtf8().data(), fmt, &a, &b);
         if (n == 2) {
-            if (a > 0 && b > 0 && !(b & (b - 1))) {
+            QList<int> allowedDenominators{1, 2, 4, 8, 16, 32, 64, 128};
+            if (a > 0 && allowedDenominators.contains(b)) {
                 TDigitTimeSigEvent e;
                 e.a = a;
                 e.b = b;

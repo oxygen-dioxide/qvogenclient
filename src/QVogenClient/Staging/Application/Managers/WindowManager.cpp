@@ -23,7 +23,7 @@ MainWindow *WindowManager::newWindow() {
 
     auto w = new MainWindow();
     w->setAttribute(Qt::WA_DeleteOnClose);
-	w->installEventFilter(this);
+    w->installEventFilter(this);
 
     // Recover Window State
     QRect rect = qRecordCData.windowRect;
@@ -47,6 +47,13 @@ MainWindow *WindowManager::newWindow() {
 QList<MainWindow *> WindowManager::windows() const {
     Q_D(const WindowManager);
     return d->windows.values();
+}
+
+void WindowManager::closeAll() {
+    const auto &ws = windows();
+    for (auto w : qAsConst(ws)){
+        w->close();
+    }
 }
 
 WindowManager::WindowManager(WindowManagerPrivate &d, QObject *parent) : BaseManager(d, parent) {

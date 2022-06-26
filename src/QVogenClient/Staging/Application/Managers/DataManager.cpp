@@ -133,7 +133,6 @@ void DataManager::reloadStrings() {
 
     d->appendFilter = tr("Standard MIDI Files(*.mid);;"
                          "UTAU Sequence Text(*.ust);;"
-                         "Vogen Package Files(*.vog);;"
                          "Synthesizer V Files(*.svp *.s5p);;"
                          "VOCALOID Files(*.vsqx *.vsq);;"
                          "OpenUtau Files(*.ustx);;"
@@ -195,14 +194,17 @@ void DataManager::localeLoad(int index) {
     d->eliminate();
     switch (index) {
     case 0:
+        reloadStrings();
         break;
     case 1:
         d->translate(Sys::appPath() + "/translations/qvogenclient_zh_CN.qm");
         d->translate(Sys::appPath() + "/translations/qtbase_zh_CN.qm");
         break;
     case 2:
+        reloadStrings();
         break;
     case 3:
+        reloadStrings();
         break;
     default:
         break;

@@ -1,6 +1,7 @@
 #include "QCommandPalette.h"
 #include "QCommandPalette_p.h"
 
+#include "DataManager.h"
 #include "Logs/CRecordHolder.h"
 #include "QsApplication.h"
 
@@ -15,11 +16,16 @@ QCommandPalette::QCommandPalette(QWidget *parent)
 QCommandPalette::~QCommandPalette() {
 }
 
+void QCommandPalette::reloadStrings() {
+    Q_D(QCommandPalette);
+    d->reloadStrings_helper();
+}
+
 void QCommandPalette::showCommands(QCommandPalette::CommandType type) {
     Q_D(QCommandPalette);
 
     if (isVisible()) {
-        emit abandoned();
+        d->abandon();
         d->reset();
     }
 
@@ -46,6 +52,26 @@ void QCommandPalette::showCommands(QCommandPalette::CommandType type) {
         d->lineEdit->setPlaceholderText(tr("Select quantization unit"));
         break;
     }
+    case Languages: {
+        // Show actions
+        QListWidgetItem *curItem = nullptr;
+        for (auto item : qAsConst(d->languageItems)) {
+            d->listWidget->addItem(item);
+            if (item->data(QCommandPalettePrivate::LanguageIndex).toInt() ==
+                qRecordCData.translationIndex) {
+                curItem = item;
+            }
+        }
+
+        // Select Current
+        if (curItem) {
+            d->listWidget->setCurrentItem(curItem);
+        }
+
+        // Show hint
+        d->lineEdit->setPlaceholderText(tr("Select translation (Up/down keys to preview)"));
+        break;
+    }
     default:
         break;
     }
@@ -57,13 +83,16 @@ void QCommandPalette::showCommands(QCommandPalette::CommandType type) {
 void QCommandPalette::showLineEdit(const QString &hint, const QString &placeholder) {
     Q_D(QCommandPalette);
     if (isVisible()) {
-        emit abandoned();
+        d->abandon();
         d->reset();
     }
+
+    d->curCmdType = NoCommands;
 
     d->lineEdit->setPlaceholderText(placeholder);
     d->lineEdit->setText(hint);
     d->listWidget->hide();
+
     show();
 }
 
@@ -95,7 +124,7 @@ void QCommandPalette::showEvent(QShowEvent *event) {
 }
 
 bool QCommandPalette::eventFilter(QObject *obj, QEvent *event) {
-    if (event->type() == QEvent::KeyPress || event->type() == QEvent::ShortcutOverride) {
+    if (/*event->type() == QEvent::KeyPress || */ event->type() == QEvent::ShortcutOverride) {
         Q_D(QCommandPalette);
         if (isVisible()) {
             auto keyEvent = static_cast<QKeyEvent *>(event);
@@ -113,7 +142,7 @@ bool QCommandPalette::eventFilter(QObject *obj, QEvent *event) {
             } else if (key == Qt::Key_Tab) {
                 return true;
             } else if (key == Qt::Key_Escape) {
-                emit abandoned();
+                d->abandon();
                 return true;
             } else {
                 if (obj != d->lineEdit) {
@@ -132,6 +161,8 @@ QCommandPalette::QCommandPalette(QCommandPalettePrivate &d, QWidget *parent)
     : BaseContainer(parent), d_ptr(&d) {
     d.q_ptr = this;
     d.init();
+
+    Q_TR_NOTIFY(QCommandPalette);
 }
 
 void QCommandPalette::_q_textChanged(const QString &text) {
@@ -139,6 +170,8 @@ void QCommandPalette::_q_textChanged(const QString &text) {
 }
 
 void QCommandPalette::_q_currentRowChanged(int row) {
+    Q_D(QCommandPalette);
+    d->previewItem(d->listWidget->currentItem());
     emit indexChanged(row);
 }
 

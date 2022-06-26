@@ -9,6 +9,8 @@
 
 #include "Types/Events.h"
 
+#include "MathHelper.h"
+
 #include <QApplication>
 #include <QDebug>
 #include <QFile>

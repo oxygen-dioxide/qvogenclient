@@ -1,6 +1,8 @@
 #include "ActionManager.h"
 #include "ActionManager_p.h"
 
+#include "DataManager.h"
+
 #include "MainWindow.h"
 
 ActionManager::ActionManager(MainWindow *parent)

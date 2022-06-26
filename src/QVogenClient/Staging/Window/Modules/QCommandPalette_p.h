@@ -25,16 +25,22 @@ public:
 
     QLineEdit *lineEdit;
     QCommandPaletteListWidget *listWidget;
+
     QList<QListWidgetItem *> quantizationItems;
+    QList<QListWidgetItem *> languageItems;
 
     // Status
     QCommandPalette::CommandType curCmdType;
 
     enum CommandItemTypes {
         Quantization = Qt::UserRole + 1000,
+        LanguageIndex,
     };
 
     void activateItem(QListWidgetItem *item);
+    void previewItem(QListWidgetItem *item);
+    void abandon();
+
     void reset();
 
     // Item Manager
@@ -45,6 +51,8 @@ public:
 
     // Event Guard
     CommandPaletteEventGuard *guard;
+
+    void reloadStrings_helper();
 };
 
 #endif // QCOMMANDPALETTEPRIVATE_H

@@ -26,6 +26,8 @@
 
 #include <QJsonDocument>
 
+#include <cstdio>
+
 static const char LYRICS_SEPARATOR = ' ';
 
 TNNotesCtl::TNNotesCtl(TNotesArea *parent) : TNController(parent) {
@@ -363,6 +365,10 @@ TNNoteGroup *TNNotesCtl::createGroup(quint64 id, const QString &name, const QStr
         m_mainGroup = g;
     }
 
+    // Handle Repeated Name
+    g->name = Math::adjustRepeatedName(m_groupNames, g->name);
+    m_groupNames.insert(g->name);
+
     g->install();
     g->adjustHintGeometry();
 
@@ -378,6 +384,8 @@ void TNNotesCtl::removeGroup(TNNoteGroup *g) {
     g->uninstall();
 
     m_noteGroups.remove(g->id);
+    m_groupNames.remove(g->name);
+
     g->deleteLater();
 }
 

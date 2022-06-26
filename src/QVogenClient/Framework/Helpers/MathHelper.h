@@ -24,6 +24,8 @@ namespace Math {
 
     QStringList splitAll(const QString &str, const QChar &delim);
 
+    QString adjustRepeatedName(const QSet<QString> &set, const QString &name);
+
     // Template Functions
     template <class T>
     inline void insertSort(QList<T> &array) {

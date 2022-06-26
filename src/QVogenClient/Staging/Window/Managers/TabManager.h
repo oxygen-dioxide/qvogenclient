@@ -38,6 +38,8 @@ public:
     bool closeSaved();
     bool closeAll();
 
+    bool saveAll();
+
     void triggerCurrent(ActionImpl::Action a);
     ActionImpl::States actionStates() const;
 

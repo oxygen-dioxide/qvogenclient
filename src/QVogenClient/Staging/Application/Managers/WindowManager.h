@@ -22,6 +22,9 @@ public:
 
     QList<MainWindow *> windows() const;
 
+public:
+    void closeAll();
+
 protected:
     WindowManager(WindowManagerPrivate &d, QObject *parent = nullptr);
 

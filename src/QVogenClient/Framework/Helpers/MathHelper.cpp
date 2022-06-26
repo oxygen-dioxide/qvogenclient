@@ -1,6 +1,10 @@
 #include "MathHelper.h"
 
+#include <QDebug>
+#include <QSet>
 #include <QtMath>
+
+#include <cstdio>
 
 #include <QtGui/private/qcssparser_p.h>
 
@@ -108,4 +112,44 @@ QStringList Math::splitAll(const QString &str, const QChar &delim) {
         res.append(buf);
     }
     return res;
+}
+
+QString Math::adjustRepeatedName(const QSet<QString> &set, const QString &name) {
+    QString body;
+    int num;
+
+    bool failed = false;
+
+    // Check if there's a formatted suffix
+    int index = name.lastIndexOf(" (");
+    if (index >= 0) {
+        QString suffix = name.mid(index);
+
+        // Get suffix index
+        const char fmt[] = " (%d)";
+        int n = ::sscanf(suffix.toUtf8().data(), fmt, &num);
+        if (n != 1) {
+            failed = true;
+        } else {
+            body = name.left(index);
+        }
+    } else {
+        failed = true;
+    }
+
+    if (failed) {
+        body = name;
+        num = 0;
+    }
+
+    QString newName;
+    while (true) {
+        num++;
+        newName = body + QString(" (%1)").arg(QString::number(num));
+        if (!set.contains(newName)) {
+            break;
+        }
+    };
+
+    return newName;
 }

@@ -120,6 +120,7 @@
     </message>
     <message>
         <location filename="../../Staging/Application/Managers/DataManager.cpp" line="126"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="134"/>
         <source>Standard MIDI Files(*.mid);;UTAU Sequence Text(*.ust);;Synthesizer V Files(*.svp *.s5p);;VOCALOID Files(*.vsqx *.vsq);;OpenUtau Files(*.ustx);;All Files(%1)</source>
         <translation type="unfinished">标准Midi文件(*.mid);;UTAU 序列文本(*.ust);;Synthesizer V 文件(*.svp *.s5p);;VOCALOID 文件(*.vsqx *.vsq);;OpenUtau 文件(*.ustx);;所有文件(%1)</translation>
     </message>
@@ -137,69 +138,68 @@
         <translation type="unfinished">Vogen 工程文件(*.vog);;所有文件(%1)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="134"/>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="143"/>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="152"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="142"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="151"/>
         <source>Standard MIDI Files(*.mid);;UTAU Sequence Text(*.ust);;Vogen Package Files(*.vog);;Synthesizer V Files(*.svp *.s5p);;VOCALOID Files(*.vsqx *.vsq);;OpenUtau Files(*.ustx);;All Files(%1)</source>
         <translation type="unfinished">标准Midi文件(*.mid);;UTAU 序列文本(*.ust);;Vogen 工程文件(*.vog);;Synthesizer V 文件(*.svp *.s5p);;VOCALOID 文件(*.vsqx *.vsq);;OpenUtau 文件(*.ustx);;所有文件(%1)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="161"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="160"/>
         <source>Voice Configurations(oto.ini);;All Files(%1)</source>
         <translation type="unfinished">音源设定文件(oto.ini);;所有文件(%1)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="165"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="164"/>
         <source>Image Files(*.bmp *.jpg *.jpeg *.png *.gif *.webp);;All Files(%1)</source>
         <translation type="unfinished">图像文件(*.bmp *.jpg *.jpeg *.png *.gif *.webp);;所有文件(%1)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="169"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="168"/>
         <source>Audio Files(*.wav);;All Files(%1)</source>
         <translation type="unfinished">音频文件(*.wav);;所有文件(%1)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="174"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="173"/>
         <source>Executable(*.exe);;All Files(%1)</source>
         <translation type="unfinished">可执行文件(*.exe);;所有文件(%1)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="176"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="175"/>
         <source>Executable(*)</source>
         <translation type="unfinished">可执行文件(*)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="179"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="178"/>
         <source>Vogen Voice Package(*.vogeon);;All Files(%1)</source>
         <translation type="unfinished">Vogen 声库文件(*.vogeon);;所有文件(%1)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="367"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="366"/>
         <source>Error</source>
         <translation type="unfinished">错误</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="371"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="370"/>
         <source>Untitled</source>
         <translation type="unfinished">未命名</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="379"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="378"/>
         <source>(Deleted)</source>
         <translation type="unfinished">(已删除)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="384"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="383"/>
         <source>Explorer</source>
         <translation type="unfinished">文件资源管理器</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="386"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="385"/>
         <source>Finder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="388"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="387"/>
         <source>File Manager</source>
         <translation type="unfinished">文件管理器</translation>
     </message>
@@ -222,7 +222,7 @@
         <translation type="unfinished">追加导入</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/EventManager.cpp" line="121"/>
+        <location filename="../../Staging/Window/Managers/EventManager.cpp" line="139"/>
         <source>Save As</source>
         <translation type="unfinished">另存为</translation>
     </message>
@@ -312,9 +312,29 @@
         <translation type="obsolete">选择量化单位（按上下键预览）</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Modules/QCommandPalette.cpp" line="46"/>
+        <location filename="../../Staging/Window/Modules/QCommandPalette.cpp" line="52"/>
         <source>Select quantization unit</source>
         <translation type="unfinished">选择量化单位</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Modules/QCommandPalette.cpp" line="72"/>
+        <source>Select translation (Up/down keys to preview)</source>
+        <translation type="unfinished">选择翻译（按上下箭头键预览）</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Modules/QCommandPalette_p.cpp" line="119"/>
+        <source>None</source>
+        <translation type="unfinished">无</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Modules/QCommandPalette_p.cpp" line="122"/>
+        <source>Quarter</source>
+        <translation type="unfinished">四分音符</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Modules/QCommandPalette_p.cpp" line="125"/>
+        <source>1/%1 Quarter</source>
+        <translation type="unfinished">1/%1 个四分音符</translation>
     </message>
 </context>
 <context>
@@ -802,19 +822,16 @@
         <translation type="unfinished">默认</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Modules/QCommandPalette_p.cpp" line="52"/>
         <source>None</source>
-        <translation type="unfinished">无</translation>
+        <translation type="obsolete">无</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Modules/QCommandPalette_p.cpp" line="55"/>
         <source>Quarter</source>
-        <translation type="unfinished">四分音符</translation>
+        <translation type="obsolete">四分音符</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Modules/QCommandPalette_p.cpp" line="58"/>
         <source>1/%1 Quarter</source>
-        <translation type="unfinished">1/%1 个四分音符</translation>
+        <translation type="obsolete">1/%1 个四分音符</translation>
     </message>
     <message>
         <source>%1 Quarter</source>
@@ -839,12 +856,12 @@
         <translation type="unfinished">输入新的拍号，如3/4、4/4</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="211"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="213"/>
         <source>Enter the new tempo (10 ~ 512)</source>
         <translation type="unfinished">输入新的曲速（10 ~ 512）</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="233"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="235"/>
         <source>Enter the transpose offset (0 ~ 84)</source>
         <translation type="unfinished">输入变调偏移量（0 ~ 84）</translation>
     </message>
@@ -892,7 +909,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Dialogs/SelectsDialogV2.cpp" line="96"/>
+        <location filename="../../Staging/Window/Dialogs/SelectsDialogV2.cpp" line="92"/>
         <source>Please select at least one!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -943,37 +960,43 @@
 <context>
     <name>TabManager</name>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="233"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="254"/>
+        <source>&lt;h3&gt;QVogenClient&lt;/h3&gt;&lt;p&gt;Vogen editor using &lt;span style=&quot;font-weight: bold;&quot;&gt;QSynthesis&lt;/span&gt; framework.&lt;/p&gt;&lt;p&gt;Copyright Sine Striker, 2020-2022. All rights reserved. &lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="258"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="262"/>
         <source>About %1</source>
         <translation type="unfinished">关于 %1</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="356"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="385"/>
         <source>Close</source>
         <translation type="unfinished">关闭</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="357"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="386"/>
         <source>Close Others</source>
         <translation type="unfinished">关闭其他</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="358"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="387"/>
         <source>Close Saved</source>
         <translation type="unfinished">关闭已保存</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="359"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="388"/>
         <source>Close All</source>
         <translation type="unfinished">全部关闭</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="368"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="397"/>
         <source>Show in %1(&amp;S)</source>
         <translation type="unfinished">在%1中显示(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="372"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="401"/>
         <source>Open in %1(&amp;S)</source>
         <translation type="unfinished">在%1中打开(&amp;S)</translation>
     </message>
@@ -981,7 +1004,7 @@
 <context>
     <name>VogenTab</name>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab.cpp" line="48"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab.cpp" line="49"/>
         <source>Failed to open file &quot;%1&quot;!</source>
         <translation type="unfinished">无法打开文件“%1”！</translation>
     </message>

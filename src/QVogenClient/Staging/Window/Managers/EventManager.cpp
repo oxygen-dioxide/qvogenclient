@@ -127,6 +127,8 @@ bool EventManager::saveFile(CentralTab *tab) {
         if (docTab->isUntitled() || docTab->isDeleted()) {
             saveAs = true;
         }
+    } else if (!((tab->type() & CentralTab::Folder) || (tab->type() & CentralTab::Config))) {
+        return true;
     }
     return saveAs ? saveAsFile(tab) : tab->save();
 }

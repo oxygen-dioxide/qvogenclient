@@ -19,7 +19,10 @@ public:
     explicit QCommandPalette(QWidget *parent = nullptr);
     ~QCommandPalette();
 
+    void reloadStrings();
+
     enum CommandType {
+        NoCommands,
         All,
         RecentFiles,
         RecentDirs,
@@ -29,6 +32,14 @@ public:
         Playhead,
         BuildIns,
         Plugins,
+    };
+
+    enum Languages {
+        English,
+        SimplifiedChinese,
+        TraditionalChinese,
+        Japanese,
+        LanguageMax,
     };
 
 public:

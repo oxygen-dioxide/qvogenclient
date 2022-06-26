@@ -5,6 +5,8 @@
 #include "MainWindow.h"
 #include "VogenTab/VogenTab.h"
 
+#include "Namespace.h"
+
 #include "DataManager.h"
 #include "Logs/CRecordHolder.h"
 #include "SystemHelper.h"
@@ -169,6 +171,19 @@ bool TabManager::closeAll() {
     return res;
 }
 
+bool TabManager::saveAll() {
+    Q_D(TabManager);
+    bool res = true;
+    for (int i = d->tabCount() - 1; i >= 0; --i) {
+        auto tab = d->tabAt(i);
+        if (!d->w->eventMgr()->saveFile(tab)) {
+            res = false;
+            break;
+        }
+    }
+    return res;
+}
+
 void TabManager::triggerCurrent(ActionImpl::Action a) {
     Q_D(TabManager);
     auto tab = currentTab();
@@ -198,6 +213,34 @@ void TabManager::triggerCurrent(ActionImpl::Action a) {
     }
     case File_SaveAs: {
         d->w->eventMgr()->saveAsFile(tab);
+        break;
+    }
+    case File_SaveAll: {
+        saveAll();
+        break;
+    }
+    case File_FileSettings: {
+        break;
+    }
+    case File_Settings: {
+        break;
+    }
+    case File_KeyboardShortcuts: {
+        break;
+    }
+    case File_ColorThemes: {
+        break;
+    }
+    case File_Languages: {
+        d->w->showCommands(QCommandPalette::Languages);
+        break;
+    }
+    case File_Close: {
+        closeTab(currentTab());
+        break;
+    }
+    case File_CloseWindow: {
+        d->w->close();
         break;
     }
     case Edit_Undo: {
@@ -230,10 +273,11 @@ void TabManager::triggerCurrent(ActionImpl::Action a) {
         break;
     }
     case Help_AboutApplication: {
-        QString text = tr("<h3>QVogenClient</h3>"
+        QString text = tr("<h3>QVogenClient %1</h3>"
                           "<p>Vogen editor using "
                           "<span style=\"font-weight: bold;\">QSynthesis</span> framework.</p>"
-                          "<p>Copyright Sine Striker, 2020-2022. All rights reserved. </p>");
+                          "<p>Copyright Sine Striker, 2020-2022. All rights reserved. </p>")
+                           .arg(qApp->applicationVersion());
         QMessageBox::about(d->w, tr("About %1").arg(qData->appName()), text);
         break;
     }
