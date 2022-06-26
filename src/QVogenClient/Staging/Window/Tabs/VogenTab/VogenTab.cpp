@@ -2,8 +2,11 @@
 #include "VogenTab_p.h"
 
 #include "DataManager.h"
+#include "Logs/CRecordHolder.h"
 
 #include "Macros.h"
+#include "Namespace.h"
+
 #include "QVogenFile.h"
 
 #include "Utils/Events/TPianoRollEvent.h"
@@ -43,6 +46,9 @@ bool VogenTab::load() {
     if (!res) {
         Q_ERROR(this, qData->errorTitle(),
                 tr("Failed to open file \"%1\"!").arg(QDir::toNativeSeparators(d->filename)));
+
+        // Remove from recent
+        qRecord->commitRecent(CRecordHolder::Project, CRecordHolder::Remove, d->filename);
         return false;
     }
 
@@ -72,6 +78,8 @@ bool VogenTab::load() {
 
     d->piano->notesArea()->setProjectData(pd);
 
+    // Add to recent
+    qRecord->commitRecent(CRecordHolder::Project, CRecordHolder::Advance, d->filename);
     return true;
 }
 
@@ -90,6 +98,8 @@ bool VogenTab::save() {
     d->savedHistoryIndex = d->historyIndex; // Update saved history index
     setEdited(false);
 
+    // Add to recent
+    qRecord->commitRecent(CRecordHolder::Project, CRecordHolder::Advance, d->filename);
     return true;
 }
 
@@ -111,6 +121,8 @@ bool VogenTab::saveAs(const QString &filename) {
     d->savedHistoryIndex = d->historyIndex; // Update saved history index
     setEdited(false);
 
+    // Add to recent
+    qRecord->commitRecent(CRecordHolder::Project, CRecordHolder::Advance, d->filename);
     return true;
 }
 
@@ -242,6 +254,43 @@ void VogenTab::makeUntitled(const QString &name) {
         d->untitledIndex = d->s_untitledIndex;
     }
     setFilename(name);
+}
+
+void VogenTab::import(const CommonScore &proj) {
+    Q_D(VogenTab);
+
+    makeUntitled(proj.name);
+
+    // Interpret
+    TWProject pd;
+    pd.projectName = proj.name;
+    pd.tempo = proj.tempo;
+    pd.beat = proj.beat;
+    pd.accomOffset = 0;
+
+    QList<TWProject::Utterance> utterances;
+    for (const auto &utter : qAsConst(proj.tracks)) {
+        TWProject::Utterance u;
+        u.name = utter.name;
+        u.singer = QString();
+        u.romScheme = "man";
+
+        QList<TWProject::Note> notes;
+        for (const auto &note : utter.notes) {
+            TWProject::Note p{note.noteNum, QString(), note.lyric, note.start, note.length};
+            notes.append(p);
+        }
+        u.notes = std::move(notes);
+        utterances.append(u);
+    }
+    pd.utterances = std::move(utterances);
+
+    // Move to main group
+    if (pd.utterances.size() == 1) {
+        pd.utterances.front().name = Qs::MAIN_GROUP_NAME;
+    }
+
+    d->piano->notesArea()->setProjectData(pd);
 }
 
 void VogenTab::setUntitled(bool untitled) {

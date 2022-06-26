@@ -59,11 +59,23 @@ VogenTab *TabManager::addProject(const QString &filename) {
 
     if (!tab->load()) {
         closeTab(tab);
-        qRecord->commitRecent(CRecordHolder::Project, CRecordHolder::Remove, filename);
         return nullptr;
-    } else {
-        qRecord->commitRecent(CRecordHolder::Project, CRecordHolder::Advance, filename);
     }
+
+    return tab;
+}
+
+VogenTab *TabManager::addUntitled(const CommonScore &proj) {
+    Q_D(TabManager);
+
+    // Add new
+    auto tabs = d->w->tabWidget();
+
+    auto tab = d->createProjectTab(QString());
+    tabs->setCurrentWidget(tab);
+
+    // Import
+    tab->import(proj);
 
     return tab;
 }

@@ -2,6 +2,7 @@
 #define VOGENTAB_H
 
 #include "../DocumentTab.h"
+#include "CommonScore.h"
 
 class VogenTabPrivate;
 
@@ -31,6 +32,8 @@ public:
     void handleSpecificAction(ActionImpl::Action a) override;
 
     void makeUntitled(const QString &name = QString());
+
+    void import(const CommonScore &proj);
 
 protected:
     void setUntitled(bool untitled) override;

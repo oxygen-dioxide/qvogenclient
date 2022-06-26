@@ -78,12 +78,14 @@ bool EventManager::importFile(const QString &filename) {
         return false;
     }
     FileParser parser(d->w);
-    CommonScore notes;
+    CommonScore proj;
 
-    bool res = parser.parseFile(path, notes);
+    bool res = parser.parseFile(path, proj);
     if (!res) {
         return false;
     }
+
+    d->w->tabMgr()->addUntitled(proj);
 
     return true;
 }

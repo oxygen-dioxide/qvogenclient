@@ -23,7 +23,7 @@ public:
     void changeLyrics(const QList<TWNote::Lyric> &lyrics);
     void addNotes(const QList<TWNote::NoteAll> &notes);
     void removeNotes(const QList<quint64> &ids);
-    void changeGroup(const QList<quint64> &ids, const TWNote::GroupAll &group);
+    void changeGroup(const QList<quint64> &ids, const TWNote::Group &group);
 
 public:
     void selectAll();

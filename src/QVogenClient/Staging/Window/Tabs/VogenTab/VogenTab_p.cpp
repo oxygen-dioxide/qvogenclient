@@ -248,14 +248,11 @@ void VogenTabPrivate::transpose(int val) {
 
 QString VogenTabPrivate::setTabNameProxy(const QString &tabName) {
     QString newName;
-    if (untitled) {
-        if (untitledIndex >= 0) {
-            newName = QString(qData->untitledFileName() + " " + QString::number(untitledIndex));
-        } else {
-            newName = tabName;
-        }
+    if (untitled && untitledIndex >= 0) {
+        newName = QString(qData->untitledFileName() + " " + QString::number(untitledIndex));
     } else {
-        newName = DocumentTabPrivate::setTabNameProxy(tabName);
+        newName = tabName;
     }
+    newName = DocumentTabPrivate::setTabNameProxy(newName);
     return newName;
 }

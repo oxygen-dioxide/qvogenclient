@@ -59,8 +59,8 @@ namespace Qs {
     const char DIR_NAME_CONFIG_THEMES[] = "themes";
     const char DIR_NAME_CONFIG_TOOLS[] = "tools";
 
-    // Supplement of Utau
-    const char KEY_NAME_PLUGIN_CHARSET[] = "charset";
+    // Project settings
+    const char MAIN_GROUP_NAME[] = "%MAIN%";
 
 } // namespace Qs
 

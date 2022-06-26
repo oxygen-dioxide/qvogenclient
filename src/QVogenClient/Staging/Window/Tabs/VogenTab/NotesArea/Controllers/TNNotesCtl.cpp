@@ -27,8 +27,6 @@
 
 #include <QJsonDocument>
 
-static const char MAIN_GROUP_NAME[] = "%MAIN%";
-
 static const char LYRICS_SEPARATOR = ' ';
 
 TNNotesCtl::TNNotesCtl(TNotesArea *parent) : TNController(parent) {
@@ -40,7 +38,8 @@ TNNotesCtl::TNNotesCtl(TNotesArea *parent) : TNController(parent) {
 
     m_movedNoteIndex = -1;
 
-    createGroup(0, MAIN_GROUP_NAME, QString(), QString()); // main group is set
+    // Init main group
+    createGroup(0, Qs::MAIN_GROUP_NAME, QString(), QString());
 
     m_currentGroup = m_mainGroup;
 
@@ -56,10 +55,15 @@ void TNNotesCtl::install() {
 
 void TNNotesCtl::setUtterances(const QList<TWProject::Utterance> &utters) {
     for (const auto &utter : utters) {
-        auto g = (utter.name == MAIN_GROUP_NAME)
-                     ? m_mainGroup
-                     : createGroup(0, utter.name, utter.singer, utter.romScheme);
-
+        TNNoteGroup *g;
+        if (utter.name == Qs::MAIN_GROUP_NAME) {
+            g = m_mainGroup;
+        } else {
+            if (utter.notes.isEmpty()) {
+                continue;
+            }
+            g = createGroup(0, utter.name, utter.singer, utter.romScheme);
+        }
         const auto &notes = utter.notes;
         for (const auto &note : notes) {
             auto p = createNote(0, note.start, note.length, note.noteNum, note.rom, g);
@@ -185,7 +189,7 @@ void TNNotesCtl::removeNotes(const QList<quint64> &ids) {
     adjustCanvas();
 }
 
-void TNNotesCtl::changeGroup(const QList<quint64> &ids, const TWNote::GroupAll &group) {
+void TNNotesCtl::changeGroup(const QList<quint64> &ids, const TWNote::Group &group) {
     auto g = findGroup(group.id);
     if (!g) {
         g = createGroup(group.id, group.name, group.singer, group.rom);
@@ -356,7 +360,7 @@ TNNoteGroup *TNNotesCtl::createGroup(quint64 id, const QString &name, const QStr
     g->id = (id == 0) ? (++m_maxGroupId) : id;
     g->name = name.isEmpty() ? ("utt-" + QString::number(g->id)) : name;
     g->singer = singer;
-    g->rom = rom;
+    g->rom = rom.isEmpty() ? "man" : rom;
 
     // Insert to groups
     if (g->id > 1) {

@@ -122,7 +122,7 @@ bool TNotesArea::processOperation(TBaseOperation *op, bool undo) {
     case TBaseOperation::GroupChange: {
         auto op1 = static_cast<TOGroupChange *>(op);
         auto g = undo ? op1->oldGroup : op1->group;
-        m_notesCtl->changeGroup(op1->ids, TWNote::GroupAll{g.id, g.name, g.singer, g.rom});
+        m_notesCtl->changeGroup(op1->ids, TWNote::Group{g.id, g.name, g.singer, g.rom});
         break;
     }
     case TBaseOperation::TempoTimeSig: {

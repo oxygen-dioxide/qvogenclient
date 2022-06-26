@@ -21,7 +21,12 @@ public:
     QPoint beat;
 
     // Note Sequence
-    QList<CommonNote> notes;
+    struct Track {
+        QString name;
+        QList<CommonNote> notes;
+    };
+
+    QList<Track> tracks;
 };
 
 #endif // COMMONSCORE_H

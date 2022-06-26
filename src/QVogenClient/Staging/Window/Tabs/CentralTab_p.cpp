@@ -22,7 +22,7 @@ bool CentralTabPrivate::latest() const {
 }
 
 QString CentralTabPrivate::setTabNameProxy(const QString &tabName) {
-    return (edited ? qData->unsavedPrefix() : "") + tabName;
+    return (edited ? qData->unsavedPrefix() : QString()) + tabName;
 }
 
 QString CentralTabPrivate::tabText() {

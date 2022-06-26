@@ -5,6 +5,7 @@
 #include "CentralTab.h"
 
 #include "Types/Actions.h"
+#include "CommonTune/CommonScore.h"
 
 class MainWindow;
 class TabManagerPrivate;
@@ -24,6 +25,8 @@ public:
     // API
 public:
     VogenTab *addProject(const QString &filename);
+    VogenTab *addUntitled(const CommonScore &proj);
+
     CentralTab *addUnique(CentralTab::Type type);
 
     CentralTab *currentTab() const;
