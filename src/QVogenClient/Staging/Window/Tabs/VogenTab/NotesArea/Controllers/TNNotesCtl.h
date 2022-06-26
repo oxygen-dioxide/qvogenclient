@@ -80,6 +80,7 @@ protected:
     TNNoteList *m_selection; // Index
 
     bool m_editing;
+    TNNoteList *m_cachedSelection;
     QList<QPair<TNRectNote *, QString>> m_cachedLyrics;
 
     void switchGroup(TNNoteGroup *group);
@@ -114,7 +115,7 @@ protected:
     void setGroupEnabled(TNNoteGroup *group, bool enabled);
 
     // Helper
-    QList<TNRectNote *> tryApplyLyrics(int len);
+    QList<TNRectNote *> tryApplyLyrics(int len, TNNoteList *s);
     void addUtterancesCore(const QList<TWProject::Utterance> &utters,
                            QList<QPair<TNNoteGroup *, QList<TNRectNote *>>> *res = nullptr);
 

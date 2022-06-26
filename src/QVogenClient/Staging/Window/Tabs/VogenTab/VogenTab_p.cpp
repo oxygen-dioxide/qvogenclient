@@ -190,15 +190,18 @@ void VogenTabPrivate::inputBeat() {
         w->showLineEdit(QString::asprintf(fmt, timeSig.first, timeSig.second), placeholder_pipe,
                         QObject::tr("Enter the new time signature, e.g. 3/4, 4/4"), &str);
     if (res == 0) {
-        int a, b;
-        int n = ::sscanf(str.toUtf8().data(), fmt, &a, &b);
-        if (n == 2) {
-            QList<int> allowedDenominators{1, 2, 4, 8, 16, 32, 64, 128};
-            if (a > 0 && allowedDenominators.contains(b)) {
-                TDigitTimeSigEvent e;
-                e.a = a;
-                e.b = b;
-                qApp->sendEvent(piano->notesArea(), &e);
+        QRegExp reg("^[1-9][0-9]*/[1-9][0-9]*$");
+        if (reg.exactMatch(str)) {
+            int a, b;
+            int n = ::sscanf(str.toUtf8().data(), fmt, &a, &b);
+            if (n == 2) {
+                QList<int> allowedDenominators{1, 2, 4, 8, 16, 32, 64, 128};
+                if (a > 0 && allowedDenominators.contains(b)) {
+                    TDigitTimeSigEvent e;
+                    e.a = a;
+                    e.b = b;
+                    qApp->sendEvent(piano->notesArea(), &e);
+                }
             }
         }
     }

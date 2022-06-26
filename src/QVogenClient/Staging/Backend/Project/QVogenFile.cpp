@@ -8,10 +8,9 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QTextStream>
 
 #include <quazip.h>
-
-#include <cstdio>
 
 const char KEY_NAME_TIME_SIG[] = "timeSig0";
 const char KEY_NAME_BPM[] = "bpm0";
@@ -104,11 +103,18 @@ bool QVogenFile::loadCore(bool *valid) {
 
     // Parse Time Sig
     {
-        int a, b;
-        int n = ::sscanf(timeSig.toUtf8().data(), "%d/%d", &a, &b);
-        if (n == 2) {
-            beat = QPoint(a, b);
-        } else {
+        bool failed = false;
+        QStringList pair = timeSig.split('/');
+        if (pair.size() != 2) {
+            failed = true;
+        }
+        if (!failed) {
+            beat = QPoint(pair.front().toInt(), pair.back().toInt());
+            if (beat.x() == 0 || beat.y() == 0) {
+                failed = true;
+            }
+        }
+        if (failed) {
             beat = QPoint(4, 4);
         }
     }

@@ -59,6 +59,15 @@ void TNNoteList::clear() {
     }
 }
 
+void TNNoteList::copy(TNNoteList *other) {
+    clear();
+
+    auto set = other->m_set;
+    for (auto it = set.begin(); it != set.end(); it++) {
+        insert(*it);
+    }
+}
+
 int TNNoteList::count() const {
     return m_set.size();
 }

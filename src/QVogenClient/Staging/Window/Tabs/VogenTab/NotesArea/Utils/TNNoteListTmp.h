@@ -18,6 +18,7 @@ public:
     bool insert(TNRectNote *item);
     bool remove(TNRectNote *item);
     void clear();
+    void copy(TNNoteList *other);
     int count() const;
 
     bool contains(TNRectNote *item) const;

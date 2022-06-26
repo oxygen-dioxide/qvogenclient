@@ -115,6 +115,10 @@ QStringList Math::splitAll(const QString &str, const QChar &delim) {
 }
 
 QString Math::adjustRepeatedName(const QSet<QString> &set, const QString &name) {
+    if (!set.contains(name)) {
+        return name;
+    }
+
     QString body;
     int num;
 
@@ -126,8 +130,9 @@ QString Math::adjustRepeatedName(const QSet<QString> &set, const QString &name) 
         QString suffix = name.mid(index);
 
         // Get suffix index
-        const char fmt[] = " (%d)";
-        int n = ::sscanf(suffix.toUtf8().data(), fmt, &num);
+        const char fmt[] = " (%d)%c";
+        char ch;
+        int n = ::sscanf(suffix.toUtf8().data(), fmt, &num, &ch);
         if (n != 1) {
             failed = true;
         } else {

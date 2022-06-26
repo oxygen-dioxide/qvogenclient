@@ -33,6 +33,7 @@ static const char LYRICS_SEPARATOR = ' ';
 TNNotesCtl::TNNotesCtl(TNotesArea *parent) : TNController(parent) {
     m_timeBounds = new TNNoteList(this);
     m_selection = new TNNoteList(this);
+    m_cachedSelection = new TNNoteList(this);
 
     m_maxNoteId = 0;
     m_maxGroupId = 0;
@@ -475,7 +476,7 @@ void TNNotesCtl::setGroupEnabled(TNNoteGroup *group, bool enabled) {
     }
 }
 
-QList<TNRectNote *> TNNotesCtl::tryApplyLyrics(int len) {
+QList<TNRectNote *> TNNotesCtl::tryApplyLyrics(int len, TNNoteList *s) {
     QList<TNRectNote *> res;
     TNRectNote *lastNote = nullptr;
     TNNoteGroup *g = nullptr;
@@ -485,7 +486,7 @@ QList<TNRectNote *> TNNotesCtl::tryApplyLyrics(int len) {
     }
 
     // Fill Selected Notes
-    const auto &selection = m_selection->begins();
+    const auto &selection = s->begins();
     for (const auto &pair : selection) {
         const auto &set = pair.second;
         auto note = *set.begin();
@@ -963,9 +964,10 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                     } else {
                         // Arrange lyrics
                         m_cachedLyrics.clear();
+                        m_cachedSelection->copy(m_selection);
 
                         QStringList lyrics;
-                        const auto &selection = m_selection->begins();
+                        const auto &selection = m_cachedSelection->begins();
                         for (const auto &pair : selection) {
                             const auto &set = pair.second;
                             auto note = *set.begin();
@@ -990,7 +992,8 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
 
                         // Change new notes
                         m_cachedLyrics.clear();
-                        QList<TNRectNote *> curNotes = tryApplyLyrics(lyrics.size());
+                        QList<TNRectNote *> curNotes =
+                            tryApplyLyrics(lyrics.size(), m_cachedSelection);
 
                         for (int i = 0; i < curNotes.size(); ++i) {
                             auto note = curNotes.at(i);
@@ -1033,6 +1036,8 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                             e.dispatch(a);
                         }
 
+                        m_cachedLyrics.clear();
+                        m_cachedSelection->clear();
                         m_editing = false;
                     }
                     break;
@@ -1045,6 +1050,8 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                             note->lyric = pair.second;
                             note->update();
                         }
+                        m_cachedLyrics.clear();
+                        m_cachedSelection->clear();
                         m_editing = false;
                     }
                     break;

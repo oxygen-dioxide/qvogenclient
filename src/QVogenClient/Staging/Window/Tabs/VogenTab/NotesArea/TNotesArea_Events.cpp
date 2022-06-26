@@ -73,24 +73,28 @@ void TNotesArea::customEvent(QEvent *event) {
                 auto oldTimeSig = m_timeSig;
                 setTimeSig(e3->a, e3->b);
 
-                auto op = new TOTempoTimeSig();
-                op->val = TOTempoTimeSig::Data{m_tempo, m_timeSig};
-                op->oldVal = TOTempoTimeSig::Data{m_tempo, oldTimeSig};
-                TOperateEvent oe;
-                oe.setData(op);
-                oe.dispatch(this);
+                if (oldTimeSig != m_timeSig) {
+                    auto op = new TOTempoTimeSig();
+                    op->val = TOTempoTimeSig::Data{m_tempo, m_timeSig};
+                    op->oldVal = TOTempoTimeSig::Data{m_tempo, oldTimeSig};
+                    TOperateEvent oe;
+                    oe.setData(op);
+                    oe.dispatch(this);
+                }
                 break;
             }
             case TDigitalEvent::Tempo: {
                 auto oldTempo = m_tempo;
                 setTempo(e2->digitF);
 
-                auto op = new TOTempoTimeSig();
-                op->val = TOTempoTimeSig::Data{m_tempo, m_timeSig};
-                op->oldVal = TOTempoTimeSig::Data{oldTempo, m_timeSig};
-                TOperateEvent oe;
-                oe.setData(op);
-                oe.dispatch(this);
+                if (oldTempo != m_tempo) {
+                    auto op = new TOTempoTimeSig();
+                    op->val = TOTempoTimeSig::Data{m_tempo, m_timeSig};
+                    op->oldVal = TOTempoTimeSig::Data{oldTempo, m_timeSig};
+                    TOperateEvent oe;
+                    oe.setData(op);
+                    oe.dispatch(this);
+                }
                 break;
             }
             default:

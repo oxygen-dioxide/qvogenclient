@@ -13,7 +13,7 @@ CommandPaletteEventGuard::~CommandPaletteEventGuard() {
 }
 
 bool CommandPaletteEventGuard::eventFilter(QObject *obj, QEvent *event) {
-    if (obj->isWidgetType() && cp->isVisible()) {
+    if (obj->isWidgetType() && cp->isVisible() && !cp->asStdin()) {
         if (event->type() == QEvent::MouseButtonPress) {
             auto e = static_cast<QMouseEvent *>(event);
             if (!cp->rect().contains(cp->mapFromGlobal(e->globalPos()))) {
@@ -22,6 +22,5 @@ bool CommandPaletteEventGuard::eventFilter(QObject *obj, QEvent *event) {
             }
         }
     }
-    return QObject::eventFilter(obj, event);
+    return false;
 }
-
