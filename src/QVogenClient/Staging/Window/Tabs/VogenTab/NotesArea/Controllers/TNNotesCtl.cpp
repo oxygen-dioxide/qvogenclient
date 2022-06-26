@@ -1002,33 +1002,54 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                     if (parseError.error == QJsonParseError::NoError) {
                         QJsonArray arr = jsonDoc.array();
 
-                        QList<TNRectNote *> ptrs;
+                        // Get note tick offset
+                        int tickOffset = 0;
+                        if (!m_selection->isEmpty()) {
+                            auto p = *m_selection->ends().back().second.rbegin();
+                            tickOffset = p->start + p->length;
+                        } else if (!m_currentGroup->isEmpty()) {
+                            auto p = *m_currentGroup->ends().back().second.rbegin();
+                            tickOffset = p->start + p->length;
+                        }
+
+                        // Subtract mimimum tick
+                        QList<TWNote::NoteAll> notesToPaste;
+                        int minStart = -1;
                         for (auto it = arr.begin(); it != arr.end(); ++it) {
                             auto note = TWNote::NoteAll::fromJson(it->toObject());
                             if (note.id != 0) {
-                                // Add New Notes (New id and gid)
-                                auto p = createNote(0, note.start, note.length, note.noteNum,
-                                                    note.lyric, m_currentGroup);
-                                adjustGeometry(p);
-                                ptrs.append(p);
+                                notesToPaste.append(note);
+                                minStart = (minStart < 0) ? note.start : qMin(note.start, minStart);
                             }
                         }
+                        tickOffset -= minStart;
 
-                        adjustCanvas();
-
-                        QList<TONoteInsDel::NoteData> notes;
-                        for (auto note : qAsConst(ptrs)) {
-                            notes.append(TONoteInsDel::NoteData{
-                                note->id,        // Id
-                                note->start,     // Start
-                                note->length,    // Length
-                                note->tone,      // Tone
-                                note->lyric,     // Lyric
-                                note->group->id, // Gid
-                            });
+                        QList<TNRectNote *> ptrs;
+                        for (const auto &note : qAsConst(notesToPaste)) {
+                            // Add New Notes (New id and gid)
+                            auto p = createNote(0, tickOffset + note.start, note.length,
+                                                note.noteNum, note.lyric, m_currentGroup);
+                            adjustGeometry(p);
+                            ptrs.append(p);
                         }
 
-                        if (!notes.isEmpty()) {
+                        if (!ptrs.isEmpty()) {
+                            adjustCanvas();
+                            deselect();
+
+                            QList<TONoteInsDel::NoteData> notes;
+                            for (auto note : qAsConst(ptrs)) {
+                                notes.append(TONoteInsDel::NoteData{
+                                    note->id,        // Id
+                                    note->start,     // Start
+                                    note->length,    // Length
+                                    note->tone,      // Tone
+                                    note->lyric,     // Lyric
+                                    note->group->id, // Gid
+                                });
+                                selectOne(note);
+                            }
+
                             // New Operation
                             auto op = new TONoteInsDel(TONoteInsDel::Create);
                             op->data = std::move(notes);
