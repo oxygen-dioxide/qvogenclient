@@ -51,6 +51,10 @@ void TNRectNote::setMovable(bool movable) {
     update();
 }
 
+QRectF TNRectNote::geometry() const {
+    return m_area->convertValueToGeometry(start, tone, length);
+}
+
 TNRectSelectable::Behavior TNRectNote::mousePressBehavior() const {
     Behavior res = NoBehavior;
 
@@ -114,18 +118,22 @@ void TNRectNote::setStretch(bool stretch) {
 void TNRectNote::layoutRequestEvent(QEvent *event) {
     Q_UNUSED(event);
 
-    setBegin(start);
-    setEnd(start + length);
-
     QRectF geometry = m_area->convertValueToGeometry(start, tone, length);
     setPos(geometry.topLeft());
     setRect(0, 0, geometry.width(), geometry.height());
 
     update();
+
+    setBegin(start);
+    setEnd(start + length);
 }
 
 void TNRectNote::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) {
-    qDebug() << this;
+    if (event->button() == Qt::LeftButton) {
+        qDebug() << this;
+    } else {
+        qDebug() << pos();
+    }
     TNRectSelectable::mouseDoubleClickEvent(event);
 }
 

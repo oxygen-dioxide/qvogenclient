@@ -24,6 +24,8 @@ public:
     bool movable() const;
     void setMovable(bool movable);
 
+    QRectF geometry() const;
+
     Behavior mousePressBehavior() const;
 
 protected:

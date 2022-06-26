@@ -119,7 +119,7 @@ bool QVogenFile::loadCore(bool *valid) {
         notes.clear();
         parsed = f.parse(*it, f.OT({
                                   {KEY_NAME_UTTERANCE_NAME, f.S(&utterance.name)},
-                                  {KEY_NAME_UTTERANCE_SINGER, f.S(&utterance.name)},
+                                  {KEY_NAME_UTTERANCE_SINGER, f.S(&utterance.singer)},
                                   {KEY_NAME_UTTERANCE_ROM_SCHEME, f.S(&utterance.romScheme)},
                                   {KEY_NAME_UTTERANCE_NOTES, f.OL(&notes)},
                               }));
@@ -201,7 +201,7 @@ bool QVogenFile::saveCore() {
         // Marshall Utterance
         auto obj = QJsonObject({
             {KEY_NAME_UTTERANCE_NAME, utterance.name},
-            {KEY_NAME_UTTERANCE_SINGER, utterance.name},
+            {KEY_NAME_UTTERANCE_SINGER, utterance.singer},
             {KEY_NAME_UTTERANCE_ROM_SCHEME, utterance.romScheme},
             {KEY_NAME_UTTERANCE_NOTES, notes},
         });

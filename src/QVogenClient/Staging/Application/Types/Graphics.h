@@ -7,6 +7,7 @@ namespace GraphicsImpl {
 
     enum ItemTypes {
         NoteItem = QGraphicsItem::UserType + 1,
+        GroupHintItem,
     };
 
 };

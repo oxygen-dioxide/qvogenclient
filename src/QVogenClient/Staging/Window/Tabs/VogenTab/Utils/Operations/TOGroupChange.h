@@ -21,10 +21,17 @@ public:
         MoveAndDel,
     };
 
+    struct GroupData {
+        quint64 id;
+        QString name;
+        QString singer;
+        QString rom;
+    };
+
     QList<quint64> ids;
 
-    quint64 gid;
-    quint64 oldGid;
+    GroupData group;
+    GroupData oldGroup;
 
 protected:
     int gc;

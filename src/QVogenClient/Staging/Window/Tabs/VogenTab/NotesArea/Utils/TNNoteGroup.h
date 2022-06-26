@@ -1,17 +1,21 @@
 #ifndef TNNOTEGROUP_H
 #define TNNOTEGROUP_H
 
-#include "../Elements/TNRectNote.h"
+#include "../Elements/TNGroupHint.h"
 
 #include "TNNoteListTmp.h"
-
-//Q_DECLARE_ENTITY_LIST(TNNoteList, TNRectNote)
 
 class TNNoteGroup : public TNNoteList {
     Q_OBJECT
 public:
-    explicit TNNoteGroup(QObject *parent = nullptr);
+    explicit TNNoteGroup(TNotesArea *area, QObject *parent = nullptr);
     ~TNNoteGroup();
+
+    friend class TNGroupHint;
+
+public:
+    void install();
+    void uninstall();
 
 public:
     quint64 id;
@@ -19,6 +23,24 @@ public:
     QString name;
     QString singer;
     QString rom;
+
+    TNGroupHint *hintItem() const;
+
+    void adjustHintGeometry();
+    void adjustHintPos();
+
+protected:
+    TNotesArea *m_area;
+
+    TNGroupHint *m_hintItem;
+    TNRectNote *m_firstNote;
+
+    bool eventFilter(QObject *obj, QEvent *event) override;
+
+private:
+    void _q_inserted(int beginIndex, int endIndex, TNRectNote *p);
+    void _q_removed(int beginIndex, int endIndex, TNRectNote *p);
+    void _q_beginChanged(int index, int oldIndex, TNRectNote *p);
 
 signals:
 };

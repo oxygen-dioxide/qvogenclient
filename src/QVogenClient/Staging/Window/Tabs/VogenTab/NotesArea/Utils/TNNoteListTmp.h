@@ -35,8 +35,11 @@ public:
     bool isEndSerialized() const;
 
 signals:
-    void beginChanged(int index, int val);
-    void endChanged(int index, int val);
+    void inserted(int beginIndex, int endIndex, TNRectNote *p);
+    void removed(int beginIndex, int endIndex, TNRectNote *p);
+
+    void beginChanged(int index, int oldIndex, TNRectNote *p);
+    void endChanged(int index, int oldIndex, TNRectNote *p);
 
 protected:
     QList<QPair<int, QSet<TNRectNote *>>> m_begins;

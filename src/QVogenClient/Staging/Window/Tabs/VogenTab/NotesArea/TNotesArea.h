@@ -46,6 +46,7 @@ public:
         LyricEdit,
         RubberBand,
         Playhead,
+        GroupHint,
         Bar,
     };
 

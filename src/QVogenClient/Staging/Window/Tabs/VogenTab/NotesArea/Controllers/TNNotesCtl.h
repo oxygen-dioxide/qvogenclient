@@ -23,7 +23,7 @@ public:
     void changeLyrics(const QList<TWNote::Lyric> &lyrics);
     void addNotes(const QList<TWNote::NoteAll> &notes);
     void removeNotes(const QList<quint64> &ids);
-    void changeGroup(const QList<quint64> &ids, quint64 gid);
+    void changeGroup(const QList<quint64> &ids, const TWNote::GroupAll &group);
 
 public:
     void selectAll();
@@ -92,7 +92,8 @@ protected:
     void setNotesMovable(bool movable);
 
     // Group Variations
-    TNNoteGroup *createGroup(quint64 id);
+    TNNoteGroup *createGroup(quint64 id, const QString &name, const QString &singer,
+                             const QString &rom);
     void removeGroup(TNNoteGroup *g);
 
     void adjustGeometry(TNRectNote *note);
@@ -115,8 +116,8 @@ protected:
     int totalLength() const;
 
 private:
-    void _q_beginChanged(int index, int val);
-    void _q_endChanged(int index, int val);
+    void _q_beginChanged(int index, int oldIndex, TNRectNote *p);
+    void _q_endChanged(int index, int oldIndex, TNRectNote *p);
 };
 
 #endif // TNNOTESCTL_H

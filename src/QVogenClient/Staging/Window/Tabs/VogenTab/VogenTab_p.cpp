@@ -8,6 +8,7 @@
 #include "MainWindow.h"
 
 #include <QApplication>
+#include <QMessageBox>
 
 #include <cstdio>
 
@@ -43,6 +44,45 @@ void VogenTabPrivate::init() {
     layout->addWidget(piano, 0, 0);
 
     q->setLayout(layout);
+}
+
+bool VogenTabPrivate::saveFile(const QString &filename) {
+    Q_Q(VogenTab);
+
+    QVogenFile vog(filename);
+
+    TWProject pd = piano->notesArea()->projectData();
+    vog.projectName = pd.projectName;
+    vog.tempo = pd.tempo;
+    vog.beat = pd.beat;
+    vog.accomOffset = pd.accomOffset;
+
+    QList<QVogenFile::Utterance> utterances;
+    for (const auto &utter : qAsConst(pd.utterances)) {
+        QVogenFile::Utterance u;
+        u.name = utter.name;
+        u.singer = utter.singer;
+        u.romScheme = utter.romScheme;
+
+        QList<QVogenFile::Note> notes;
+        for (const auto &note : utter.notes) {
+            QVogenFile::Note p{note.noteNum, note.lyric, note.rom, note.start, note.length, {}};
+            notes.append(p);
+        }
+        u.notes = std::move(notes);
+        utterances.append(u);
+    }
+    vog.utterances = std::move(utterances);
+
+    bool res = vog.save();
+    if (!res) {
+        Q_ERROR(q, qData->errorTitle(), VogenTab::tr("Failed to save file!"));
+        return false;
+    }
+
+    this->vog = std::move(vog);
+
+    return true;
 }
 
 bool VogenTabPrivate::earliest() const {

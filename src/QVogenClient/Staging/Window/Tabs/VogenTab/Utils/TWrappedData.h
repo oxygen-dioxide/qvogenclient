@@ -73,6 +73,13 @@ namespace TWNote {
         static NoteAll fromJson(const QJsonObject &obj);
     };
 
+    struct GroupAll {
+        quint64 id;
+        QString name;
+        QString singer;
+        QString rom;
+    };
+
 } // namespace TWNote
 
 #endif // TWRAPPEDDATA_H

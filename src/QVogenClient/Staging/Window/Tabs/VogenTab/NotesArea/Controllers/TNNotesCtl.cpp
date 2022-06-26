@@ -40,7 +40,7 @@ TNNotesCtl::TNNotesCtl(TNotesArea *parent) : TNController(parent) {
 
     m_movedNoteIndex = -1;
 
-    createGroup(0); // main group is set
+    createGroup(0, MAIN_GROUP_NAME, QString(), QString()); // main group is set
 
     m_currentGroup = m_mainGroup;
 
@@ -56,20 +56,17 @@ void TNNotesCtl::install() {
 
 void TNNotesCtl::setUtterances(const QList<TWProject::Utterance> &utters) {
     for (const auto &utter : utters) {
-        auto g = (utter.name == MAIN_GROUP_NAME) ? m_mainGroup : createGroup(0);
-
-        g->name = utter.name;
-        g->singer = utter.singer;
-        g->rom = utter.romScheme;
+        auto g = (utter.name == MAIN_GROUP_NAME)
+                     ? m_mainGroup
+                     : createGroup(0, utter.name, utter.singer, utter.romScheme);
 
         const auto &notes = utter.notes;
         for (const auto &note : notes) {
             auto p = createNote(0, note.start, note.length, note.noteNum, note.rom, g);
-            Q_UNUSED(p);
+            adjustGeometry(p);
         }
     }
 
-    adjustAllGeometry();
     adjustCanvas();
 
     // Move scroll
@@ -85,7 +82,44 @@ void TNNotesCtl::setUtterances(const QList<TWProject::Utterance> &utters) {
 }
 
 QList<TWProject::Utterance> TNNotesCtl::utterances() const {
-    return {};
+    QList<TWProject::Utterance> utters;
+
+    // Group List Temp
+    QMap<QString, TNNoteGroup *> groups;
+    groups.insert(m_mainGroup->name, m_mainGroup);
+    for (const auto &g : m_noteGroups) {
+        groups.insert(g->name, g);
+    }
+
+    for (const auto &group : groups) {
+        if (group->isEmpty()) {
+            continue;
+        }
+
+        TWProject::Utterance u;
+
+        u.name = group->name;
+        u.singer = group->singer;
+        u.romScheme = group->rom;
+
+        QList<TWProject::Note> notes;
+        const auto &all = group->begins();
+        for (const auto &pair : qAsConst(all)) {
+            const auto &set = pair.second;
+            for (auto note : set) {
+                TWProject::Note n;
+                n.start = note->start;
+                n.length = note->length;
+                n.noteNum = note->tone;
+                n.rom = note->lyric;
+                notes.append(n);
+            }
+        }
+
+        u.notes = std::move(notes);
+        utters.append(u);
+    }
+    return utters;
 }
 
 void TNNotesCtl::moveNotes(const QList<TWNote::Movement> &moves) {
@@ -151,10 +185,10 @@ void TNNotesCtl::removeNotes(const QList<quint64> &ids) {
     adjustCanvas();
 }
 
-void TNNotesCtl::changeGroup(const QList<quint64> &ids, quint64 gid) {
-    auto g = findGroup(gid);
+void TNNotesCtl::changeGroup(const QList<quint64> &ids, const TWNote::GroupAll &group) {
+    auto g = findGroup(group.id);
     if (!g) {
-        g = createGroup(gid);
+        g = createGroup(group.id, group.name, group.singer, group.rom);
     }
 
     QSet<TNNoteGroup *> groups;
@@ -316,9 +350,13 @@ void TNNotesCtl::setNotesMovable(bool movable) {
     }
 }
 
-TNNoteGroup *TNNotesCtl::createGroup(quint64 id) {
-    auto g = new TNNoteGroup(this);
+TNNoteGroup *TNNotesCtl::createGroup(quint64 id, const QString &name, const QString &singer,
+                                     const QString &rom) {
+    auto g = new TNNoteGroup(a, this);
     g->id = (id == 0) ? (++m_maxGroupId) : id;
+    g->name = name.isEmpty() ? ("utt-" + QString::number(g->id)) : name;
+    g->singer = singer;
+    g->rom = rom;
 
     // Insert to groups
     if (g->id > 1) {
@@ -327,11 +365,17 @@ TNNoteGroup *TNNotesCtl::createGroup(quint64 id) {
         m_mainGroup = g;
     }
 
+    g->install();
+    g->adjustHintGeometry();
+
     return g;
 }
 
 void TNNotesCtl::removeGroup(TNNoteGroup *g) {
     Q_ASSERT(g != m_mainGroup);
+
+    g->uninstall();
+
     m_noteGroups.remove(g->id);
     g->deleteLater();
 }
@@ -681,6 +725,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                             m_startPoint = newPoint;
 
                             auto p = createNote(0, tick1, len, val.second, "a", m_currentGroup);
+                            adjustGeometry(p);
 
                             p->setPos(a->convertValueToPosition(tick1, val.second));
                             p->setSize(double(len) / 480 * a->currentWidth(), h);
@@ -794,9 +839,13 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
             auto e = static_cast<QGraphicsSceneMouseEvent *>(event);
             if (e->button() == Qt::LeftButton) {
                 auto item = a->itemUnderMouse();
-                if (item && item->type() == GraphicsImpl::NoteItem) {
-                    auto noteItem = static_cast<TNRectNote *>(item);
-                    switchGroup(noteItem->group);
+                if (item) {
+                    if (item->type() == GraphicsImpl::NoteItem) {
+                        auto noteItem = static_cast<TNRectNote *>(item);
+                        switchGroup(noteItem->group);
+                    }
+                } else {
+                    switchGroup(m_mainGroup);
                 }
             }
             break;
@@ -1097,7 +1146,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
             }
             case QEventImpl::SceneActionRequestEvent::Group: {
                 if (!m_selection->isEmpty()) {
-                    auto g = createGroup(0);
+                    auto g = createGroup(0, QString(), QString(), QString());
                     QList<quint64> ids;
 
                     // Move to new group
@@ -1113,8 +1162,10 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                     // New Operation
                     auto op = new TOGroupChange(TOGroupChange::Move);
                     op->ids = std::move(ids);
-                    op->gid = g->id;
-                    op->oldGid = m_currentGroup->id;
+                    op->group = TOGroupChange::GroupData{g->id, g->name, g->singer, g->rom};
+                    op->oldGroup =
+                        TOGroupChange::GroupData{m_currentGroup->id, m_currentGroup->name,
+                                                 m_currentGroup->singer, m_currentGroup->rom};
 
                     // Dispatch
                     TOperateEvent e;
@@ -1148,8 +1199,11 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                     // New Operation
                     auto op = new TOGroupChange(TOGroupChange::Move);
                     op->ids = std::move(ids);
-                    op->gid = m_mainGroup->id;
-                    op->oldGid = m_currentGroup->id;
+                    op->group = TOGroupChange::GroupData{m_mainGroup->id, m_mainGroup->name,
+                                                         m_mainGroup->singer, m_mainGroup->rom};
+                    op->oldGroup =
+                        TOGroupChange::GroupData{m_currentGroup->id, m_currentGroup->name,
+                                                 m_currentGroup->singer, m_currentGroup->rom};
 
                     // Dispatch
                     TOperateEvent e;
@@ -1215,13 +1269,15 @@ int TNNotesCtl::totalLength() const {
     return p->start + p->length;
 }
 
-void TNNotesCtl::_q_beginChanged(int index, int val) {
+void TNNotesCtl::_q_beginChanged(int index, int oldIndex, TNRectNote *p) {
+    Q_UNUSED(oldIndex);
     Q_UNUSED(index);
-    Q_UNUSED(val);
+    Q_UNUSED(p);
 }
 
-void TNNotesCtl::_q_endChanged(int index, int val) {
-    Q_UNUSED(val);
+void TNNotesCtl::_q_endChanged(int index, int oldIndex, TNRectNote *p) {
+    Q_UNUSED(oldIndex);
+    Q_UNUSED(p);
     if (index == m_timeBounds->ends().size() - 1) {
         adjustCanvas();
     }

@@ -32,6 +32,8 @@ public:
     // Data
     QVogenFile vog;
 
+    bool saveFile(const QString &filename);
+
     // Operations
     QList<TBaseOperation *> historyList;
     int historyIndex;

@@ -16,15 +16,16 @@ bool TNNoteList::insert(TNRectNote *item) {
     m_set.insert(item);
 
     // Insert to starts
-    insert_begin(item, item->begin());
+    int beginIndex = insert_begin(item, item->begin());
 
     // Insert to ends
-    insert_end(item, item->end());
+    int endIndex = insert_end(item, item->end());
 
     // Connect
     connect(item, &TNRectNote::beginChanged, this, &TNNoteList::_q_beginChanged);
     connect(item, &TNRectNote::endChanged, this, &TNNoteList::_q_endChanged);
 
+    emit inserted(beginIndex, endIndex, item);
     return true;
 }
 
@@ -39,26 +40,23 @@ bool TNNoteList::remove(TNRectNote *item) {
     disconnect(item, &TNRectNote::endChanged, this, &TNNoteList::_q_endChanged);
 
     // Remove from ends
-    remove_end(item, item->end());
+    int endIndex = remove_end(item, item->end());
 
     // Remove from starts
-    remove_begin(item, item->begin());
+    int beginIndex = remove_begin(item, item->begin());
 
     // Remove from set
     m_set.erase(it);
 
+    emit removed(beginIndex, endIndex, item);
     return true;
 }
 
 void TNNoteList::clear() {
-    for (auto it = m_set.begin(); it != m_set.end(); ++it) {
-        auto item = *it;
-        disconnect(item, &TNRectNote::beginChanged, this, &TNNoteList::_q_beginChanged);
-        disconnect(item, &TNRectNote::endChanged, this, &TNNoteList::_q_endChanged);
+    auto set = m_set;
+    for (auto it = set.begin(); it != set.end(); it++) {
+        remove(*it);
     }
-    m_ends.clear();
-    m_begins.clear();
-    m_set.clear();
 }
 
 bool TNNoteList::contains(TNRectNote *item) const {
@@ -219,16 +217,16 @@ int TNNoteList::remove_end(TNRectNote *item, int val) {
 
 void TNNoteList::_q_beginChanged(int val, int oldVal) {
     auto item = qobject_cast<TNRectNote *>(sender());
-    remove_begin(item, oldVal);
+    int oldIndex = remove_begin(item, oldVal);
 
     int index = insert_begin(item, val);
-    emit beginChanged(index, val);
+    emit beginChanged(index, oldIndex, item);
 }
 
 void TNNoteList::_q_endChanged(int val, int oldVal) {
     auto item = qobject_cast<TNRectNote *>(sender());
-    remove_end(item, oldVal);
+    int oldIndex = remove_end(item, oldVal);
 
     int index = insert_end(item, val);
-    emit endChanged(index, val);
+    emit endChanged(index, oldIndex, item);
 }

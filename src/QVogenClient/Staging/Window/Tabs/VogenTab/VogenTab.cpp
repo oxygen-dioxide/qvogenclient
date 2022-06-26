@@ -54,7 +54,7 @@ bool VogenTab::load() {
     pd.accomOffset = vog.accomOffset;
 
     QList<TWProject::Utterance> utterances;
-    for (const auto &utter : vog.utterances) {
+    for (const auto &utter : qAsConst(vog.utterances)) {
         TWProject::Utterance u;
         u.name = utter.name;
         u.singer = utter.singer;
@@ -78,11 +78,17 @@ bool VogenTab::load() {
 bool VogenTab::save() {
     Q_D(VogenTab);
 
-    bool res = d->vog.save();
+    bool res = d->saveFile(d->filename);
     if (!res) {
-        Q_ERROR(this, qData->errorTitle(), tr("Failed to save file!"));
         return false;
     }
+
+    // Update Save State
+    setDeleted(false);
+    setUntitled(false);
+
+    d->savedHistoryIndex = d->historyIndex; // Update saved history index
+    setEdited(false);
 
     return true;
 }
@@ -90,23 +96,20 @@ bool VogenTab::save() {
 bool VogenTab::saveAs(const QString &filename) {
     Q_D(VogenTab);
 
-    QVogenFile file(filename);
-
-    file.projectName = d->vog.projectName;
-    file.tempo = d->vog.tempo;
-    file.beat = d->vog.beat;
-    file.accomOffset = d->vog.accomOffset;
-    file.utterances = d->vog.utterances;
-
-    if (!file.save()) {
-        Q_ERROR(this, qData->errorTitle(), tr("Failed to save file!"));
+    bool res = d->saveFile(filename);
+    if (!res) {
         return false;
     }
 
-    d->vog = std::move(file);
-
-    // Update
+    // Update Filename
     setFilename(filename);
+
+    // Update Save State
+    setDeleted(false);
+    setUntitled(false);
+
+    d->savedHistoryIndex = d->historyIndex; // Update saved history index
+    setEdited(false);
 
     return true;
 }

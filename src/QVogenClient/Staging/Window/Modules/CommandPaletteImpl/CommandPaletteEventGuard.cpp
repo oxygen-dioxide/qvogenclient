@@ -18,6 +18,7 @@ bool CommandPaletteEventGuard::eventFilter(QObject *obj, QEvent *event) {
             auto e = static_cast<QMouseEvent *>(event);
             if (!cp->rect().contains(cp->mapFromGlobal(e->globalPos()))) {
                 emit cp->abandoned();
+                return true;
             }
         }
     }

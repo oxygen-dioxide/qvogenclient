@@ -52,6 +52,7 @@ TWProject TNotesArea::projectData() const {
     data.utterances = m_notesCtl->utterances();
     data.beat = QPoint(m_timeSig.first, m_timeSig.second);
     data.tempo = m_tempo;
+    data.accomOffset = 0;
     return data;
 }
 
@@ -120,7 +121,8 @@ bool TNotesArea::processOperation(TBaseOperation *op, bool undo) {
     }
     case TBaseOperation::GroupChange: {
         auto op1 = static_cast<TOGroupChange *>(op);
-        m_notesCtl->changeGroup(op1->ids, undo ? op1->oldGid : op1->gid);
+        auto g = undo ? op1->oldGroup : op1->group;
+        m_notesCtl->changeGroup(op1->ids, TWNote::GroupAll{g.id, g.name, g.singer, g.rom});
         break;
     }
     case TBaseOperation::TempoTimeSig: {
