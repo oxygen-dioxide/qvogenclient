@@ -3,8 +3,8 @@
 
 #include "SystemHelper.h"
 
-#include "DocumentTab.h"
 #include "MainWindow.h"
+#include "VogenTab/VogenTab.h"
 
 #include "CommonScore.h"
 #include "FileParser.h"
@@ -99,8 +99,24 @@ bool EventManager::appendFile(const QString &filename) {
         path = qData->openFile(tr("Append"), qData->getFileFilter(DataManager::AppendFile),
                                FLAG_APPEND, d->w);
     }
-    if (!path.isEmpty()) {
+    if (path.isEmpty()) {
+        return false;
     }
+    FileParser parser(d->w);
+    CommonScore proj;
+
+    bool res = parser.parseFile(path, proj);
+    if (!res) {
+        return false;
+    }
+
+    auto tab = d->w->tabMgr()->currentTab();
+    if (tab->type() == CentralTab::Tuning) {
+        auto tab1 = qobject_cast<VogenTab *>(tab);
+        tab1->append(proj);
+        return true;
+    }
+
     return false;
 }
 

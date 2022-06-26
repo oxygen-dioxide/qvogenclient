@@ -133,6 +133,7 @@ namespace QEventImpl {
             Group,
             Ungroup,
             Digital,
+            Append,
         };
 
         SceneActionRequestEvent(int a);

@@ -34,6 +34,7 @@ public:
     void makeUntitled(const QString &name = QString());
 
     void import(const CommonScore &proj);
+    void append(const CommonScore &proj);
 
 protected:
     void setUntitled(bool untitled) override;

@@ -35,8 +35,6 @@ protected:
     TNGroupHint *m_hintItem;
     TNRectNote *m_firstNote;
 
-    bool eventFilter(QObject *obj, QEvent *event) override;
-
 private:
     void _q_inserted(int beginIndex, int endIndex, TNRectNote *p);
     void _q_removed(int beginIndex, int endIndex, TNRectNote *p);

@@ -19,6 +19,8 @@
 #include "../Utils/Operations/TBaseOperation.h"
 #include "../Utils/TWrappedData.h"
 
+#include "private/qobject_p.h"
+
 #include <QSet>
 
 class TNotesScroll;
@@ -30,6 +32,8 @@ class TNotesArea : public CGraphicsScene {
 public:
     TNotesArea(TNotesScroll *parent = nullptr);
     ~TNotesArea();
+
+    QObjectPrivate *priv() const;
 
 protected:
     TNotesArea(TNotesAreaPrivate &d, TNotesScroll *parent = nullptr);

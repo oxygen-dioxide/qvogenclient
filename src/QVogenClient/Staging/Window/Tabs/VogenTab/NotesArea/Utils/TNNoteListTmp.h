@@ -18,6 +18,7 @@ public:
     bool insert(TNRectNote *item);
     bool remove(TNRectNote *item);
     void clear();
+    int count() const;
 
     bool contains(TNRectNote *item) const;
     bool isEmpty() const;

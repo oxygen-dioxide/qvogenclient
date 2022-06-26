@@ -41,7 +41,7 @@ void TNotesArea::setSpriteAlpha(double spriteAlpha) {
 }
 
 void TNotesArea::setProjectData(const TWProject &data) {
-    m_notesCtl->setUtterances(data.utterances);
+    m_notesCtl->addUtterances(data.utterances);
 
     setTimeSig(data.beat.x(), data.beat.y());
     setTempo(data.tempo);
@@ -100,22 +100,35 @@ bool TNotesArea::processOperation(TBaseOperation *op, bool undo) {
         int f2 = undo ? -1 : 1;
 
         if (f1 * f2 > 0) {
-            QList<TWNote::NoteAll> notes;
-            foreach (const auto &note, op1->data) {
-                notes.append(TWNote::NoteAll{
-                    note.id,      //
-                    note.start,   //
-                    note.length,  //
-                    note.noteNum, //
-                    note.lyric,   //
-                    note.gid      //
-                });
+            for (const auto &utt : qAsConst(op1->data)) {
+                QList<TWNote::NoteAll> notes;
+                foreach (const auto &note, utt.notes) {
+                    notes.append(TWNote::NoteAll{
+                        note.id,      //
+                        note.start,   //
+                        note.length,  //
+                        note.noteNum, //
+                        note.lyric,   //
+                        note.gid,     //
+                    });
+                }
+                TWNote::Group group{
+                    utt.group.id,
+                    utt.group.name,
+                    utt.group.singer,
+                    utt.group.rom,
+                };
+                m_notesCtl->addNotes(notes, group);
             }
-            m_notesCtl->addNotes(notes);
         } else {
-            QList<quint64> ids;
-            foreach (const auto &note, op1->data) { ids.append(note.id); }
-            m_notesCtl->removeNotes(ids);
+            for (const auto &utt : qAsConst(op1->data)) {
+                QList<quint64> ids;
+                foreach (const auto &note, utt.notes) {
+                    ids.append(note.id);
+                    ;
+                }
+                m_notesCtl->removeNotes(ids);
+            }
         }
         break;
     }

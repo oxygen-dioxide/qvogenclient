@@ -97,6 +97,9 @@ void TNotesArea::customEvent(QEvent *event) {
                 break;
             }
         }
+        case QEventImpl::SceneActionRequestEvent::Append: {
+            break;
+        }
         default:
             break;
         }

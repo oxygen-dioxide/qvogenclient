@@ -29,6 +29,11 @@ TNotesArea::TNotesArea(TNotesScroll *parent) : TNotesArea(*new TNotesAreaPrivate
 TNotesArea::~TNotesArea() {
 }
 
+QObjectPrivate *TNotesArea::priv() const {
+    auto d = QObject::d_ptr.data();
+    return static_cast<QObjectPrivate *>(d);
+}
+
 TNotesArea::TNotesArea(TNotesAreaPrivate &d, TNotesScroll *parent)
     : CGraphicsScene(parent), d_ptr(&d), m_view(parent) {
     d.q_ptr = this;

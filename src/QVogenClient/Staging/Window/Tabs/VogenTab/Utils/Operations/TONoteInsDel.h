@@ -25,7 +25,19 @@ public:
         quint64 gid;
     };
 
-    QList<NoteData> data;
+    struct GroupData {
+        quint64 id;
+        QString name;
+        QString singer;
+        QString rom;
+    };
+
+    struct UtteranceData {
+        QList<NoteData> notes;
+        GroupData group;
+    };
+
+    QList<UtteranceData> data;
 
     inline int cType() const {
         return c;

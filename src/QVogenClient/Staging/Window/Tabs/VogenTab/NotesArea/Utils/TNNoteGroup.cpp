@@ -17,12 +17,9 @@ TNNoteGroup::~TNNoteGroup() {
 }
 
 void TNNoteGroup::install() {
-    m_area->installEventFilter(this);
-
     m_hintItem = new TNGroupHint(this);
     m_area->addItem(m_hintItem);
     m_hintItem->setZValue(TNotesArea::GroupHint);
-
     adjustHintPos();
 }
 
@@ -55,22 +52,6 @@ void TNNoteGroup::adjustHintPos() {
         m_hintItem->show();
         m_hintItem->update();
     }
-}
-
-bool TNNoteGroup::eventFilter(QObject *obj, QEvent *event) {
-    if (obj == m_area) {
-        switch (event->type()) {
-        case QEvent::GraphicsSceneMove:
-        case QEvent::GraphicsSceneResize:
-        case QEventImpl::SceneRectChange:
-            adjustHintPos();
-            break;
-
-        default:
-            break;
-        }
-    }
-    return TNNoteList::eventFilter(obj, event);
 }
 
 void TNNoteGroup::_q_inserted(int beginIndex, int endIndex, TNRectNote *p) {

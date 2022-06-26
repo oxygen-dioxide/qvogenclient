@@ -59,6 +59,10 @@ void TNNoteList::clear() {
     }
 }
 
+int TNNoteList::count() const {
+    return m_set.size();
+}
+
 bool TNNoteList::contains(TNRectNote *item) const {
     return m_set.contains(item);
 }

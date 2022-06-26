@@ -15,13 +15,13 @@ public:
 public:
     void install() override;
 
-    void setUtterances(const QList<TWProject::Utterance> &utters);
+    void addUtterances(const QList<TWProject::Utterance> &utters);
     QList<TWProject::Utterance> utterances() const;
 
     void moveNotes(const QList<TWNote::Movement> &moves);
     void stretchNotes(const QList<TWNote::Stretch> &stretches);
     void changeLyrics(const QList<TWNote::Lyric> &lyrics);
-    void addNotes(const QList<TWNote::NoteAll> &notes);
+    void addNotes(const QList<TWNote::NoteAll> &notes, const TWNote::Group &group);
     void removeNotes(const QList<quint64> &ids);
     void changeGroup(const QList<quint64> &ids, const TWNote::Group &group);
 
@@ -99,6 +99,7 @@ protected:
     void adjustGeometry(TNRectNote *note);
     void adjustGroupGeometry(const TNNoteGroup *group);
     void adjustAllGeometry();
+    void adjustAllGroupHintPos();
     void adjustCanvas();
 
     void selectOne(TNRectNote *p);
@@ -107,7 +108,10 @@ protected:
     void setGroupSelected(TNNoteGroup *group, bool selected);
     void setGroupEnabled(TNNoteGroup *group, bool enabled);
 
+    // Helper
     QList<TNRectNote *> tryApplyLyrics(int len);
+    void addUtterancesCore(const QList<TWProject::Utterance> &utters,
+                           QList<QPair<TNNoteGroup *, QList<TNRectNote *>>> *res = nullptr);
 
     bool eventFilter(QObject *obj, QEvent *event) override;
 

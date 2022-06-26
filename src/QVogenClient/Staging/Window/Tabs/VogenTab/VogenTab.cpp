@@ -9,6 +9,7 @@
 
 #include "QVogenFile.h"
 
+#include "Utils/Events/TAppendEvent.h"
 #include "Utils/Events/TPianoRollEvent.h"
 
 #include "Utils/TWrappedData.h"
@@ -299,6 +300,34 @@ void VogenTab::import(const CommonScore &proj) {
     }
 
     d->piano->notesArea()->setProjectData(pd);
+}
+
+void VogenTab::append(const CommonScore &proj) {
+    Q_D(VogenTab);
+
+    QList<TWProject::Utterance> utterances;
+    for (const auto &utter : qAsConst(proj.tracks)) {
+        if (utter.notes.isEmpty()) {
+            continue;
+        }
+
+        TWProject::Utterance u;
+        u.name = utter.name;
+        u.singer = QString();
+        u.romScheme = "man";
+
+        QList<TWProject::Note> notes;
+        for (const auto &note : utter.notes) {
+            TWProject::Note p{note.noteNum, QString(), note.lyric, note.start, note.length};
+            notes.append(p);
+        }
+        u.notes = std::move(notes);
+        utterances.append(u);
+    }
+
+    TAppendEvent e;
+    e.utterances = std::move(utterances);
+    QApplication::sendEvent(d->piano->notesArea(), &e);
 }
 
 void VogenTab::setUntitled(bool untitled) {
