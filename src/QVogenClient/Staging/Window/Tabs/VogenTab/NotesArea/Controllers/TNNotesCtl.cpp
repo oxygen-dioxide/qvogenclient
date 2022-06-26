@@ -694,6 +694,9 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                     offset.setY(dy * h);
 
                     if (!m_movingData.isEmpty()) {
+                        QEventImpl::InterruptEvent ei;
+                        QApplication::sendEvent(a->view()->window(), &ei);
+
                         // Adjust delta
                         int dx1 = dx * tw;
                         int dy1 = -dy;
@@ -739,6 +742,9 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                             m.dy = dy1;
                         }
                     } else if (!m_stretchingData.isEmpty()) {
+                        QEventImpl::InterruptEvent ei;
+                        QApplication::sendEvent(a->view()->window(), &ei);
+
                         for (auto &s : m_stretchingData) {
                             auto note = s.note;
                             int end = note->start + note->length;
@@ -767,6 +773,9 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                     }
                 } else {
                     if (!a->isSelecting() && !item && a->drawMode() == TNotesArea::DrawNote) {
+                        QEventImpl::InterruptEvent ei;
+                        QApplication::sendEvent(a->view()->window(), &ei);
+
                         // Start draw
                         if (m_startPoint.x() >= a->zeroLine()) {
                             int q = a->currentQuantize();
@@ -906,6 +915,9 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
 
             // Mouse Double Click Event
         case QEvent::GraphicsSceneMouseDoubleClick: {
+            QEventImpl::InterruptEvent ei;
+            QApplication::sendEvent(a->view()->window(), &ei);
+
             auto e = static_cast<QGraphicsSceneMouseEvent *>(event);
             if (e->button() == Qt::LeftButton) {
                 auto item = a->itemUnderMouse();

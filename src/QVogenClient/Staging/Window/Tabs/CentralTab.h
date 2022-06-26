@@ -19,6 +19,8 @@ public:
     explicit CentralTab(QWidget *parent = nullptr);
     ~CentralTab();
 
+    void reloadStrings();
+
 public:
     enum Type {
         NoTab = 0x0,

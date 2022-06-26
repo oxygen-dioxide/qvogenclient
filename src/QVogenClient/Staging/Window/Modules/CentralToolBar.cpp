@@ -18,7 +18,20 @@ CentralToolBar::CursorModes CentralToolBar::cursorMode() const {
 
 void CentralToolBar::setCursorMode(CursorModes mode) {
     Q_D(CentralToolBar);
-    d->m_cursorGroup->button(mode)->setChecked(true);
+    if (mode == cursorMode()) {
+        return;
+    }
+
+    if (mode == NoCursor) {
+        auto button = d->m_cursorGroup->checkedButton();
+        if (button) {
+            d->m_cursorGroup->setExclusive(false);
+            button->setChecked(false);
+            d->m_cursorGroup->setExclusive(true);
+        }
+    } else {
+        d->m_cursorGroup->button(mode)->setChecked(true);
+    }
 }
 
 CentralToolBar::CentralToolBar(CentralToolBarPrivate &d, QWidget *parent)

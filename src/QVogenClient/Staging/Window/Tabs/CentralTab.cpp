@@ -13,6 +13,10 @@ CentralTab::~CentralTab() {
     destructId();
 }
 
+void CentralTab::reloadStrings() {
+    updateTabName();
+}
+
 CentralTab::Type CentralTab::type() const {
     return NoTab;
 }
@@ -157,4 +161,6 @@ CentralTab::CentralTab(CentralTabPrivate &d, QWidget *parent) : BaseTab(d, paren
     initId();
 
     d.init();
+
+    Q_TR_NOTIFY(CentralTab);
 }

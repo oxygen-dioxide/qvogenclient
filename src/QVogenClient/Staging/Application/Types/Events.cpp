@@ -68,6 +68,12 @@ SceneStateQueryEvent::SceneStateQueryEvent(int type) : SceneStateChangeEvent(typ
 SceneStateQueryEvent::~SceneStateQueryEvent() {
 }
 
+InterruptEvent::InterruptEvent() : QEvent(static_cast<QEvent::Type>(Interrupt)) {
+}
+
+InterruptEvent::~InterruptEvent() {
+}
+
 void QEventImpl::Register() {
     QEvent::registerEventType(MenuUpdateRequest);
     QEvent::registerEventType(SceneRectChange);
@@ -78,4 +84,5 @@ void QEventImpl::Register() {
     QEvent::registerEventType(SceneActionRequest);
     QEvent::registerEventType(SceneStateChange);
     QEvent::registerEventType(SceneStateQuery);
+    QEvent::registerEventType(Interrupt);
 }

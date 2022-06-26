@@ -15,7 +15,8 @@ public:
 
 public:
     enum CursorModes {
-        Select,
+        NoCursor = -1,
+        Select = 0,
         Sketch,
         Free,
     };

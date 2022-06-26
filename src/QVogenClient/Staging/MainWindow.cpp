@@ -141,7 +141,11 @@ ActionManager *MainWindow::actionMgr() const {
 
 int MainWindow::showCommands(QCommandPalette::CommandType type) {
     int result = -1;
+
     QEventLoop loop;
+    if (loop.isRunning()) {
+        loop.quit();
+    }
 
     // auto slot1 = [&previewFuction](int index) mutable {
     //     if (previewFuction) {
@@ -164,7 +168,9 @@ int MainWindow::showCommands(QCommandPalette::CommandType type) {
 
     adjustSelector();
 
+    m_loops.insert(&loop);
     loop.exec();
+    m_loops.remove(&loop);
 
     // Don't use obj->disconnect() casually because it's really dangerous!
     // disconnect(conn1);
@@ -180,6 +186,21 @@ void MainWindow::resizeEvent(QResizeEvent *event) {
     BasicWindow::resizeEvent(event);
 
     adjustSelector();
+}
+
+void MainWindow::customEvent(QEvent *event) {
+    switch (event->type()) {
+    case QEventImpl::Interrupt: {
+        // All event loops should be stopped when important changes are about to occur
+        auto loops = m_loops;
+        for (auto loop : qAsConst(loops)) {
+            loop->quit();
+        }
+        break;
+    }
+    default:
+        break;
+    }
 }
 
 void MainWindow::adjustSelector() {

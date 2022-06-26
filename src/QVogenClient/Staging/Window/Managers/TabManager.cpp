@@ -381,12 +381,16 @@ void TabManager::_q_tabIndexChanged(int index, int orgIndex) {
 
     // Get Scene State
     auto tab = d->w->tabMgr()->currentTab();
-    if (tab && tab->type() == CentralTab::Tuning) {
-        TSSQCursorModeEvent e2;
-        // Query
-        QApplication::sendEvent(tab, &e2);
-        // Set
-        d->w->toolBar()->setCursorMode(static_cast<CentralToolBar::CursorModes>(e2.mode));
+    if (tab) {
+        if (tab->type() == CentralTab::Tuning) {
+            TSSQCursorModeEvent e2;
+            // Query
+            QApplication::sendEvent(tab, &e2);
+            // Set
+            d->w->toolBar()->setCursorMode(static_cast<CentralToolBar::CursorModes>(e2.mode));
+        }
+    } else {
+        d->w->toolBar()->setCursorMode(CentralToolBar::NoCursor);
     }
 }
 

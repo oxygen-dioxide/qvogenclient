@@ -12,6 +12,8 @@
 
 #include "Utils/Operations/TBaseOperation.h"
 
+#include <QEventLoop>
+
 class VogenTabPrivate : public DocumentTabPrivate {
     Q_DECLARE_PUBLIC(VogenTab)
 public:

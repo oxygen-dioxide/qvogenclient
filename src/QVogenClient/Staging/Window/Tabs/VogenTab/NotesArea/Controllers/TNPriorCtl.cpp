@@ -123,6 +123,56 @@ bool TNPriorCtl::eventFilter(QObject *obj, QEvent *event) {
             m_downButton = Qt::NoButton;
             break;
         }
+
+        case QEventImpl::StdinRequest: {
+            auto e = static_cast<QEventImpl::StdinRequestEvent *>(event);
+            switch (e->iType()) {
+            case QEventImpl::StdinRequestEvent::Lyrics: {
+                // Handle Lyrics Input
+                switch (e->iProcess()) {
+                case QEventImpl::StdinRequestEvent::InputStart: {
+                    QEventImpl::InterruptEvent e;
+                    QApplication::sendEvent(a->view()->window(), &e);
+                    break;
+                }
+                default:
+                    break;
+                }
+                break;
+            }
+            default:
+                break;
+            }
+
+            break;
+        }
+
+        case QEventImpl::SceneActionRequest: {
+            auto e = static_cast<QEventImpl::SceneActionRequestEvent *>(event);
+            auto act = e->action();
+            switch (act) {
+            case QEventImpl::SceneActionRequestEvent::Paste:
+            case QEventImpl::SceneActionRequestEvent::Cut:
+            case QEventImpl::SceneActionRequestEvent::Remove:
+            case QEventImpl::SceneActionRequestEvent::Append:
+            case QEventImpl::SceneActionRequestEvent::Digital:
+            case QEventImpl::SceneActionRequestEvent::Group:
+            case QEventImpl::SceneActionRequestEvent::Ungroup: {
+                QEventImpl::InterruptEvent e;
+                QApplication::sendEvent(a->view()->window(), &e);
+                break;
+            }
+            case QEventImpl::SceneActionRequestEvent::Copy:
+            case QEventImpl::SceneActionRequestEvent::SelectAll: {
+            case QEventImpl::SceneActionRequestEvent::Deselect: {
+                break;
+            }
+            default:
+                break;
+            }
+            }
+            break;
+        }
         default:
             break;
         }

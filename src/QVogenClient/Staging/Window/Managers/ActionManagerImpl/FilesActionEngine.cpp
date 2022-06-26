@@ -17,7 +17,7 @@ void FilesActionEngine::updateStates(ActionImpl::StateTypes st) {
     auto states = d->tabMgr->actionStates();
 
     if (st & ActionImpl::FileState) {
-        d->file_saveFile->setEnabled(states & ActionImpl::EditedFlag);
+        d->file_saveFile->setEnabled(states & (ActionImpl::EditedFlag | ActionImpl::UntitledFlag));
         d->file_saveAs->setEnabled(states & ActionImpl::DocumentFlag);
         d->file_appendFile->setEnabled(states & ActionImpl::DocumentFlag);
         d->file_fileSettings->setEnabled(states & ActionImpl::DocumentFlag);

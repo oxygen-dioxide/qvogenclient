@@ -23,6 +23,8 @@ namespace QEventImpl {
 
         SceneStateQuery,
 
+        Interrupt,
+
         // LayoutRequest
     };
 
@@ -172,6 +174,13 @@ namespace QEventImpl {
     public:
         SceneStateQueryEvent(int type);
         ~SceneStateQueryEvent();
+    };
+
+    // Interrupt
+    class InterruptEvent : public QEvent {
+    public:
+        InterruptEvent();
+        ~InterruptEvent();
     };
 
     void Register();

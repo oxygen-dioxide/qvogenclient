@@ -51,7 +51,6 @@ protected:
 
     CentralToolBar *m_tools;
     CentralNavBar *m_nav;
-    QCommandPalette *m_cp;
 
     CentralTabWidget *m_tabs;
 
@@ -62,12 +61,16 @@ protected:
     CCoupleTabBarCard *m_ctrlCard;
     CCoupleTabBarCard *m_utterCard;
 
+    QCommandPalette *m_cp;
+    QSet<QEventLoop *> m_loops; // Cached event loops
+
     // Managers
     TabManager *m_tabMgr;
     EventManager *m_eventMgr;
     ActionManager *m_actionMgr;
 
     void resizeEvent(QResizeEvent *event) override;
+    void customEvent(QEvent *event) override;
 
 private:
     void adjustSelector();
@@ -77,6 +80,7 @@ template <class P>
 int MainWindow::showLineEdit(const QString &hint, P previewer, const QString &placeholder,
                              QString *res) {
     int result = -1;
+
     QEventLoop loop;
 
     auto slot1 = [&previewer](const QString &text) mutable { previewer(text); };
@@ -96,7 +100,9 @@ int MainWindow::showLineEdit(const QString &hint, P previewer, const QString &pl
 
     adjustSelector();
 
+    m_loops.insert(&loop);
     loop.exec();
+    m_loops.remove(&loop);
 
     // Don't use obj->disconnect() casually because it's really dangerous!
     disconnect(conn1);
