@@ -95,16 +95,8 @@ public:
     QAction *appearance_panelBars;
     QAction *appearance_menuBar;
 
-    QAction *panels_notePanel;
-    QAction *panels_ctrlPanel;
-    QAction *panels_pitchPanel;
-    QAction *panels_trackPanel;
-    QAction *panels_lyricsPanel;
-    QAction *panels_statePanel;
-
     QAction *display_note;
     QAction *display_pitch;
-    QAction *display_env;
 
     QAction *cursor_select;
     QAction *cursor_sketch;

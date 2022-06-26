@@ -166,12 +166,10 @@ bool CCoupleTabFrame::barVisible() const {
 }
 
 void CCoupleTabFrame::setBarVisible(bool visible) {
-    if (visible != barVisible()) {
-        m_leftBar->setVisible(visible);
-        m_topBar->setVisible(visible);
-        m_rightBar->setVisible(visible);
-        m_bottomBar->setVisible(visible);
-    }
+    m_leftBar->setVisible(visible);
+    m_topBar->setVisible(visible);
+    m_rightBar->setVisible(visible);
+    m_bottomBar->setVisible(visible);
 }
 
 void CCoupleTabFrame::toggleBarVisible() {

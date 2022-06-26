@@ -93,6 +93,11 @@ MainWindow::MainWindow(QWidget *parent) : BasicWindow(parent) {
         QEventImpl::MenuUpdateRequestEvent e(ActionImpl::StateMask);
         QApplication::sendEvent(this, &e);
     }
+
+    /*
+     *  Temp
+     */
+    m_frame->setBarVisible(false);
 }
 
 MainWindow::~MainWindow() {

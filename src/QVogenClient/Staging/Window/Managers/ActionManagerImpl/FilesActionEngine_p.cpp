@@ -132,16 +132,8 @@ void FilesActionEnginePrivate::setup() {
     appearance_panelBars = NewAction(ActionImpl::View_Appearance_ToolWindowsBar);
     appearance_menuBar = NewAction(ActionImpl::View_Appearance_MenuBar);
 
-    panels_notePanel = new QAction();
-    panels_ctrlPanel = new QAction();
-    panels_pitchPanel = new QAction();
-    panels_trackPanel = new QAction();
-    panels_lyricsPanel = new QAction();
-    panels_statePanel = new QAction();
-
     display_note = new QAction();
     display_pitch = new QAction();
-    display_env = new QAction();
 
     cursor_select = NewAction(ActionImpl::View_Cursor_Select);
     cursor_sketch = NewAction(ActionImpl::View_Cursor_Sketch);
@@ -230,17 +222,16 @@ void FilesActionEnginePrivate::setup() {
     appearanceMenu->addAction(appearance_panelBars);
     appearanceMenu->addAction(appearance_menuBar);
 
-    panelsMenu->addAction(panels_notePanel);
-    panelsMenu->addAction(panels_ctrlPanel);
-    panelsMenu->addAction(panels_pitchPanel);
-    panelsMenu->addAction(panels_trackPanel);
-    panelsMenu->addAction(panels_lyricsPanel);
-    panelsMenu->addAction(panels_statePanel);
+//    panelsMenu->addAction(panels_notePanel);
+//    panelsMenu->addAction(panels_ctrlPanel);
+//    panelsMenu->addAction(panels_pitchPanel);
+//    panelsMenu->addAction(panels_trackPanel);
+//    panelsMenu->addAction(panels_lyricsPanel);
+//    panelsMenu->addAction(panels_statePanel);
 
     // Play
     displayMenu->addAction(display_note);
     displayMenu->addAction(display_pitch);
-    displayMenu->addAction(display_env);
 
     cursorMenu->addAction(cursor_select);
     cursorMenu->addAction(cursor_sketch);
@@ -371,16 +362,15 @@ void FilesActionEnginePrivate::reloadStrings() {
     appearance_panelBars->setText(QObject::tr("Tool Panel Bars"));
     appearance_menuBar->setText(QObject::tr("Menu Bar"));
 
-    panels_notePanel->setText(QObject::tr("Note"));
-    panels_ctrlPanel->setText(QObject::tr("Control"));
-    panels_pitchPanel->setText(QObject::tr("Pitch"));
-    panels_trackPanel->setText(QObject::tr("Track"));
-    panels_lyricsPanel->setText(QObject::tr("Lyrics"));
-    panels_statePanel->setText(QObject::tr("State"));
+//    panels_notePanel->setText(QObject::tr("Note"));
+//    panels_ctrlPanel->setText(QObject::tr("Control"));
+//    panels_pitchPanel->setText(QObject::tr("Pitch"));
+//    panels_trackPanel->setText(QObject::tr("Track"));
+//    panels_lyricsPanel->setText(QObject::tr("Lyrics"));
+//    panels_statePanel->setText(QObject::tr("State"));
 
     display_note->setText(QObject::tr("Show Note"));
     display_pitch->setText(QObject::tr("Show Pitch"));
-    display_env->setText(QObject::tr("Show Envelope"));
 
     cursor_select->setText(QObject::tr("Select Mode"));
     cursor_sketch->setText(QObject::tr("Sketch Mode"));
@@ -442,16 +432,15 @@ void FilesActionEnginePrivate::reloadShortcuts() {
     edit_selectAll->setShortcut(QKeySequence("Ctrl+A"));
 
     // View
-    panels_notePanel->setShortcut(QKeySequence("Ctrl+E"));
-    panels_ctrlPanel->setShortcut(QKeySequence("Ctrl+Y"));
-    panels_pitchPanel->setShortcut(QKeySequence("Ctrl+P"));
-    panels_trackPanel->setShortcut(QKeySequence("Ctrl+T"));
-    panels_lyricsPanel->setShortcut(QKeySequence("Ctrl+L"));
-    panels_statePanel->setShortcut(QKeySequence("Ctrl+I"));
+//    panels_notePanel->setShortcut(QKeySequence("Ctrl+E"));
+//    panels_ctrlPanel->setShortcut(QKeySequence("Ctrl+Y"));
+//    panels_pitchPanel->setShortcut(QKeySequence("Ctrl+P"));
+//    panels_trackPanel->setShortcut(QKeySequence("Ctrl+T"));
+//    panels_lyricsPanel->setShortcut(QKeySequence("Ctrl+L"));
+//    panels_statePanel->setShortcut(QKeySequence("Ctrl+I"));
 
     display_note->setShortcut(QKeySequence("Show Note"));
     display_pitch->setShortcut(QKeySequence("Show Pitch"));
-    display_env->setShortcut(QKeySequence("Show Envelope"));
 
     cursor_select->setShortcut(QKeySequence("G"));
     cursor_sketch->setShortcut(QKeySequence("H"));
