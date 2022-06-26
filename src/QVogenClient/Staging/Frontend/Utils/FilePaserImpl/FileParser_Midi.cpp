@@ -4,6 +4,8 @@
 #include "CommonScore.h"
 #include "CommonTuneStd.h"
 
+#include "Dialogs/SelectsDialogV2.h"
+
 #include "DataManager.h"
 
 bool FileParser::parseMidiFile(const QString &filename, CommonScore &proj) {
@@ -84,13 +86,11 @@ bool FileParser::parseMidiFile(const QString &filename, CommonScore &proj) {
     }
 
     QList<bool> result;
-    //    auto dlg = new SelectsDialogV2(tr("Import Midi"), tr("Tracks in file"), titles, result,
-    //    true,
-    //                                   Q_W(parent()));
+    auto dlg = new SelectsDialogV2(tr("Import Midi"), tr("Tracks in file"), titles, result, false,
+                                   Q_W(parent()));
 
-    //    int code = dlg->exec();
-    //    dlg->deleteLater();
-    int code = 0;
+    int code = dlg->exec();
+    dlg->deleteLater();
 
     if (code != 1) {
         return false;
@@ -100,79 +100,77 @@ bool FileParser::parseMidiFile(const QString &filename, CommonScore &proj) {
     for (int i = 0; i < result.size(); ++i) {
         if (result.at(i)) {
             tracks.append(i);
-            break;
         }
     }
+
+    int resolution = midi.resolution();
 
     for (auto track : qAsConst(tracks)) {
         // Parse notes
         QList<CommonNote> notes;
-        {
-            int resolution = midi.resolution();
-            QList<QPoint> noteOns, noteOffs;
-            QList<QPair<int, QString>> lyrics;
 
-            QList<QMidiEvent *> list = midi.eventsForTrack(track);
-            for (int i = 0; i < list.size(); ++i) {
-                QMidiEvent *e = list.at(i);
-                if (e->type() == QMidiEvent::NoteOn) {
-                    noteOns.append(QPoint(e->tick(), e->note()));
-                } else if (e->type() == QMidiEvent::NoteOff) {
-                    noteOffs.append(QPoint(e->tick(), e->note()));
-                } else if (e->type() == QMidiEvent::Meta) {
-                    if (e->number() == QMidiEvent::Lyric) {
-                        lyrics.append(qMakePair(e->tick(), QString::fromLocal8Bit(e->data())));
-                    }
+        QList<QPoint> noteOns, noteOffs;
+        QList<QPair<int, QString>> lyrics;
+
+        QList<QMidiEvent *> list = midi.eventsForTrack(track);
+        for (int i = 0; i < list.size(); ++i) {
+            QMidiEvent *e = list.at(i);
+            if (e->type() == QMidiEvent::NoteOn) {
+                noteOns.append(QPoint(e->tick(), e->note()));
+            } else if (e->type() == QMidiEvent::NoteOff) {
+                noteOffs.append(QPoint(e->tick(), e->note()));
+            } else if (e->type() == QMidiEvent::Meta) {
+                if (e->number() == QMidiEvent::Lyric) {
+                    lyrics.append(qMakePair(e->tick(), QString::fromLocal8Bit(e->data())));
                 }
             }
+        }
 
+        for (int i = 0; i < noteOns.size(); ++i) {
+            int start = double(noteOns.at(i).x()) / resolution * CommonTuneStd::TIME_BASE;
+            int end = (noteOffs.size() > i)
+                          ? (double(noteOffs.at(i).x()) / resolution * CommonTuneStd::TIME_BASE)
+                          : (start + CommonTuneStd::TIME_BASE);
 
-            for (int i = 0; i < noteOns.size(); ++i) {
-                int start = double(noteOns.at(i).x()) / resolution * CommonTuneStd::TIME_BASE;
-                int end = (noteOffs.size() > i)
-                              ? (double(noteOffs.at(i).x()) / resolution * CommonTuneStd::TIME_BASE)
-                              : (start + CommonTuneStd::TIME_BASE);
+            int pitch = noteOns.at(i).y();
+            int len = end - start;
 
-                int pitch = noteOns.at(i).y();
-                int len = end - start;
-
-                if (pitch > 107) {
-                    pitch = 107;
-                } else if (pitch < 24) {
-                    pitch = 24;
-                }
-
-                notes.append(CommonNote(start, len, pitch));
+            if (pitch > 107) {
+                pitch = 107;
+            } else if (pitch < 24) {
+                pitch = 24;
             }
 
-            // Save map
-            QMap<int, int> noteMap;
-            for (int i = 0; i < notes.size(); ++i) {
-                noteMap.insert(notes.at(i).start, i);
-            }
+            notes.append(CommonNote(start, len, pitch));
+        }
 
-            // Change Lyrics
-            for (int i = 0; i < lyrics.size(); ++i) {
-                auto it = noteMap.find(lyrics.at(i).first);
-                if (it == noteMap.end()) {
-                    continue;
-                }
-                notes[it.value()].lyric = lyrics.at(i).second;
-            }
+        // Save map
+        QMap<int, int> noteMap;
+        for (int i = 0; i < notes.size(); ++i) {
+            noteMap.insert(notes.at(i).start, i);
+        }
 
-            // Change Tempo
-            for (int i = 0; i < tempos.size(); ++i) {
-                auto it = noteMap.find(tempos.at(i).first);
-                if (it == noteMap.end()) {
-                    continue;
-                }
-                notes[it.value()].tempo = tempos.at(i).second;
+        // Change Lyrics
+        for (int i = 0; i < lyrics.size(); ++i) {
+            auto it = noteMap.find(lyrics.at(i).first);
+            if (it == noteMap.end()) {
+                continue;
             }
+            notes[it.value()].lyric = lyrics.at(i).second;
+        }
 
-            // Update Tempo
-            if (!notes.isEmpty()) {
-                proj.tempo = (notes.at(0).tempo);
+        // Change Tempo
+        for (int i = 0; i < tempos.size(); ++i) {
+            auto it = noteMap.find(tempos.at(i).first);
+            if (it == noteMap.end()) {
+                continue;
             }
+            notes[it.value()].tempo = tempos.at(i).second;
+        }
+
+        // Update Tempo
+        if (!notes.isEmpty()) {
+            proj.tempo = (notes.at(0).tempo);
         }
 
         proj.tracks.append(CommonScore::Track{trackNames.at(track), notes});

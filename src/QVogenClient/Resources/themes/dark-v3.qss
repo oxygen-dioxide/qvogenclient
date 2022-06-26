@@ -6,6 +6,31 @@ QWidget {
 }
 
 
+/* CCheckBox */
+
+CCheckBox {
+    qproperty-layoutMargins: 0;
+    qproperty-layoutSpacing: 10px;
+}
+
+CCheckBox>QLabel#label {
+    color: white;
+}
+
+CCheckBox>CToolButton#box {
+    border-radius: 3px;
+    background-color: #3C3C3C;
+    border: 1px solid #3C3C3C;
+    qproperty-iconUpChecked: svg(":/svg/checkbox/check-line.svg", #FFFFFF);
+    qproperty-iconSize: 16px 16px;
+}
+
+CCheckBox>CToolButton#box:focus {
+    border-radius: 0;
+    border-color: #167FD2;
+}
+
+
 /* QScrollBar */
 
 QScrollArea {
@@ -607,4 +632,47 @@ QCommandPalette>QLineEdit {
 
 QCommandPalette>QLineEdit:focus {
     border-color: #167FD2;
+}
+
+
+/* Dialogs */
+
+SelectsDialogV2 {
+    qproperty-boxLayoutMargins: 0;
+    qproperty-boxLayoutSpacing: 5px;
+    qproperty-mainLayoutMargins: qmargins(30px, 20px, 30px, 20px);
+    qproperty-mainLayoutSpacing: 10px;
+    qproperty-buttonLayoutMargins: qmargins(0px, 20px, 0px, 0px);
+    qproperty-buttonLayoutSpacing: 10px;
+    background-color: #333333;
+}
+
+QLabel#dialog-title-label {
+    margin-top: 10px;
+    font-size: 20px;
+    color: white;
+}
+
+QLabel#dialog-caption-label {
+    color: white;
+}
+
+QCheckBox#dialog-check-box {
+    color: white;
+}
+
+QPushButton#dialog-button {
+    color: white;
+    background-color: #0E639C;
+    border: 1px solid transparent;
+    fix-width: 115px;
+    fix-height: 35px;
+}
+
+QPushButton#dialog-button:hover {
+    background-color: #1177BB;
+}
+
+QPushButton#dialog-button:pressed {
+    color: #EEEEEE;
 }

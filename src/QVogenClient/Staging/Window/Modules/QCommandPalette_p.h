@@ -22,9 +22,9 @@ public:
     QCommandPalette *q_ptr;
 
     QVBoxLayout *layout;
+
     QLineEdit *lineEdit;
     QCommandPaletteListWidget *listWidget;
-
     QList<QListWidgetItem *> quantizationItems;
 
     // Status

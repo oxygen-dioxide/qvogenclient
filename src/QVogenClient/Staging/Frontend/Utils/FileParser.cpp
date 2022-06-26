@@ -19,42 +19,42 @@ FileParser::FileParser(QWidget *parent) : QObject(parent) {
 FileParser::~FileParser() {
 }
 
-bool FileParser::parseFile(const QString &filename, CommonScore &notes) {
+bool FileParser::parseFile(const QString &filename, CommonScore &proj) {
     QString suffix = Sys::PathFindSuffix(filename).toLower();
     CommonScore temp;
     if (suffix == mid_suffix) {
         if (parseMidiFile(filename, temp)) {
-            notes = temp;
+            proj = std::move(temp);
             return true;
         }
     } else if (suffix == ust_suffix) {
         if (parseUTAUFile(filename, temp)) {
-            notes = temp;
+            proj = std::move(temp);
             return true;
         }
     } else if (suffix == svp_suffix) {
         if (parseSynthVFile(filename, temp)) {
-            notes = temp;
+            proj = std::move(temp);
             return true;
         }
     } else if (suffix == s5p_suffix) {
         if (parseSynthVOldFile(filename, temp)) {
-            notes = temp;
+            proj = std::move(temp);
             return true;
         }
     } else if (suffix == vsqx_suffix) {
         if (parseVocaloidFile(filename, temp)) {
-            notes = temp;
+            proj = std::move(temp);
             return true;
         }
     } else if (suffix == vsq_suffix) {
         if (parseVocaloidOldFile(filename, temp)) {
-            notes = temp;
+            proj = std::move(temp);
             return true;
         }
     } else if (suffix == ustx_suffix) {
         if (parseOpenUTAUFile(filename, temp)) {
-            notes = temp;
+            proj = std::move(temp);
             return true;
         }
     }

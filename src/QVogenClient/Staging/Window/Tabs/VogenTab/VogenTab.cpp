@@ -268,8 +268,16 @@ void VogenTab::import(const CommonScore &proj) {
     pd.beat = proj.beat;
     pd.accomOffset = 0;
 
+    if (pd.tempo < 10 || pd.tempo > 512) {
+        pd.tempo = 120.0;
+    }
+
     QList<TWProject::Utterance> utterances;
     for (const auto &utter : qAsConst(proj.tracks)) {
+        if (utter.notes.isEmpty()) {
+            continue;
+        }
+
         TWProject::Utterance u;
         u.name = utter.name;
         u.singer = QString();

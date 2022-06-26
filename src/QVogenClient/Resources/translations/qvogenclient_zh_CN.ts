@@ -267,19 +267,29 @@
         <translation type="unfinished">无法加载 UTAU 文件！</translation>
     </message>
     <message>
-        <location filename="../../Staging/Frontend/Utils/FilePaserImpl/FileParser_Midi.cpp" line="13"/>
+        <location filename="../../Staging/Frontend/Utils/FilePaserImpl/FileParser_Midi.cpp" line="15"/>
         <source>Failed to read MIDI file!</source>
         <translation type="unfinished">无法加载 MIDI 文件！</translation>
     </message>
     <message>
-        <location filename="../../Staging/Frontend/Utils/FilePaserImpl/FileParser_Midi.cpp" line="74"/>
+        <location filename="../../Staging/Frontend/Utils/FilePaserImpl/FileParser_Midi.cpp" line="76"/>
         <source>Track %1</source>
         <translation type="unfinished">音轨 %1</translation>
     </message>
     <message>
-        <location filename="../../Staging/Frontend/Utils/FilePaserImpl/FileParser_Midi.cpp" line="76"/>
+        <location filename="../../Staging/Frontend/Utils/FilePaserImpl/FileParser_Midi.cpp" line="78"/>
         <source>%1 notes</source>
         <translation type="unfinished">%1个音符</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Frontend/Utils/FilePaserImpl/FileParser_Midi.cpp" line="89"/>
+        <source>Import Midi</source>
+        <translation type="unfinished">导入Midi</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Frontend/Utils/FilePaserImpl/FileParser_Midi.cpp" line="89"/>
+        <source>Tracks in file</source>
+        <translation type="unfinished">文件中的音轨</translation>
     </message>
 </context>
 <context>
@@ -867,6 +877,24 @@
         <location filename="../../Staging/Window/Managers/TabManager_p.cpp" line="132"/>
         <source>Cancel</source>
         <translation type="unfinished">取消</translation>
+    </message>
+</context>
+<context>
+    <name>SelectsDialogV2</name>
+    <message>
+        <location filename="../../Staging/Window/Dialogs/SelectsDialogV2.cpp" line="23"/>
+        <source>Cancel</source>
+        <translation type="unfinished">取消</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Dialogs/SelectsDialogV2.cpp" line="26"/>
+        <source>OK</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Dialogs/SelectsDialogV2.cpp" line="96"/>
+        <source>Please select at least one!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
