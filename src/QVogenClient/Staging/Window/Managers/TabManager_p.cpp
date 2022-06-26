@@ -4,11 +4,14 @@
 #include "WindowManager.h"
 
 #include "ActionManager.h"
+#include "EventManager.h"
 #include "MainWindow.h"
 
 #include "FolderTab.h"
 #include "VogenTab/VogenTab.h"
 #include "WelcomeTab/WelcomeTab.h"
+
+#include <QMessageBox>
 
 TabManagerPrivate::TabManagerPrivate() {
 }
@@ -97,8 +100,60 @@ void TabManagerPrivate::reloadActionStates(ActionImpl::StateTypes st) {
 
 bool TabManagerPrivate::tryCloseTab(int index) {
     auto tab = tabAt(index);
+    auto tabs = w->tabWidget();
+
+    bool accept = true;
+    QString title;
+
+    if (tab->type() & CentralTab::Document) {
+        auto tab1 = qobject_cast<DocumentTab *>(tab);
+        title = QObject::tr("You have not saved the file, do you want to save it?");
+        accept = !(tab1->isDeleted() || tab1->isEdited());
+    } else if (tab->type() & CentralTab::Folder) {
+        title = QObject::tr("You have not saved the directory, do you want to save it?");
+        accept = !tab->isEdited();
+    } else {
+        title = QObject::tr("You have not saved the configuration, do you want to save it?");
+        accept = !tab->isEdited();
+    }
+
+    if (!accept) {
+        tabs->setCurrentIndex(index);
+
+        QMessageBox msgbox(w);
+        msgbox.setText(title);
+        msgbox.setWindowTitle(qData->mainTitle());
+        msgbox.setIcon(QMessageBox::Question);
+        msgbox.setStandardButtons(QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+        msgbox.setDefaultButton(QMessageBox::Yes);
+
+        msgbox.button(QMessageBox::Yes)->setText(QObject::tr("Save(&S)"));
+        msgbox.button(QMessageBox::No)->setText(QObject::tr("Don't save(&N)"));
+        msgbox.button(QMessageBox::Cancel)->setText(QObject::tr("Cancel"));
+
+        QMessageBox::StandardButton result =
+            static_cast<QMessageBox::StandardButton>(msgbox.exec());
+
+        switch (result) {
+        case QMessageBox::Yes:
+            accept = w->eventMgr()->saveFile(tab);
+            break;
+        case QMessageBox::No:
+            accept = true;
+            break;
+        default:
+            accept = false;
+            break;
+        }
+    }
+
+    if (!accept) {
+        return false;
+    }
+
     w->tabWidget()->removeTab(index);
     tab->deleteLater();
+
     return true;
 }
 

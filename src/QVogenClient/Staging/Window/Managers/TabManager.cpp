@@ -193,14 +193,7 @@ void TabManager::triggerCurrent(ActionImpl::Action a) {
         break;
     }
     case File_Save: {
-        bool saveAs = false;
-        if (tab->type() & CentralTab::Document) {
-            auto docTab = qobject_cast<DocumentTab *>(tab);
-            if (docTab->isUntitled() || docTab->isDeleted()) {
-                saveAs = true;
-            }
-        }
-        saveAs ? d->w->eventMgr()->saveAsFile(tab) : tab->save();
+        d->w->eventMgr()->saveFile(tab);
         break;
     }
     case File_SaveAs: {

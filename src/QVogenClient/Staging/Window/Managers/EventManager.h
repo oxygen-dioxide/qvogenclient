@@ -22,6 +22,7 @@ public:
     bool openFile(const QString &filename = QString());
     bool importFile(const QString &filename = QString());
     bool appendFile(const QString &filename = QString());
+    bool saveFile(CentralTab *tab);
     bool saveAsFile(CentralTab *tab);
 
 protected:

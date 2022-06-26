@@ -217,12 +217,12 @@
         <translation type="unfinished">导入</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/EventManager.cpp" line="97"/>
+        <location filename="../../Staging/Window/Managers/EventManager.cpp" line="99"/>
         <source>Append</source>
         <translation type="unfinished">追加导入</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/EventManager.cpp" line="108"/>
+        <location filename="../../Staging/Window/Managers/EventManager.cpp" line="121"/>
         <source>Save As</source>
         <translation type="unfinished">另存为</translation>
     </message>
@@ -262,7 +262,7 @@
         <translation type="unfinished">本功能等待实现。</translation>
     </message>
     <message>
-        <location filename="../../Staging/Frontend/Utils/FilePaserImpl/FileParser_UTAU.cpp" line="11"/>
+        <location filename="../../Staging/Frontend/Utils/FilePaserImpl/FileParser_UTAU.cpp" line="12"/>
         <source>Failed to read UTAU file!</source>
         <translation type="unfinished">无法加载 UTAU 文件！</translation>
     </message>
@@ -815,7 +815,7 @@
         <translation type="obsolete">输入变调偏移量（0~84）</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="132"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="172"/>
         <source>Enter the lyrics, separated by white space</source>
         <translation type="unfinished">输入歌词，使用空格分隔</translation>
     </message>
@@ -824,19 +824,49 @@
         <translation type="obsolete">输入新的拍号</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="146"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="191"/>
         <source>Enter the new time signature, e.g. 3/4, 4/4</source>
         <translation type="unfinished">输入新的拍号，如3/4、4/4</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="166"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="211"/>
         <source>Enter the new tempo (10 ~ 512)</source>
         <translation type="unfinished">输入新的曲速（10 ~ 512）</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="188"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="233"/>
         <source>Enter the transpose offset (0 ~ 84)</source>
         <translation type="unfinished">输入变调偏移量（0 ~ 84）</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Managers/TabManager_p.cpp" line="110"/>
+        <source>You have not saved the file, do you want to save it?</source>
+        <translation type="unfinished">是否将更改保存到文件中？</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Managers/TabManager_p.cpp" line="113"/>
+        <source>You have not saved the directory, do you want to save it?</source>
+        <translation type="unfinished">是否将更改保存到目录中？</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Managers/TabManager_p.cpp" line="116"/>
+        <source>You have not saved the configuration, do you want to save it?</source>
+        <translation type="unfinished">是否将更改保存到配置中？</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Managers/TabManager_p.cpp" line="130"/>
+        <source>Save(&amp;S)</source>
+        <translation type="unfinished">保存(&amp;S)</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Managers/TabManager_p.cpp" line="131"/>
+        <source>Don&apos;t save(&amp;N)</source>
+        <translation type="unfinished">不保存(&amp;N)</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Managers/TabManager_p.cpp" line="132"/>
+        <source>Cancel</source>
+        <translation type="unfinished">取消</translation>
     </message>
 </context>
 <context>
@@ -885,37 +915,37 @@
 <context>
     <name>TabManager</name>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="228"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="233"/>
         <source>About %1</source>
         <translation type="unfinished">关于 %1</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="351"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="356"/>
         <source>Close</source>
         <translation type="unfinished">关闭</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="352"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="357"/>
         <source>Close Others</source>
         <translation type="unfinished">关闭其他</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="353"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="358"/>
         <source>Close Saved</source>
         <translation type="unfinished">关闭已保存</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="354"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="359"/>
         <source>Close All</source>
         <translation type="unfinished">全部关闭</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="363"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="368"/>
         <source>Show in %1(&amp;S)</source>
         <translation type="unfinished">在%1中显示(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="367"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="372"/>
         <source>Open in %1(&amp;S)</source>
         <translation type="unfinished">在%1中打开(&amp;S)</translation>
     </message>
@@ -923,13 +953,12 @@
 <context>
     <name>VogenTab</name>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab.cpp" line="45"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab.cpp" line="48"/>
         <source>Failed to open file &quot;%1&quot;!</source>
         <translation type="unfinished">无法打开文件“%1”！</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab.cpp" line="83"/>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab.cpp" line="102"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="79"/>
         <source>Failed to save file!</source>
         <translation type="unfinished">无法保存文件！</translation>
     </message>

@@ -3,7 +3,7 @@
 
 #include "SystemHelper.h"
 
-#include "CentralTab.h"
+#include "DocumentTab.h"
 #include "MainWindow.h"
 
 #include "CommonScore.h"
@@ -102,6 +102,17 @@ bool EventManager::appendFile(const QString &filename) {
     if (!path.isEmpty()) {
     }
     return false;
+}
+
+bool EventManager::saveFile(CentralTab *tab) {
+    bool saveAs = false;
+    if (tab->type() & CentralTab::Document) {
+        auto docTab = qobject_cast<DocumentTab *>(tab);
+        if (docTab->isUntitled() || docTab->isDeleted()) {
+            saveAs = true;
+        }
+    }
+    return saveAs ? saveAsFile(tab) : tab->save();
 }
 
 bool EventManager::saveAsFile(CentralTab *tab) {
