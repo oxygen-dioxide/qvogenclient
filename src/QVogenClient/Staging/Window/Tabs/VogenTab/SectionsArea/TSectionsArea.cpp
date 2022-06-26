@@ -96,7 +96,7 @@ QPixmap TSectionsArea::backgroundBrush() const {
     int curWidth = m_currentWidth;
     double lineWidth = m_styleData.lineWidth;
 
-    double totalWidth = curWidth * 4;
+    double totalWidth = double(curWidth * 4) / m_beat.y() * m_beat.x();
     double totalHeight = height();
 
     double usedHeight = totalHeight / USE_HEIGHT_FACTOR;
@@ -114,13 +114,20 @@ QPixmap TSectionsArea::backgroundBrush() const {
 
     painter.setBrush(m_styleData.line);
 
-    int curAdsorb = 4;
+    int curAdsorb = m_beat.x();
     int threshold = font().pixelSize() * 2;
     double w = totalWidth / curAdsorb;
     while (w < threshold && curAdsorb > 1) {
-        curAdsorb--;
-        while (curAdsorb % 2 != 0 && curAdsorb > 1) {
-            curAdsorb--;
+        if (curAdsorb % 2 == 0) {
+            curAdsorb /= 2;
+        } else if (curAdsorb % 3 == 0) {
+            curAdsorb /= 3;
+        } else if (curAdsorb % 5 == 0) {
+            curAdsorb /= 5;
+        } else if (curAdsorb % 7 == 0) {
+            curAdsorb /= 7;
+        } else {
+            curAdsorb = 1;
         }
         w = totalWidth / curAdsorb;
     }

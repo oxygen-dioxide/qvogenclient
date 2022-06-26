@@ -418,6 +418,7 @@ void TNNotesCtl::adjustAllGroupHintPos() {
     for (auto g : qAsConst(m_noteGroups)) {
         g->adjustHintPos();
     }
+    m_mainGroup->adjustHintPos();
 }
 
 void TNNotesCtl::adjustCanvas() {

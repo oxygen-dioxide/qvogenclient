@@ -222,14 +222,29 @@ void TNotesArea::adjustBackground() {
 
     QPainter painter(&pixmap);
     painter.setPen(Qt::NoPen);
-    painter.translate(0, 0);
 
+    // Draw background
     const QSet<short> deep{1, 3, 5, 8, 10};
     for (int i = 0; i < 12; ++i) {
         painter.setBrush((deep.contains(i % 12)) ? m_styleData.backDark : m_styleData.backLight);
         painter.drawRect(QRectF(0, i * curHeight, totalWidth, curHeight));
     }
 
+
+    // Draw horizontal lines
+    painter.setBrush(m_styleData.levelLine);
+    painter.drawRect(QRectF(0, 0, totalWidth, lineWidth / 2));
+    painter.drawRect(QRectF(0, totalHeight - lineWidth / 2, totalWidth, lineWidth / 2));
+
+    painter.setBrush(m_styleData.pitchLine);
+    painter.drawRect(QRectF(0, curHeight * 7 - lineWidth / 2, totalWidth, lineWidth));
+
+
+    // Move by offset
+    int offset = int(zeroLine()) % curWidth;
+    painter.translate(offset, 0);
+
+    // Draw vertical lines
     double w = (curAdsorb == 0) ? Q_INFINITY : (totalWidth / curAdsorb);
     int threshold = 6;
     while (w < threshold && curAdsorb > 1) {
@@ -239,25 +254,23 @@ void TNotesArea::adjustBackground() {
         }
         w = totalWidth / curAdsorb;
     }
-    for (int i = 1; i < curAdsorb; ++i) {
-        if ((i * 4) % curAdsorb == 0) {
-            painter.setBrush(m_styleData.quarterLine);
-        } else {
-            painter.setBrush(m_styleData.timeLine);
+    for (int j = 0; j < 2; ++j) {
+        for (int i = 1; i < curAdsorb; ++i) {
+            if ((i * 4) % curAdsorb == 0) {
+                painter.setBrush(m_styleData.quarterLine);
+            } else {
+                painter.setBrush(m_styleData.timeLine);
+            }
+            painter.drawRect(
+                QRectF(totalWidth * j + w * i - lineWidth / 2, 0, lineWidth, totalHeight));
         }
-        painter.drawRect(QRectF(w * i - lineWidth / 2, 0, lineWidth, totalHeight));
     }
 
-    painter.setBrush(m_styleData.sectionLine);
-    painter.drawRect(QRectF(0, 0, lineWidth / 2, totalHeight));
-    painter.drawRect(QRectF(totalWidth - lineWidth / 2, 0, lineWidth / 2, totalHeight));
-
-    painter.setBrush(m_styleData.levelLine);
-    painter.drawRect(QRectF(0, 0, totalWidth, lineWidth / 2));
-    painter.drawRect(QRectF(0, totalHeight - lineWidth / 2, totalWidth, lineWidth / 2));
-
-    painter.setBrush(m_styleData.pitchLine);
-    painter.drawRect(QRectF(0, curHeight * 7 - lineWidth / 2, totalWidth, lineWidth));
+    // Draw one more
+    for (int i = 0; i < 3; ++i) {
+        painter.setBrush(m_styleData.sectionLine);
+        painter.drawRect(QRectF(totalWidth * i - lineWidth / 2, 0, lineWidth, totalHeight));
+    }
 
     setBackgroundBrush(pixmap);
 }
@@ -271,6 +284,11 @@ void TNotesArea::setTempo(double tempo) {
 
 void TNotesArea::setTimeSig(int a, int b) {
     m_timeSig = qMakePair(a, b);
+
+    m_notesCtl->adjustAllGeometry();
+    m_notesCtl->adjustAllGroupHintPos();
+    m_notesCtl->adjustCanvas();
+    adjustBackground();
 
     QEventImpl::SceneStateChangeEvent e(QEventImpl::SceneStateChangeEvent::TimeSig);
     QApplication::sendEvent(view()->window(), &e);

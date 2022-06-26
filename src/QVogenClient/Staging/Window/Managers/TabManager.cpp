@@ -229,6 +229,14 @@ void TabManager::triggerCurrent(ActionImpl::Action a) {
         dlg->deleteLater();
         break;
     }
+    case Help_AboutApplication: {
+        QString text = tr("<h3>QVogenClient</h3>"
+                          "<p>Vogen editor using "
+                          "<span style=\"font-weight: bold;\">QSynthesis</span> framework.</p>"
+                          "<p>Copyright Sine Striker, 2020-2022. All rights reserved. </p>");
+        QMessageBox::about(d->w, tr("About %1").arg(qData->appName()), text);
+        break;
+    }
     case Help_AboutQt: {
         QMessageBox::aboutQt(d->w, tr("About %1").arg("Qt"));
         break;

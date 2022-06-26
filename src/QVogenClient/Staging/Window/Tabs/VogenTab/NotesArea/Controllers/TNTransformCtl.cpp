@@ -40,7 +40,8 @@ void TNTransformCtl::setSectionCount(int sectionCount) {
 }
 
 void TNTransformCtl::setSectionCountHint(int totalLength) {
-    int sections = totalLength / 480 / 4;
+    auto timeSig = a->timeSig();
+    int sections = totalLength / 480 / 4 + int(double(1) / timeSig.second * timeSig.first);
     int count = int((sections + (SECTION_UNIT * 1.5)) / SECTION_UNIT) * SECTION_UNIT;
 
     count = qMax(count, SECTION_MIN);
@@ -91,7 +92,8 @@ void TNTransformCtl::setBlankSections(int blankSections) {
 }
 
 double TNTransformCtl::zeroLine() const {
-    return m_currentWidth * 4 * m_blankSections;
+    auto timeSig = a->timeSig();
+    return int(double(m_currentWidth * 4) / timeSig.second * timeSig.first) * m_blankSections;
 }
 
 bool TNTransformCtl::scrollDrag() const {

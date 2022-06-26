@@ -98,10 +98,13 @@ protected:
 
     void adjustGeometry(TNRectNote *note);
     void adjustGroupGeometry(const TNNoteGroup *group);
+
+public:
     void adjustAllGeometry();
     void adjustAllGroupHintPos();
     void adjustCanvas();
 
+protected:
     void selectOne(TNRectNote *p);
     void deselectOne(TNRectNote *p);
 

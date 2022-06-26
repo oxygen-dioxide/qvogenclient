@@ -193,10 +193,12 @@ void VogenTabPrivate::inputBeat() {
         int a, b;
         int n = ::sscanf(str.toUtf8().data(), fmt, &a, &b);
         if (n == 2) {
-            TDigitTimeSigEvent e;
-            e.a = a;
-            e.b = b;
-            qApp->sendEvent(piano->notesArea(), &e);
+            if (a > 0 && b > 0 && !(b & (b - 1))) {
+                TDigitTimeSigEvent e;
+                e.a = a;
+                e.b = b;
+                qApp->sendEvent(piano->notesArea(), &e);
+            }
         }
     }
 }
