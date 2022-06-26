@@ -42,6 +42,8 @@ public:
         LanguageMax,
     };
 
+    friend class CommandPaletteEventGuard;
+
 public:
     void showCommands(CommandType type);
     void showLineEdit(const QString &hint, const QString &placeholder);

@@ -135,14 +135,7 @@ bool QCommandPalette::eventFilter(QObject *obj, QEvent *event) {
                     QApplication::sendEvent(d->listWidget, keyEvent);
                     return true;
                 }
-            } else if (key == Qt::Key_Return || key == Qt::Key_Enter) {
-                auto item = d->listWidget->currentItem();
-                d->activateItem(item);
-                return true;
             } else if (key == Qt::Key_Tab) {
-                return true;
-            } else if (key == Qt::Key_Escape) {
-                d->abandon();
                 return true;
             } else {
                 if (obj != d->lineEdit) {
