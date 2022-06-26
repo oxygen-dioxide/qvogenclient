@@ -19,7 +19,7 @@ public:
     void reloadStrings() override;
     void reloadShortcuts() override;
 
-    QAction *NewAction(ActionImpl::Action a);
+    QAction *NewAction(ActionImpl::Action a, QObject *parent = nullptr);
     void registerHandler(QMenu *menu);
 
     void reloadRecentActions();

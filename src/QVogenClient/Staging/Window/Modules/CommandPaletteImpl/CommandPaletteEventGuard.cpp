@@ -15,6 +15,7 @@ CommandPaletteEventGuard::~CommandPaletteEventGuard() {
 }
 
 bool CommandPaletteEventGuard::eventFilter(QObject *obj, QEvent *event) {
+    Q_UNUSED(obj)
     if (cp->isVisible()) {
         if (event->type() == QEvent::ShortcutOverride) {
             auto keyEvent = static_cast<QKeyEvent *>(event);

@@ -36,9 +36,6 @@ FilesActionEnginePrivate::FilesActionEnginePrivate() {
 }
 
 FilesActionEnginePrivate::~FilesActionEnginePrivate() {
-    for (auto it = map.begin(); it != map.end(); ++it) {
-        delete it.key();
-    }
 }
 
 void FilesActionEnginePrivate::init() {
@@ -63,109 +60,112 @@ void FilesActionEnginePrivate::setup() {
     cursorGroup = new QActionGroup(menuBar);
 
     // File
-    recentMenu = new CMenu(); // *
-    exportMenu = new CMenu();
-    preferencesMenu = new CMenu();
+    recentMenu = new CMenu(fileMenu); // *
+    exportMenu = new CMenu(fileMenu);
+    preferencesMenu = new CMenu(fileMenu);
 
     registerHandler(recentMenu);
     registerHandler(exportMenu);
     registerHandler(preferencesMenu);
 
-    file_newFile = NewAction(ActionImpl::File_New);
-    file_newWindow = NewAction(ActionImpl::File_NewWindow);
-    file_openFile = NewAction(ActionImpl::File_Open);
-    file_saveFile = NewAction(ActionImpl::File_Save);
-    file_saveAs = NewAction(ActionImpl::File_SaveAs);
-    file_saveAll = NewAction(ActionImpl::File_SaveAll);
-    file_importFile = NewAction(ActionImpl::File_Import);
-    file_appendFile = NewAction(ActionImpl::File_Append);
-    file_fileSettings = NewAction(ActionImpl::File_FileSettings);
-    file_closeFile = NewAction(ActionImpl::File_Close);
-    file_closeWindow = NewAction(ActionImpl::File_CloseWindow);
+    file_newFile = NewAction(ActionImpl::File_New, fileMenu);
+    file_newWindow = NewAction(ActionImpl::File_NewWindow, fileMenu);
+    file_openFile = NewAction(ActionImpl::File_Open, fileMenu);
+    file_saveFile = NewAction(ActionImpl::File_Save, fileMenu);
+    file_saveAs = NewAction(ActionImpl::File_SaveAs, fileMenu);
+    file_saveAll = NewAction(ActionImpl::File_SaveAll, fileMenu);
+    file_importFile = NewAction(ActionImpl::File_Import, fileMenu);
+    file_appendFile = NewAction(ActionImpl::File_Append, fileMenu);
+    file_fileSettings = NewAction(ActionImpl::File_FileSettings, fileMenu);
+    file_closeFile = NewAction(ActionImpl::File_Close, fileMenu);
+    file_closeWindow = NewAction(ActionImpl::File_CloseWindow, fileMenu);
 
-    file_exportSelection = NewAction(ActionImpl::File_ExportSelection);
-    file_exportTrack = NewAction(ActionImpl::File_ExportTrack);
+    file_exportSelection = NewAction(ActionImpl::File_ExportSelection, exportMenu);
+    file_exportTrack = NewAction(ActionImpl::File_ExportTrack, exportMenu);
 
-    preference_settings = NewAction(ActionImpl::File_Settings);
-    preference_keyShortcuts = NewAction(ActionImpl::File_KeyboardShortcuts);
-    preference_themes = NewAction(ActionImpl::File_ColorThemes);
-    preference_languages = NewAction(ActionImpl::File_Languages);
+    preference_settings = NewAction(ActionImpl::File_Settings, preferencesMenu);
+    preference_keyShortcuts = NewAction(ActionImpl::File_KeyboardShortcuts, preferencesMenu);
+    preference_themes = NewAction(ActionImpl::File_ColorThemes, preferencesMenu);
+    preference_languages = NewAction(ActionImpl::File_Languages, preferencesMenu);
 
     // Edit
-    pasteMenu = new CMenu();
-    removeMenu = new CMenu();
+    pasteMenu = new CMenu(editMenu);
+    removeMenu = new CMenu(editMenu);
 
     registerHandler(pasteMenu);
     registerHandler(removeMenu);
 
-    edit_undo = NewAction(ActionImpl::Edit_Undo);
-    edit_redo = NewAction(ActionImpl::Edit_Redo);
+    edit_undo = NewAction(ActionImpl::Edit_Undo, editMenu);
+    edit_redo = NewAction(ActionImpl::Edit_Redo, editMenu);
 
-    edit_cut = NewAction(ActionImpl::Edit_Cut);
-    edit_copy = NewAction(ActionImpl::Edit_Copy);
-    edit_paste = NewAction(ActionImpl::Edit_Paste);
-    edit_pastePitch = NewAction(ActionImpl::Edit_PastePitch);
+    edit_cut = NewAction(ActionImpl::Edit_Cut, editMenu);
+    edit_copy = NewAction(ActionImpl::Edit_Copy, editMenu);
+    edit_paste = NewAction(ActionImpl::Edit_Paste, editMenu);
+    edit_remove = NewAction(ActionImpl::Edit_Remove, editMenu);
 
-    edit_remove = NewAction(ActionImpl::Edit_Remove);
-    edit_removePitch = NewAction(ActionImpl::Edit_RemovePitch);
+    edit_pastePitch = NewAction(ActionImpl::Edit_PastePitch, pasteMenu);
+    edit_removePitch = NewAction(ActionImpl::Edit_RemovePitch, removeMenu);
 
-    edit_selectAll = NewAction(ActionImpl::Edit_SelectAll);
-    edit_deselect = NewAction(ActionImpl::Edit_Deselect);
+    edit_selectAll = NewAction(ActionImpl::Edit_SelectAll, editMenu);
+    edit_deselect = NewAction(ActionImpl::Edit_Deselect, editMenu);
 
     // View
-    appearanceMenu = new CMenu();
-    panelsMenu = new CMenu();
-    displayMenu = new CMenu();
-    cursorMenu = new CMenu();
+    appearanceMenu = new CMenu(viewMenu);
+    panelsMenu = new CMenu(viewMenu);
+    displayMenu = new CMenu(viewMenu);
+    cursorMenu = new CMenu(viewMenu);
 
     registerHandler(appearanceMenu);
     registerHandler(panelsMenu);
     registerHandler(displayMenu);
     registerHandler(cursorMenu);
 
-    view_quantization = NewAction(ActionImpl::View_Quantization);
-    view_playhead = NewAction(ActionImpl::View_Playhead);
+    view_quantization = NewAction(ActionImpl::View_Quantization, viewMenu);
+    view_playhead = NewAction(ActionImpl::View_Playhead, viewMenu);
 
-    appearance_toolBar = NewAction(ActionImpl::View_Appearance_ToolBar);
-    appearance_navBar = NewAction(ActionImpl::View_Appearance_NavigationBar);
-    appearance_statusBar = NewAction(ActionImpl::View_Appearance_StatusBar);
-    appearance_panelBars = NewAction(ActionImpl::View_Appearance_ToolWindowsBar);
-    appearance_menuBar = NewAction(ActionImpl::View_Appearance_MenuBar);
+    appearance_toolBar = NewAction(ActionImpl::View_Appearance_ToolBar, appearanceMenu);
+    appearance_navBar = NewAction(ActionImpl::View_Appearance_NavigationBar, appearanceMenu);
+    appearance_statusBar = NewAction(ActionImpl::View_Appearance_StatusBar, appearanceMenu);
+    appearance_panelBars = NewAction(ActionImpl::View_Appearance_ToolWindowsBar, appearanceMenu);
+    appearance_menuBar = NewAction(ActionImpl::View_Appearance_MenuBar, appearanceMenu);
 
-    display_note = new QAction();
-    display_pitch = new QAction();
+    display_note = new QAction(displayMenu);
+    display_pitch = new QAction(displayMenu);
 
-    cursor_select = NewAction(ActionImpl::View_Cursor_Select);
-    cursor_sketch = NewAction(ActionImpl::View_Cursor_Sketch);
-    cursor_free = NewAction(ActionImpl::View_Cursor_Freehand);
+    cursor_select = NewAction(ActionImpl::View_Cursor_Select, cursorMenu);
+    cursor_sketch = NewAction(ActionImpl::View_Cursor_Sketch, cursorMenu);
+    cursor_free = NewAction(ActionImpl::View_Cursor_Freehand, cursorMenu);
 
     // Modify
-    modify_insertLyrics = NewAction(ActionImpl::Modify_InsertLyrics);
-    modify_findReplace = NewAction(ActionImpl::Modify_FindReplace);
-    modify_transpose = NewAction(ActionImpl::Modify_Transpose);
-    modify_octaveUp = NewAction(ActionImpl::Modify_OctaveUp);
-    modify_octaveDown = NewAction(ActionImpl::Modify_OctaveDown);
+    modify_insertLyrics = NewAction(ActionImpl::Modify_InsertLyrics, modifyMenu);
+    modify_findReplace = NewAction(ActionImpl::Modify_FindReplace, modifyMenu);
+    modify_transpose = NewAction(ActionImpl::Modify_Transpose, modifyMenu);
+    modify_octaveUp = NewAction(ActionImpl::Modify_OctaveUp, modifyMenu);
+    modify_octaveDown = NewAction(ActionImpl::Modify_OctaveDown, modifyMenu);
 
-    modify_buildIn = NewAction(ActionImpl::Modify_BuildIn);
-    modify_plugins = NewAction(ActionImpl::Modify_Plugins);
+    modify_buildIn = NewAction(ActionImpl::Modify_BuildIn, modifyMenu);
+    modify_plugins = NewAction(ActionImpl::Modify_Plugins, modifyMenu);
 
     // Play
-    play_play = NewAction(ActionImpl::Playback_Play);
-    play_stop = NewAction(ActionImpl::Playback_Stop);
-    play_replay = NewAction(ActionImpl::Playback_Replay);
-    play_moveStart = NewAction(ActionImpl::Playback_MoveStart);
-    play_moveEnd = NewAction(ActionImpl::Playback_MoveEnd);
-    play_removeCache = NewAction(ActionImpl::Playback_RemoveCache);
-    play_exportAudio = NewAction(ActionImpl::Playback_ExportRecent);
+    play_play = NewAction(ActionImpl::Playback_Play, playMenu);
+    play_stop = NewAction(ActionImpl::Playback_Stop, playMenu);
+    play_replay = NewAction(ActionImpl::Playback_Replay, playMenu);
+    play_moveStart = NewAction(ActionImpl::Playback_MoveStart, playMenu);
+    play_moveEnd = NewAction(ActionImpl::Playback_MoveEnd, playMenu);
+    play_removeCache = NewAction(ActionImpl::Playback_RemoveCache, playMenu);
+    play_exportAudio = NewAction(ActionImpl::Playback_ExportRecent, playMenu);
 
     // Help
-    help_welcome = NewAction(ActionImpl::Help_Welcome);
-    help_showActions = NewAction(ActionImpl::Help_ShowActions);
-    help_voiceManager = NewAction(ActionImpl::Help_VoiceManager);
-    help_instructions = NewAction(ActionImpl::Help_Instructions);
-    help_checkUpdate = NewAction(ActionImpl::Help_CheckUpdate);
-    help_aboutApp = NewAction(ActionImpl::Help_AboutApplication);
-    help_aboutQt = NewAction(ActionImpl::Help_AboutQt);
+    help_welcome = NewAction(ActionImpl::Help_Welcome, helpMenu);
+    help_showActions = NewAction(ActionImpl::Help_ShowActions, helpMenu);
+    help_voiceManager = NewAction(ActionImpl::Help_VoiceManager, helpMenu);
+    help_instructions = NewAction(ActionImpl::Help_Instructions, helpMenu);
+    help_checkUpdate = NewAction(ActionImpl::Help_CheckUpdate, helpMenu);
+    help_aboutApp = NewAction(ActionImpl::Help_AboutApplication, helpMenu);
+    help_aboutQt = NewAction(ActionImpl::Help_AboutQt, helpMenu);
+
+    help_aboutApp->setMenuRole(QAction::AboutRole);
+    help_aboutQt->setMenuRole(QAction::AboutQtRole);
 
     // ----------------- Setup -----------------
     // File
@@ -222,12 +222,12 @@ void FilesActionEnginePrivate::setup() {
     appearanceMenu->addAction(appearance_panelBars);
     appearanceMenu->addAction(appearance_menuBar);
 
-//    panelsMenu->addAction(panels_notePanel);
-//    panelsMenu->addAction(panels_ctrlPanel);
-//    panelsMenu->addAction(panels_pitchPanel);
-//    panelsMenu->addAction(panels_trackPanel);
-//    panelsMenu->addAction(panels_lyricsPanel);
-//    panelsMenu->addAction(panels_statePanel);
+    //    panelsMenu->addAction(panels_notePanel);
+    //    panelsMenu->addAction(panels_ctrlPanel);
+    //    panelsMenu->addAction(panels_pitchPanel);
+    //    panelsMenu->addAction(panels_trackPanel);
+    //    panelsMenu->addAction(panels_lyricsPanel);
+    //    panelsMenu->addAction(panels_statePanel);
 
     // Play
     displayMenu->addAction(display_note);
@@ -362,12 +362,12 @@ void FilesActionEnginePrivate::reloadStrings() {
     appearance_panelBars->setText(QObject::tr("Tool Panel Bars"));
     appearance_menuBar->setText(QObject::tr("Menu Bar"));
 
-//    panels_notePanel->setText(QObject::tr("Note"));
-//    panels_ctrlPanel->setText(QObject::tr("Control"));
-//    panels_pitchPanel->setText(QObject::tr("Pitch"));
-//    panels_trackPanel->setText(QObject::tr("Track"));
-//    panels_lyricsPanel->setText(QObject::tr("Lyrics"));
-//    panels_statePanel->setText(QObject::tr("State"));
+    //    panels_notePanel->setText(QObject::tr("Note"));
+    //    panels_ctrlPanel->setText(QObject::tr("Control"));
+    //    panels_pitchPanel->setText(QObject::tr("Pitch"));
+    //    panels_trackPanel->setText(QObject::tr("Track"));
+    //    panels_lyricsPanel->setText(QObject::tr("Lyrics"));
+    //    panels_statePanel->setText(QObject::tr("State"));
 
     display_note->setText(QObject::tr("Show Note"));
     display_pitch->setText(QObject::tr("Show Pitch"));
@@ -432,12 +432,12 @@ void FilesActionEnginePrivate::reloadShortcuts() {
     edit_selectAll->setShortcut(QKeySequence("Ctrl+A"));
 
     // View
-//    panels_notePanel->setShortcut(QKeySequence("Ctrl+E"));
-//    panels_ctrlPanel->setShortcut(QKeySequence("Ctrl+Y"));
-//    panels_pitchPanel->setShortcut(QKeySequence("Ctrl+P"));
-//    panels_trackPanel->setShortcut(QKeySequence("Ctrl+T"));
-//    panels_lyricsPanel->setShortcut(QKeySequence("Ctrl+L"));
-//    panels_statePanel->setShortcut(QKeySequence("Ctrl+I"));
+    //    panels_notePanel->setShortcut(QKeySequence("Ctrl+E"));
+    //    panels_ctrlPanel->setShortcut(QKeySequence("Ctrl+Y"));
+    //    panels_pitchPanel->setShortcut(QKeySequence("Ctrl+P"));
+    //    panels_trackPanel->setShortcut(QKeySequence("Ctrl+T"));
+    //    panels_lyricsPanel->setShortcut(QKeySequence("Ctrl+L"));
+    //    panels_statePanel->setShortcut(QKeySequence("Ctrl+I"));
 
     display_note->setShortcut(QKeySequence("Show Note"));
     display_pitch->setShortcut(QKeySequence("Show Pitch"));
@@ -460,8 +460,8 @@ void FilesActionEnginePrivate::reloadShortcuts() {
     help_showActions->setShortcut(QKeySequence("Ctrl+Shift+A"));
 }
 
-QAction *FilesActionEnginePrivate::NewAction(ActionImpl::Action a) {
-    auto action = new QAction();
+QAction *FilesActionEnginePrivate::NewAction(ActionImpl::Action a, QObject *parent) {
+    auto action = new QAction(parent);
     map.insert(action, a);
     return action;
 }
@@ -475,7 +475,13 @@ void FilesActionEnginePrivate::reloadRecentActions() {
     QStringList projects = qRecordCData.projects.valid();
 
     // Remove all Actions
-    recentMenu->clear();
+    {
+        const auto &actions = recentMenu->actions();
+        for (auto action : qAsConst(actions)) {
+            map.remove(action);
+        }
+        recentMenu->clear();
+    }
 
     QVector<QAction *> vogFiles;
 
@@ -485,7 +491,8 @@ void FilesActionEnginePrivate::reloadRecentActions() {
             break;
         }
         QString name = *it;
-        auto action = new QAction(QDir::toNativeSeparators(name), recentMenu);
+        auto action = NewAction(ActionImpl::Special_Recent, recentMenu);
+        action->setText(QDir::toNativeSeparators(name));
         action->setData(ActionData(ActionData::OpenFile, name).toVariant());
         vogFiles.append(action);
         fileActions++;
@@ -501,21 +508,21 @@ void FilesActionEnginePrivate::reloadRecentActions() {
     }
 
     if (vogFiles.isEmpty()) {
-        QAction *emptyAction = new QAction(recentMenu);
-        emptyAction->setData(ActionData(ActionData::Null).toVariant());
-        recentMenu->addAction(emptyAction);
+        auto action = NewAction(ActionImpl::Special_Recent, recentMenu);
+        action->setData(ActionData(ActionData::Null).toVariant());
+        recentMenu->addAction(action);
     } else {
         bool more = false;
         if (fileActions < projects.size()) {
-            QAction *moreAction = new QAction(recentMenu);
-            moreAction->setData(ActionData(ActionData::MoreFiles).toVariant());
-            recentMenu->addAction(moreAction);
+            auto action = NewAction(ActionImpl::Special_Recent, recentMenu);
+            action->setData(ActionData(ActionData::MoreFiles).toVariant());
+            recentMenu->addAction(action);
             more = true;
         }
         if (more) {
             recentMenu->addSeparator();
         }
-        QAction *clearRecentAction = new QAction(recentMenu);
+        auto clearRecentAction = NewAction(ActionImpl::Special_Recent, recentMenu);
         clearRecentAction->setData(ActionData(ActionData::Clear).toVariant());
         recentMenu->addAction(clearRecentAction);
     }

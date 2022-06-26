@@ -143,9 +143,6 @@ int MainWindow::showCommands(QCommandPalette::CommandType type) {
     int result = -1;
 
     QEventLoop loop;
-    if (loop.isRunning()) {
-        loop.quit();
-    }
 
     // auto slot1 = [&previewFuction](int index) mutable {
     //     if (previewFuction) {

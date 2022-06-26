@@ -82,6 +82,8 @@ namespace ActionImpl {
         Help_CheckUpdate,
         Help_AboutApplication,
         Help_AboutQt,
+
+        Special_Recent,
     };
 
     enum StateType {

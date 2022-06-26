@@ -56,14 +56,20 @@ void FilesActionEngine::_q_recentCommited(int rType) {
 
 void FilesActionEngine::_q_actionTriggered(QAction *action) {
     Q_D(FilesActionEngine);
+
     auto menu = qobject_cast<QMenu *>(sender());
-    if (menu == d->recentMenu) {
+    if (action->parentWidget() != menu) {
+        return;
+    }
+
+    if (action->parentWidget() == d->recentMenu) {
         d->handleRecentAction(action);
     } else {
         auto it = d->map.find(action);
         if (it == d->map.end()) {
             return;
         }
-        d->tabMgr->triggerCurrent(it.value());
+        auto val = it.value();
+        d->tabMgr->triggerCurrent(val);
     }
 }

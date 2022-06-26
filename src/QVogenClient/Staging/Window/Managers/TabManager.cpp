@@ -226,9 +226,11 @@ void TabManager::triggerCurrent(ActionImpl::Action a) {
         break;
     }
     case File_KeyboardShortcuts: {
+        qDebug() << "Keyboard shortcuts";
         break;
     }
     case File_ColorThemes: {
+        qDebug() << "Color themes";
         break;
     }
     case File_Languages: {
