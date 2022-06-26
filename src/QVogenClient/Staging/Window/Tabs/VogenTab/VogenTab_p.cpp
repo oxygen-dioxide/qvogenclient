@@ -168,8 +168,9 @@ void VogenTabPrivate::inputLyrics() {
         qApp->sendEvent(piano->notesArea(), &e2);
     };
 
-    int res = w->showLineEdit(e1.text, pipe, //
-                              QObject::tr("Enter the lyrics, separated by white space"));
+    int res =
+        w->showLineEdit(e1.text, pipe, //
+                        QObject::tr("Enter the lyrics, separated by white space"), nullptr, true);
 
     // Call editor to finish stdin
     StdinRequestEvent e3(StdinRequestEvent::Lyrics, (res == 0) ? StdinRequestEvent::InputCommit
@@ -196,7 +197,7 @@ void VogenTabPrivate::inputBeat() {
             int n = ::sscanf(str.toUtf8().data(), fmt, &a, &b);
             if (n == 2) {
                 QList<int> allowedDenominators{1, 2, 4, 8, 16, 32, 64, 128};
-                if (a > 0 && allowedDenominators.contains(b)) {
+                if ((a >= 1 && a <= 256) && allowedDenominators.contains(b)) {
                     TDigitTimeSigEvent e;
                     e.a = a;
                     e.b = b;

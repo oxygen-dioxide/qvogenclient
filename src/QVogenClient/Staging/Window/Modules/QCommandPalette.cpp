@@ -80,7 +80,7 @@ void QCommandPalette::showCommands(QCommandPalette::CommandType type) {
     show();
 }
 
-void QCommandPalette::showLineEdit(const QString &hint, const QString &placeholder) {
+void QCommandPalette::showLineEdit(const QString &hint, const QString &placeholder, bool hold) {
     Q_D(QCommandPalette);
     if (isVisible()) {
         d->abandon();
@@ -88,6 +88,7 @@ void QCommandPalette::showLineEdit(const QString &hint, const QString &placehold
     }
 
     d->curCmdType = NoCommands;
+    d->hold = hold;
 
     d->lineEdit->setPlaceholderText(placeholder);
     d->lineEdit->setText(hint);

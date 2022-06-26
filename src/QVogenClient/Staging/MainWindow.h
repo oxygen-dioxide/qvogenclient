@@ -42,7 +42,7 @@ public:
 
     template <class P>
     int showLineEdit(const QString &hint, P previewer, const QString &placeholder = QString(),
-                     QString *res = nullptr);
+                     QString *res = nullptr, bool hold = false);
 
 protected:
     // UI
@@ -78,7 +78,7 @@ private:
 
 template <class P>
 int MainWindow::showLineEdit(const QString &hint, P previewer, const QString &placeholder,
-                             QString *res) {
+                             QString *res, bool hold) {
     int result = -1;
 
     QEventLoop loop;
@@ -96,7 +96,7 @@ int MainWindow::showLineEdit(const QString &hint, P previewer, const QString &pl
     auto conn2 = connect(m_cp, &QCommandPalette::abandoned, this, slot2);
     auto conn3 = connect(m_cp, &QCommandPalette::activated, this, slot3);
 
-    m_cp->showLineEdit(hint, placeholder);
+    m_cp->showLineEdit(hint, placeholder, hold);
 
     adjustSelector();
 

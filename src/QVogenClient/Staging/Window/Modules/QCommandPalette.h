@@ -46,7 +46,7 @@ public:
 
 public:
     void showCommands(CommandType type);
-    void showLineEdit(const QString &hint, const QString &placeholder);
+    void showLineEdit(const QString &hint, const QString &placeholder, bool hold = false);
     void finish();
 
     int count() const;

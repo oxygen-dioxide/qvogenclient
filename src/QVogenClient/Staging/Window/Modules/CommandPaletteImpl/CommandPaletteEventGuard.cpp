@@ -28,7 +28,7 @@ bool CommandPaletteEventGuard::eventFilter(QObject *obj, QEvent *event) {
                 return true;
             }
         }
-        if (!cp->asStdin()) {
+        if (!cp->d_func()->hold || !cp->asStdin()) {
             if (event->type() == QEvent::MouseButtonPress) {
                 auto e = static_cast<QMouseEvent *>(event);
                 if (!cp->rect().contains(cp->mapFromGlobal(e->globalPos()))) {

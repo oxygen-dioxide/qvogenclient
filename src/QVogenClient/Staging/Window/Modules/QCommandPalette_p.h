@@ -52,6 +52,8 @@ public:
     // Event Guard
     CommandPaletteEventGuard *guard;
 
+    bool hold;
+
     void reloadStrings_helper();
 };
 

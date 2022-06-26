@@ -24,7 +24,8 @@ QCommandPalettePrivate::~QCommandPalettePrivate() {
 void QCommandPalettePrivate::init() {
     Q_Q(QCommandPalette);
 
-    curCmdType = QCommandPalette::All;
+    hold = false;
+    curCmdType = QCommandPalette::NoCommands;
 
     lineEdit = new QLineEdit();
     listWidget = new QCommandPaletteListWidget();
@@ -131,6 +132,8 @@ void QCommandPalettePrivate::reset() {
     }
     lineEdit->clear();
     lineEdit->setPlaceholderText(QString());
+
+    hold = false;
 }
 
 QListWidgetItem *QCommandPalettePrivate::createItem(const QIcon &icon, const QSize &size, int type,
