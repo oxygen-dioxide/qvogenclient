@@ -13,12 +13,7 @@ WelcomeTabContent::~WelcomeTabContent() {
 void WelcomeTabContent::reloadStrings() {
     Q_D(WelcomeTabContent);
 
-    d->titleLabel->setText(qData->appName());
-    d->subtitleLabel->setText(tr("Tuning Evoved"));
-
-    d->startLabel->setText(tr("Start"));
-    d->recentLabel->setText(tr("Recent"));
-    d->circumLabel->setText(tr("More"));
+    d->reloadStrings_helper();
 }
 
 WelcomeTabContent::WelcomeTabContent(WelcomeTabContentPrivate &d, QWidget *parent)

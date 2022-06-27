@@ -39,10 +39,7 @@ public:
     ActionManager *actionMgr() const;
 
     int showCommands(QCommandPalette::CommandType type);
-
-    template <class P>
-    int showLineEdit(const QString &hint, P previewer, const QString &placeholder = QString(),
-                     QString *res = nullptr, bool hold = false);
+    int showLineEdit(QCommandPalette::Hint *hint);
 
 protected:
     // UI
@@ -75,47 +72,5 @@ protected:
 private:
     void adjustSelector();
 };
-
-template <class P>
-int MainWindow::showLineEdit(const QString &hint, P previewer, const QString &placeholder,
-                             QString *res, bool hold) {
-    int result = -1;
-
-    QEventLoop loop;
-
-    auto slot1 = [&previewer](const QString &text) mutable { previewer(text); };
-
-    auto slot2 = [&loop]() mutable { loop.quit(); };
-    auto slot3 = [&result, &loop](QListWidgetItem *item) mutable {
-        Q_UNUSED(item);
-        result = 0;
-        loop.quit();
-    };
-
-    auto conn1 = connect(m_cp, &QCommandPalette::textChanged, this, slot1);
-    auto conn2 = connect(m_cp, &QCommandPalette::abandoned, this, slot2);
-    auto conn3 = connect(m_cp, &QCommandPalette::activated, this, slot3);
-
-    m_cp->showLineEdit(hint, placeholder, hold);
-
-    adjustSelector();
-
-    m_loops.insert(&loop);
-    loop.exec();
-    m_loops.remove(&loop);
-
-    // Don't use obj->disconnect() casually because it's really dangerous!
-    disconnect(conn1);
-    disconnect(conn2);
-    disconnect(conn3);
-
-    if (res) {
-        *res = m_cp->text();
-    }
-
-    m_cp->finish();
-
-    return result;
-}
 
 #endif // MAINWINDOW_H

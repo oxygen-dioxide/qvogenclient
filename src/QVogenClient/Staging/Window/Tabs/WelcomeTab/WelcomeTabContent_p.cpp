@@ -1,5 +1,7 @@
 #include "WelcomeTabContent_p.h"
 
+#include "DataManager.h"
+
 WelcomeTabContentPrivate::WelcomeTabContentPrivate() {
 }
 
@@ -75,4 +77,13 @@ void WelcomeTabContentPrivate::init() {
     circumLayout->addWidget(circumLabel);
 
     circumPanel->setLayout(circumLayout);
+}
+
+void WelcomeTabContentPrivate::reloadStrings_helper() {
+    titleLabel->setText(qData->appName());
+    subtitleLabel->setText(WelcomeTabContent::tr("Tuning Evoved"));
+
+    startLabel->setText(WelcomeTabContent::tr("Start"));
+    recentLabel->setText(WelcomeTabContent::tr("Recent"));
+    circumLabel->setText(WelcomeTabContent::tr("More"));
 }

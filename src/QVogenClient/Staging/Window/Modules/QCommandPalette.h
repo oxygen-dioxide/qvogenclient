@@ -42,11 +42,20 @@ public:
         LanguageMax,
     };
 
+    struct Hint {
+        QString text;
+        QString placeholder;
+        bool hold;
+        Hint(const QString &text, const QString &placeholder, bool hold = false)
+            : text(text), placeholder(placeholder), hold(hold){};
+        virtual void preview(const QString &text){Q_UNUSED(text)};
+    };
+
     friend class CommandPaletteEventGuard;
 
 public:
     void showCommands(CommandType type);
-    void showLineEdit(const QString &hint, const QString &placeholder, bool hold = false);
+    void showLineEdit(Hint *hint);
     void finish();
 
     int count() const;

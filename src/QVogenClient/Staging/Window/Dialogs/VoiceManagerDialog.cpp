@@ -22,7 +22,7 @@ VoiceManagerDialog::~VoiceManagerDialog() {
 
 void VoiceManagerDialog::reloadStrings() {
     Q_D(VoiceManagerDialog);
-    d->reloadStrings();
+    d->reloadStrings_helper();
 }
 
 VoiceManagerDialog::VoiceManagerDialog(VoiceManagerDialogPrivate &d, QWidget *parent)

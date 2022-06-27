@@ -107,13 +107,13 @@ bool TabManagerPrivate::tryCloseTab(int index) {
 
     if (tab->type() & CentralTab::Document) {
         auto tab1 = qobject_cast<DocumentTab *>(tab);
-        title = QObject::tr("You have not saved the file, do you want to save it?");
+        title = TabManager::tr("You have not saved the file, do you want to save it?");
         accept = !(tab1->isDeleted() || tab1->isEdited());
     } else if (tab->type() & CentralTab::Folder) {
-        title = QObject::tr("You have not saved the directory, do you want to save it?");
+        title = TabManager::tr("You have not saved the directory, do you want to save it?");
         accept = !tab->isEdited();
     } else {
-        title = QObject::tr("You have not saved the configuration, do you want to save it?");
+        title = TabManager::tr("You have not saved the configuration, do you want to save it?");
         accept = !tab->isEdited();
     }
 
@@ -127,9 +127,9 @@ bool TabManagerPrivate::tryCloseTab(int index) {
         msgbox.setStandardButtons(QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
         msgbox.setDefaultButton(QMessageBox::Yes);
 
-        msgbox.button(QMessageBox::Yes)->setText(QObject::tr("Save(&S)"));
-        msgbox.button(QMessageBox::No)->setText(QObject::tr("Don't save(&N)"));
-        msgbox.button(QMessageBox::Cancel)->setText(QObject::tr("Cancel"));
+        msgbox.button(QMessageBox::Yes)->setText(TabManager::tr("Save(&S)"));
+        msgbox.button(QMessageBox::No)->setText(TabManager::tr("Don't save(&N)"));
+        msgbox.button(QMessageBox::Cancel)->setText(TabManager::tr("Cancel"));
 
         QMessageBox::StandardButton result =
             static_cast<QMessageBox::StandardButton>(msgbox.exec());

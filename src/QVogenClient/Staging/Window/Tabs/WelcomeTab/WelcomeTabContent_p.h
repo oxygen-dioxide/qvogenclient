@@ -18,6 +18,8 @@ public:
 
     void init();
 
+    void reloadStrings_helper();
+
     QVBoxLayout *layout;
     QGridLayout *panelLayout;
 

@@ -87,16 +87,16 @@ void VoiceManagerDialogPrivate::reloadVoices() {
     tree->expandItem(voiceItem);
 }
 
-void VoiceManagerDialogPrivate::reloadStrings() {
-    installButton->setText(QObject::tr("Install"));
-    removeButton->setText(QObject::tr("Remove"));
+void VoiceManagerDialogPrivate::reloadStrings_helper() {
+    installButton->setText(VoiceManagerDialog::tr("Install"));
+    removeButton->setText(VoiceManagerDialog::tr("Remove"));
 
-    headerItem->setText(0, QObject::tr("Voice Name"));
-    headerItem->setText(1, QObject::tr("Version"));
-    headerItem->setText(2, QObject::tr("Author"));
-    headerItem->setText(3, QObject::tr("Origin"));
+    headerItem->setText(0, VoiceManagerDialog::tr("Voice Name"));
+    headerItem->setText(1, VoiceManagerDialog::tr("Version"));
+    headerItem->setText(2, VoiceManagerDialog::tr("Author"));
+    headerItem->setText(3, VoiceManagerDialog::tr("Origin"));
 
-    voiceItem->setText(0, QObject::tr("Default"));
+    voiceItem->setText(0, VoiceManagerDialog::tr("Default"));
 }
 
 void VoiceManagerDialogPrivate::updateDefaultColumnWidth() {

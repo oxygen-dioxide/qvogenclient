@@ -104,6 +104,7 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::reloadStrings() {
+    // Proxy
     m_titleBar->reloadStrings();
     m_actionMgr->reloadStrings();
 
@@ -144,41 +145,78 @@ int MainWindow::showCommands(QCommandPalette::CommandType type) {
 
     QEventLoop loop;
 
-    // auto slot1 = [&previewFuction](int index) mutable {
-    //     if (previewFuction) {
-    //         previewFuction(index);
-    //     }
-    // };
-
-    auto slot2 = [&loop]() mutable { loop.quit(); };
-    auto slot3 = [&result, &loop](QListWidgetItem *item) mutable {
+    // Pipes
+    auto slot1 = [&loop]() mutable { loop.quit(); };
+    auto slot2 = [&result, &loop](QListWidgetItem *item) mutable {
         Q_UNUSED(item);
         result = 0;
         loop.quit();
     };
 
-    // auto conn1 = connect(selector, &ComboSelector::currentIndexChanged, this, slot1);
-    auto conn2 = connect(m_cp, &QCommandPalette::abandoned, this, slot2);
-    auto conn3 = connect(m_cp, &QCommandPalette::activated, this, slot3);
+    // Connections
+    auto conn1 = connect(m_cp, &QCommandPalette::abandoned, this, slot1);
+    auto conn2 = connect(m_cp, &QCommandPalette::activated, this, slot2);
 
+    // Show
     m_cp->showCommands(type);
-
     adjustSelector();
 
+    // Block
     m_loops.insert(&loop);
     loop.exec();
     m_loops.remove(&loop);
 
-    // Don't use obj->disconnect() casually because it's really dangerous!
-    // disconnect(conn1);
+    // Disconnect: Don't use obj->disconnect() casually because it's really dangerous!
+    disconnect(conn1);
     disconnect(conn2);
-    disconnect(conn3);
 
+    // Hide
     m_cp->finish();
 
     return result;
 }
 
+int MainWindow::showLineEdit(QCommandPalette::Hint *hint) {
+    int result = -1;
+
+    QEventLoop loop;
+
+    // Pipes
+    auto slot1 = [&loop]() mutable { loop.quit(); };
+    auto slot2 = [&result, &loop](QListWidgetItem *item) mutable {
+        Q_UNUSED(item);
+        result = 0;
+        loop.quit();
+    };
+    auto slot3 = [&hint](const QString &text) mutable { hint->preview(text); };
+
+    // Connections
+    auto conn1 = connect(m_cp, &QCommandPalette::abandoned, this, slot1);
+    auto conn2 = connect(m_cp, &QCommandPalette::activated, this, slot2);
+    auto conn3 = connect(m_cp, &QCommandPalette::textChanged, this, slot3);
+
+    // Show
+    m_cp->showLineEdit(hint);
+    adjustSelector();
+
+    // Block
+    m_loops.insert(&loop);
+    loop.exec();
+    m_loops.remove(&loop);
+
+    // Disconnect: Don't use obj->disconnect() casually because it's really dangerous!
+    disconnect(conn1);
+    disconnect(conn2);
+    disconnect(conn3);
+
+    // Get Result
+    hint->text = m_cp->text();
+
+    // Hide
+    m_cp->finish();
+
+    return result;
+}
 void MainWindow::resizeEvent(QResizeEvent *event) {
     BasicWindow::resizeEvent(event);
 

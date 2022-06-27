@@ -80,18 +80,21 @@ void QCommandPalette::showCommands(QCommandPalette::CommandType type) {
     show();
 }
 
-void QCommandPalette::showLineEdit(const QString &hint, const QString &placeholder, bool hold) {
+void QCommandPalette::showLineEdit(Hint *hint) {
     Q_D(QCommandPalette);
+
+    Q_ASSERT(hint);
+
     if (isVisible()) {
         d->abandon();
         d->reset();
     }
 
     d->curCmdType = NoCommands;
-    d->hold = hold;
+    d->hold = hint->hold;
 
-    d->lineEdit->setPlaceholderText(placeholder);
-    d->lineEdit->setText(hint);
+    d->lineEdit->setPlaceholderText(hint->placeholder);
+    d->lineEdit->setText(hint->text);
     d->listWidget->hide();
 
     show();

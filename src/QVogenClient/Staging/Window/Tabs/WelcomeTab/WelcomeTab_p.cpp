@@ -23,5 +23,5 @@ void WelcomeTabPrivate::init() {
 }
 
 QString WelcomeTabPrivate::tabText() {
-    return QObject::tr("Welcome");
+    return WelcomeTab::tr("Welcome");
 }

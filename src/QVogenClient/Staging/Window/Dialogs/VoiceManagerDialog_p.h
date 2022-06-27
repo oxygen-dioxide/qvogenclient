@@ -29,7 +29,7 @@ public:
     void init();
 
     void reloadVoices();
-    void reloadStrings();
+    void reloadStrings_helper();
 
     void updateDefaultColumnWidth();
 

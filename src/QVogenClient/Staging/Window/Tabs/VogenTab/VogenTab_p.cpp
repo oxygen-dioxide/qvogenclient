@@ -6,6 +6,7 @@
 #include "Utils/Events/TOperateEvent.h"
 
 #include "MainWindow.h"
+#include "Modules/QCommandPalette.h"
 
 #include <QApplication>
 #include <QMessageBox>
@@ -15,8 +16,6 @@
 using namespace QEventImpl;
 
 int VogenTabPrivate::s_untitledIndex = 0;
-
-static const auto placeholder_pipe = [](const QString &text) { Q_UNUSED(text); };
 
 VogenTabPrivate::VogenTabPrivate() {
 }
@@ -160,17 +159,23 @@ void VogenTabPrivate::inputLyrics() {
         return;
     }
 
-    auto w = qobject_cast<MainWindow *>(q->window());
-    auto pipe = [=](const QString &text) -> void {
-        // Call editor to update stdin
-        StdinRequestEvent e2(StdinRequestEvent::Lyrics, StdinRequestEvent::InputUpdate);
-        e2.text = text;
-        qApp->sendEvent(piano->notesArea(), &e2);
+    // Temporary Struct
+    struct Hint : public QCommandPalette::Hint {
+        QObject *obj;
+        Hint(QObject *obj, const QString &text, const QString &placeholder, bool hold = false)
+            : QCommandPalette::Hint(text, placeholder, hold), obj(obj){};
+        void preview(const QString &text) override {
+            // Call editor to update stdin
+            StdinRequestEvent e2(StdinRequestEvent::Lyrics, StdinRequestEvent::InputUpdate);
+            e2.text = text;
+            qApp->sendEvent(obj, &e2);
+        }
     };
 
-    int res =
-        w->showLineEdit(e1.text, pipe, //
-                        QObject::tr("Enter the lyrics, separated by white space"), nullptr, true);
+    auto w = qobject_cast<MainWindow *>(q->window());
+    Hint hint(piano->notesArea(), e1.text,
+              VogenTab::tr("Enter the lyrics, separated by white space"), true);
+    int res = w->showLineEdit(&hint);
 
     // Call editor to finish stdin
     StdinRequestEvent e3(StdinRequestEvent::Lyrics, (res == 0) ? StdinRequestEvent::InputCommit
@@ -180,17 +185,16 @@ void VogenTabPrivate::inputLyrics() {
 
 void VogenTabPrivate::inputBeat() {
     Q_Q(VogenTab);
-    auto w = qobject_cast<MainWindow *>(q->window());
-
+    auto timeSig = piano->notesArea()->timeSig();
     const char fmt[] = "%d/%d";
 
-    auto timeSig = piano->notesArea()->timeSig();
+    auto w = qobject_cast<MainWindow *>(q->window());
+    QCommandPalette::Hint hint(QString::asprintf(fmt, timeSig.first, timeSig.second),
+                               VogenTab::tr("Enter the new tempo (10 ~ 512)"), false);
+    int res = w->showLineEdit(&hint);
 
-    QString str;
-    int res =
-        w->showLineEdit(QString::asprintf(fmt, timeSig.first, timeSig.second), placeholder_pipe,
-                        QObject::tr("Enter the new time signature, e.g. 3/4, 4/4"), &str);
     if (res == 0) {
+        const QString &str = hint.text;
         QRegExp reg("^[1-9][0-9]*/[1-9][0-9]*$");
         if (reg.exactMatch(str)) {
             int a, b;
@@ -212,13 +216,13 @@ void VogenTabPrivate::inputTempo() {
     Q_Q(VogenTab);
 
     auto w = qobject_cast<MainWindow *>(q->window());
+    QCommandPalette::Hint hint(QString::number(piano->notesArea()->tempo()),
+                               VogenTab::tr("Enter the new tempo (10 ~ 512)"), false);
+    int res = w->showLineEdit(&hint);
 
-    QString str;
-    int res = w->showLineEdit(QString::number(piano->notesArea()->tempo()), placeholder_pipe,
-                              QObject::tr("Enter the new tempo (10 ~ 512)"), &str);
     if (res == 0) {
         bool ok;
-        double val = str.toDouble(&ok);
+        double val = hint.text.toDouble(&ok);
         if (ok) {
             // Check range
             if (val >= 10 && val <= 512) {
@@ -234,13 +238,13 @@ void VogenTabPrivate::inputTranspose() {
     Q_Q(VogenTab);
 
     auto w = qobject_cast<MainWindow *>(q->window());
+    QCommandPalette::Hint hint(QString(), VogenTab::tr("Enter the transpose offset (0 ~ 84)"),
+                               false);
+    int res = w->showLineEdit(&hint);
 
-    QString str;
-    int res = w->showLineEdit(QString(), placeholder_pipe,
-                              QObject::tr("Enter the transpose offset (0 ~ 84)"), &str);
     if (res == 0) {
         bool ok;
-        int val = str.toInt(&ok);
+        int val = hint.text.toInt(&ok);
         if (ok) {
             transpose(val);
         }

@@ -27,7 +27,6 @@ VogenTab::~VogenTab() {
 }
 
 void VogenTab::reloadStrings() {
-    updateTabName();
 }
 
 CentralTab::Type VogenTab::type() const {

@@ -295,12 +295,12 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../Staging/MainWindow.cpp" line="110"/>
+        <location filename="../../Staging/MainWindow.cpp" line="111"/>
         <source>Control</source>
         <translation type="unfinished">控制</translation>
     </message>
     <message>
-        <location filename="../../Staging/MainWindow.cpp" line="111"/>
+        <location filename="../../Staging/MainWindow.cpp" line="112"/>
         <source>Utterances</source>
         <translation type="unfinished">乐句</translation>
     </message>
@@ -515,7 +515,6 @@
     </message>
     <message>
         <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="344"/>
-        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog_p.cpp" line="92"/>
         <source>Remove</source>
         <translation type="unfinished">删除</translation>
     </message>
@@ -733,7 +732,6 @@
         <translation type="unfinished">导出最近的音频...</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/WelcomeTab/WelcomeTab_p.cpp" line="26"/>
         <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="399"/>
         <source>Welcome</source>
         <translation type="unfinished">欢迎使用</translation>
@@ -785,34 +783,28 @@
         <translation type="unfinished">清空最近列表</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog_p.cpp" line="91"/>
         <source>Install</source>
-        <translation type="unfinished">安装</translation>
+        <translation type="obsolete">安装</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog_p.cpp" line="94"/>
         <source>Voice Name</source>
-        <translation type="unfinished">声库名称</translation>
+        <translation type="obsolete">声库名称</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog_p.cpp" line="95"/>
         <source>Version</source>
-        <translation type="unfinished">版本</translation>
+        <translation type="obsolete">版本</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog_p.cpp" line="96"/>
         <source>Author</source>
-        <translation type="unfinished">作者</translation>
+        <translation type="obsolete">作者</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog_p.cpp" line="97"/>
         <source>Origin</source>
-        <translation type="unfinished">源</translation>
+        <translation type="obsolete">源</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog_p.cpp" line="99"/>
         <source>Default</source>
-        <translation type="unfinished">默认</translation>
+        <translation type="obsolete">默认</translation>
     </message>
     <message>
         <source>None</source>
@@ -835,58 +827,48 @@
         <translation type="obsolete">输入变调偏移量（0~84）</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="173"/>
         <source>Enter the lyrics, separated by white space</source>
-        <translation type="unfinished">输入歌词，使用空格分隔</translation>
+        <translation type="obsolete">输入歌词，使用空格分隔</translation>
     </message>
     <message>
         <source>Enter the new time signature</source>
         <translation type="obsolete">输入新的拍号</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="192"/>
         <source>Enter the new time signature, e.g. 3/4, 4/4</source>
-        <translation type="unfinished">输入新的拍号，如3/4、4/4</translation>
+        <translation type="obsolete">输入新的拍号，如3/4、4/4</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="218"/>
         <source>Enter the new tempo (10 ~ 512)</source>
-        <translation type="unfinished">输入新的曲速（10 ~ 512）</translation>
+        <translation type="obsolete">输入新的曲速（10 ~ 512）</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="240"/>
         <source>Enter the transpose offset (0 ~ 84)</source>
-        <translation type="unfinished">输入变调偏移量（0 ~ 84）</translation>
+        <translation type="obsolete">输入变调偏移量（0 ~ 84）</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager_p.cpp" line="110"/>
         <source>You have not saved the file, do you want to save it?</source>
-        <translation type="unfinished">是否将更改保存到文件中？</translation>
+        <translation type="obsolete">是否将更改保存到文件中？</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager_p.cpp" line="113"/>
         <source>You have not saved the directory, do you want to save it?</source>
-        <translation type="unfinished">是否将更改保存到目录中？</translation>
+        <translation type="obsolete">是否将更改保存到目录中？</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager_p.cpp" line="116"/>
         <source>You have not saved the configuration, do you want to save it?</source>
-        <translation type="unfinished">是否将更改保存到配置中？</translation>
+        <translation type="obsolete">是否将更改保存到配置中？</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager_p.cpp" line="130"/>
         <source>Save(&amp;S)</source>
-        <translation type="unfinished">保存(&amp;S)</translation>
+        <translation type="obsolete">保存(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager_p.cpp" line="131"/>
         <source>Don&apos;t save(&amp;N)</source>
-        <translation type="unfinished">不保存(&amp;N)</translation>
+        <translation type="obsolete">不保存(&amp;N)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager_p.cpp" line="132"/>
         <source>Cancel</source>
-        <translation type="unfinished">取消</translation>
+        <translation type="obsolete">取消</translation>
     </message>
 </context>
 <context>
@@ -993,18 +975,64 @@
         <source>Open in %1(&amp;S)</source>
         <translation type="unfinished">在%1中打开(&amp;S)</translation>
     </message>
+    <message>
+        <location filename="../../Staging/Window/Managers/TabManager_p.cpp" line="110"/>
+        <source>You have not saved the file, do you want to save it?</source>
+        <translation type="unfinished">是否将更改保存到文件中？</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Managers/TabManager_p.cpp" line="113"/>
+        <source>You have not saved the directory, do you want to save it?</source>
+        <translation type="unfinished">是否将更改保存到目录中？</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Managers/TabManager_p.cpp" line="116"/>
+        <source>You have not saved the configuration, do you want to save it?</source>
+        <translation type="unfinished">是否将更改保存到配置中？</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Managers/TabManager_p.cpp" line="130"/>
+        <source>Save(&amp;S)</source>
+        <translation type="unfinished">保存(&amp;S)</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Managers/TabManager_p.cpp" line="131"/>
+        <source>Don&apos;t save(&amp;N)</source>
+        <translation type="unfinished">不保存(&amp;N)</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Managers/TabManager_p.cpp" line="132"/>
+        <source>Cancel</source>
+        <translation type="unfinished">取消</translation>
+    </message>
 </context>
 <context>
     <name>VogenTab</name>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab.cpp" line="50"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab.cpp" line="49"/>
         <source>Failed to open file &quot;%1&quot;!</source>
         <translation type="unfinished">无法打开文件“%1”！</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="79"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="78"/>
         <source>Failed to save file!</source>
         <translation type="unfinished">无法保存文件！</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="177"/>
+        <source>Enter the lyrics, separated by white space</source>
+        <translation type="unfinished">输入歌词，使用空格分隔</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="193"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="220"/>
+        <source>Enter the new tempo (10 ~ 512)</source>
+        <translation type="unfinished">输入新的曲速（10 ~ 512）</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="241"/>
+        <source>Enter the transpose offset (0 ~ 84)</source>
+        <translation type="unfinished">输入变调偏移量（0 ~ 84）</translation>
     </message>
 </context>
 <context>
@@ -1029,26 +1057,69 @@
         <source>Failed to install voice package.</source>
         <translation type="unfinished">无法安装声库文件。</translation>
     </message>
+    <message>
+        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog_p.cpp" line="91"/>
+        <source>Install</source>
+        <translation type="unfinished">安装</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog_p.cpp" line="92"/>
+        <source>Remove</source>
+        <translation type="unfinished">删除</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog_p.cpp" line="94"/>
+        <source>Voice Name</source>
+        <translation type="unfinished">声库名称</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog_p.cpp" line="95"/>
+        <source>Version</source>
+        <translation type="unfinished">版本</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog_p.cpp" line="96"/>
+        <source>Author</source>
+        <translation type="unfinished">作者</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog_p.cpp" line="97"/>
+        <source>Origin</source>
+        <translation type="unfinished">源</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog_p.cpp" line="99"/>
+        <source>Default</source>
+        <translation type="unfinished">默认</translation>
+    </message>
+</context>
+<context>
+    <name>WelcomeTab</name>
+    <message>
+        <location filename="../../Staging/Window/Tabs/WelcomeTab/WelcomeTab_p.cpp" line="26"/>
+        <source>Welcome</source>
+        <translation type="unfinished">欢迎使用</translation>
+    </message>
 </context>
 <context>
     <name>WelcomeTabContent</name>
     <message>
-        <location filename="../../Staging/Window/Tabs/WelcomeTab/WelcomeTabContent.cpp" line="17"/>
+        <location filename="../../Staging/Window/Tabs/WelcomeTab/WelcomeTabContent_p.cpp" line="84"/>
         <source>Tuning Evoved</source>
         <translation type="unfinished">调音进化</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/WelcomeTab/WelcomeTabContent.cpp" line="19"/>
+        <location filename="../../Staging/Window/Tabs/WelcomeTab/WelcomeTabContent_p.cpp" line="86"/>
         <source>Start</source>
         <translation type="unfinished">启动</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/WelcomeTab/WelcomeTabContent.cpp" line="20"/>
+        <location filename="../../Staging/Window/Tabs/WelcomeTab/WelcomeTabContent_p.cpp" line="87"/>
         <source>Recent</source>
         <translation type="unfinished">最近</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/WelcomeTab/WelcomeTabContent.cpp" line="21"/>
+        <location filename="../../Staging/Window/Tabs/WelcomeTab/WelcomeTabContent_p.cpp" line="88"/>
         <source>More</source>
         <translation type="unfinished">更多</translation>
     </message>
