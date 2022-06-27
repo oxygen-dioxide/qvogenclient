@@ -2,6 +2,9 @@
 #include "ActionManager_p.h"
 
 #include "DataManager.h"
+#include "TabManager.h"
+
+#include "Types/Events.h"
 
 #include "MainWindow.h"
 
@@ -34,3 +37,4 @@ ActionManager::ActionManager(ActionManagerPrivate &d, MainWindow *parent)
     : CentralManager(d, parent) {
     d.init();
 }
+

@@ -189,10 +189,11 @@ void TabManager::triggerCurrent(ActionImpl::Action a) {
     auto tab = currentTab();
     switch (a) {
     case File_New: {
+        addUntitled(CommonScore());
         break;
     }
     case File_NewWindow: {
-        qWindows->newWindow();
+        WindowManager::instance()->newWindow();
         break;
     }
     case File_Open: {
@@ -358,6 +359,12 @@ bool TabManager::eventFilter(QObject *obj, QEvent *event) {
                 break;
             }
             }
+            break;
+        }
+        case QEventImpl::MainMenuTrigger: {
+            auto e = static_cast<QEventImpl::MainMenuTriggerEvent *>(event);
+            triggerCurrent(static_cast<ActionImpl::Action>(e->actionId()));
+            break;
         }
         default:
             break;

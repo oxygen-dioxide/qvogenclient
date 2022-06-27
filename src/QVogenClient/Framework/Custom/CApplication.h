@@ -26,6 +26,8 @@ public:
     ~CApplication();
 
 public:
+    QWidget *implicitMouseGrabber() const;
+
     QObjectList notifyFilters() const;
 
     // This connection doesn't break when destroyed, you should disconnect manually in destructor
@@ -44,7 +46,7 @@ protected:
     QScopedPointer<CApplicationPrivate> d_ptr;
 
 protected:
-    virtual bool notify(QObject *obj, QEvent *event) override;
+    bool notify(QObject *obj, QEvent *event) override;
 
 signals:
 };

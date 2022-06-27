@@ -1,6 +1,9 @@
 #include "FilesActionEngine.h"
 #include "FilesActionEngine_p.h"
 
+#include "Types/Events.h"
+
+#include <QApplication>
 #include <QDebug>
 #include <QMessageBox>
 
@@ -58,18 +61,20 @@ void FilesActionEngine::_q_actionTriggered(QAction *action) {
     Q_D(FilesActionEngine);
 
     auto menu = qobject_cast<QMenu *>(sender());
-    if (action->parentWidget() != menu) {
+    const auto &ws = action->associatedWidgets();
+
+    if (ws.isEmpty() || ws.front() != menu) {
         return;
     }
 
-    if (action->parentWidget() == d->recentMenu) {
+    if (menu == d->recentMenu) {
         d->handleRecentAction(action);
     } else {
         auto it = d->map.find(action);
         if (it == d->map.end()) {
             return;
         }
-        auto val = it.value();
-        d->tabMgr->triggerCurrent(val);
+        auto e = new QEventImpl::MainMenuTriggerEvent(it.value());
+        QApplication::postEvent(d->window(), e); // Handle in next loop
     }
 }

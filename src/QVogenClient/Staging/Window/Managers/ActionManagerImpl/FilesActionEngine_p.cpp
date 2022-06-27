@@ -479,6 +479,8 @@ void FilesActionEnginePrivate::reloadRecentActions() {
         const auto &actions = recentMenu->actions();
         for (auto action : qAsConst(actions)) {
             map.remove(action);
+            recentMenu->removeAction(action);
+            action->deleteLater(); // Cannot delete directly
         }
         recentMenu->clear();
     }

@@ -85,4 +85,12 @@ void QEventImpl::Register() {
     QEvent::registerEventType(SceneStateChange);
     QEvent::registerEventType(SceneStateQuery);
     QEvent::registerEventType(Interrupt);
+    QEvent::registerEventType(MainMenuTrigger);
+}
+
+MainMenuTriggerEvent::MainMenuTriggerEvent(int id)
+    : QEvent(static_cast<QEvent::Type>(MainMenuTrigger)), id(id) {
+}
+
+MainMenuTriggerEvent::~MainMenuTriggerEvent() {
 }

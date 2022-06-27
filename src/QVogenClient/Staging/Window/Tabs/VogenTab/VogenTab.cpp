@@ -17,6 +17,7 @@
 #include <QApplication>
 #include <QDir>
 #include <QFileInfo>
+#include <QScrollBar>
 #include <QMessageBox>
 
 VogenTab::VogenTab(QWidget *parent) : VogenTab(*new VogenTabPrivate(), parent) {
@@ -179,6 +180,7 @@ void VogenTab::initAfterLayout() {
     Q_D(VogenTab);
     // Init Scene States
     d->piano->notesArea()->setDrawMode(TNotesArea::PlainSelect);
+    d->piano->notesArea()->view()->horizontalScrollBar()->setValue(0);
 }
 
 void VogenTab::handleSpecificAction(ActionImpl::Action a) {

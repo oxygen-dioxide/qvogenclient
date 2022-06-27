@@ -3,6 +3,10 @@
 
 #include "Private/CApplication_p.h"
 
+#include <QDateTime>
+#include <QMouseEvent>
+#include <QWidget>
+
 #ifdef Q_QDOC
 CApplication::CApplication(int m_argc, char **argv)
     : CApplication(*new CApplicationPrivate(), argc, argv) {
@@ -15,6 +19,12 @@ CApplication::CApplication(int &argc, char **argv, int _internal)
 
 CApplication::~CApplication() {
     removeAllNotifyFilters();
+}
+
+extern Q_DECL_IMPORT QWidget *qt_button_down;
+
+QWidget *CApplication::implicitMouseGrabber() const {
+    return qt_button_down;
 }
 
 QObjectList CApplication::notifyFilters() const {

@@ -25,6 +25,8 @@ namespace QEventImpl {
 
         Interrupt,
 
+        MainMenuTrigger,
+
         // LayoutRequest
     };
 
@@ -181,6 +183,20 @@ namespace QEventImpl {
     public:
         InterruptEvent();
         ~InterruptEvent();
+    };
+
+    // Interrupt
+    class MainMenuTriggerEvent : public QEvent {
+    public:
+        MainMenuTriggerEvent(int id);
+        ~MainMenuTriggerEvent();
+
+        inline int actionId() {
+            return id;
+        }
+
+    protected:
+        int id;
     };
 
     void Register();
