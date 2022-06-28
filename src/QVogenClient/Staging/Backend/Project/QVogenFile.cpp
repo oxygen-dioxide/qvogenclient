@@ -4,6 +4,7 @@
 #include "TempDirGuard.h"
 
 #include <QDebug>
+#include <QDir>
 #include <QFile>
 #include <QJsonArray>
 #include <QJsonDocument>
@@ -60,6 +61,8 @@ bool QVogenFile::loadCore(bool *valid) {
         }
         return false;
     }
+
+    QTextStream os;
 
     // Read chart.json
     QFile file(m_tempDir + "/chart.json");
@@ -155,6 +158,16 @@ bool QVogenFile::loadCore(bool *valid) {
         this->utterances.append(utterance);
     }
 
+    file.setFileName(m_tempDir + "/accom.path");
+    if (file.exists()) {
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            goto out;
+        }
+        os.setDevice(&file);
+        accomPath = QDir::fromNativeSeparators(os.readAll().trimmed());
+        file.close();
+    }
+
 // Over
 out:
     if (alloc) {
@@ -232,6 +245,21 @@ bool QVogenFile::saveCore() {
     file.write(doc.toJson());
     file.close();
 
+    if (!accomPath.isEmpty()) {
+        file.setFileName(m_tempDir + "/accom.path");
+        if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            if (alloc) {
+                m_tempDir.clear();
+            }
+            return false;
+        }
+        QTextStream os(&file);
+        os.setCodec(QTextCodec::codecForName("UTF-8"));
+        os.setGenerateByteOrderMark(true); // Generate BOM Header
+        os << QDir::toNativeSeparators(accomPath);
+        file.close();
+    }
+
     // Compress
     bool res = CompressedFile::saveCore();
 
@@ -246,4 +274,5 @@ bool QVogenFile::saveCore() {
 void QVogenFile::resetCore() {
     tempo = 0;
     projectName.clear();
+    accomPath.clear();
 }

@@ -5,6 +5,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QProcess>
 
 SynthClient::SynthClient(QObject *parent) : QObject(parent) {
 }
@@ -39,4 +40,10 @@ void SynthClient::httpTest() {
     qDebug() << QString(replyData);
 
     qDebug() << QTime::currentTime().msec() - startTime;
+}
+
+void SynthClient::launchServer() {
+    QProcess p;
+    p.setProgram("D:/qvogenserver/CSRenderHost.exe");
+    p.startDetached();
 }

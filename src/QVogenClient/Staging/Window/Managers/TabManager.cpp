@@ -279,6 +279,11 @@ void TabManager::triggerCurrent(ActionImpl::Action a) {
     }
     case Help_Instructions:{
         SynthClient cli;
+        cli.launchServer();
+        break;
+    }
+    case Help_CheckUpdate:{
+        SynthClient cli;
         cli.httpTest();
         break;
     }

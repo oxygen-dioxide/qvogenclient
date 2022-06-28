@@ -50,6 +50,8 @@ public:
 
     QList<Utterance> utterances;
 
+    QString accomPath;
+
 protected:
     bool loadCore(bool *valid = nullptr) override;
     bool saveCore() override;

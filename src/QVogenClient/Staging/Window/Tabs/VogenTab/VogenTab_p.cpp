@@ -49,6 +49,7 @@ bool VogenTabPrivate::saveFile(const QString &filename) {
     Q_Q(VogenTab);
 
     QVogenFile vog(filename);
+    vog.accomPath = this->vog.accomPath;
 
     TWProject pd = piano->notesArea()->projectData();
     vog.projectName = pd.projectName;

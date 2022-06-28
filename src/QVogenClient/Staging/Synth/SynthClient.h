@@ -11,6 +11,8 @@ public:
 
     void httpTest();
 
+    void launchServer();
+
 signals:
 };
 
