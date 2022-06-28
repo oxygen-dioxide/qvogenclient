@@ -203,7 +203,7 @@ void VogenTabPrivate::inputBeat() {
                 QList<int> allowedDenominators{1, 2, 4, 8, 16, 32, 64, 128};
                 if ((a >= 1 && a <= 256) && allowedDenominators.contains(b)) {
                     TDigitTimeSigEvent e;
-                    e.a = a;
+                    e.at = a;
                     e.b = b;
                     qApp->sendEvent(piano->notesArea(), &e);
                 }

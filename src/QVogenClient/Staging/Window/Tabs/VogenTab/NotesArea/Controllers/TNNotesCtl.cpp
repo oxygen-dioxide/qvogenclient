@@ -5,9 +5,11 @@
 #include "Types/Events.h"
 #include "Types/Graphics.h"
 
+#include "../../Utils/Events/SceneStateChange/TSSCSceneRectEvent.h"
 #include "../../Utils/Events/TAppendEvent.h"
 #include "../../Utils/Events/TDigitalEvent.h"
 #include "../../Utils/Events/TOperateEvent.h"
+#include "../../Utils/Events/TRubberBandEvent.h"
 
 #include "../../Utils/Operations/TOGroupChange.h"
 #include "../../Utils/Operations/TOLyricsChange.h"
@@ -694,8 +696,8 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                     offset.setY(dy * h);
 
                     if (!m_movingData.isEmpty()) {
-                        QEventImpl::InterruptEvent ei;
-                        QApplication::sendEvent(a->view()->window(), &ei);
+                        // Interrupt
+                        sendInterrupt();
 
                         // Adjust delta
                         int dx1 = dx * tw;
@@ -742,8 +744,8 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                             m.dy = dy1;
                         }
                     } else if (!m_stretchingData.isEmpty()) {
-                        QEventImpl::InterruptEvent ei;
-                        QApplication::sendEvent(a->view()->window(), &ei);
+                        // Interrupt
+                        sendInterrupt();
 
                         for (auto &s : m_stretchingData) {
                             auto note = s.note;
@@ -773,8 +775,8 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                     }
                 } else {
                     if (!a->isSelecting() && !item && a->drawMode() == TNotesArea::DrawNote) {
-                        QEventImpl::InterruptEvent ei;
-                        QApplication::sendEvent(a->view()->window(), &ei);
+                        // Interrupt
+                        sendInterrupt();
 
                         // Start draw
                         if (m_startPoint.x() >= a->zeroLine()) {
@@ -915,8 +917,8 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
 
             // Mouse Double Click Event
         case QEvent::GraphicsSceneMouseDoubleClick: {
-            QEventImpl::InterruptEvent ei;
-            QApplication::sendEvent(a->view()->window(), &ei);
+            // Interrupt
+            sendInterrupt();
 
             auto e = static_cast<QGraphicsSceneMouseEvent *>(event);
             if (e->button() == Qt::LeftButton) {
@@ -939,26 +941,36 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
             break;
         }
 
-        case QEventImpl::SceneRectChange: {
-            auto e = static_cast<QEventImpl::SceneRectChangeEvent *>(event);
-            if (e->sizeChanged()) {
-                adjustAllGeometry();
-            }
-            adjustAllGroupHintPos();
-            break;
-        }
-
-        case QEventImpl::SceneRubberSelect: {
-            auto e = static_cast<QEventImpl::SceneRubberSelectEvent *>(event);
-            const auto &all = m_currentGroup->begins();
-            for (const auto &pair : all) {
-                const auto &set = pair.second;
-                for (auto note : set) {
-                    if (!note->isSelected() &&
-                        View::rectHitTest(QRectF(note->pos(), note->rect().size()), e->rect())) {
-                        selectOne(note);
+        case QEventImpl::EditorRequest: {
+            auto e = static_cast<QEventImpl::EditorRequestEvent *>(event);
+            switch (e->rType()) {
+            case QEventImpl::EditorRequestEvent::PianoRoll: {
+                auto e2 = static_cast<TPianoRollEvent *>(e);
+                switch (e2->pType()) {
+                case TPianoRollEvent::RubberBand: {
+                    auto e3 = static_cast<TRubberBandEvent *>(event);
+                    const auto &all = m_currentGroup->begins();
+                    for (const auto &pair : all) {
+                        const auto &set = pair.second;
+                        for (auto note : set) {
+                            if (!note->isSelected() &&
+                                View::rectHitTest(QRectF(note->pos(), note->rect().size()),
+                                                  e3->rect())) {
+                                selectOne(note);
+                            }
+                        }
                     }
+                    break;
                 }
+                default:
+                    break;
+                }
+
+                break;
+            }
+
+            default:
+                break;
             }
             break;
         }
@@ -1081,11 +1093,11 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
             break;
         }
 
-        case QEventImpl::SceneActionRequest: {
-            auto e = static_cast<QEventImpl::SceneActionRequestEvent *>(event);
-            auto act = e->action();
+        case QEventImpl::SceneAction: {
+            auto e = static_cast<QEventImpl::SceneActionEvent *>(event);
+            auto act = e->aType();
             switch (act) {
-            case QEventImpl::SceneActionRequestEvent::Paste: {
+            case QEventImpl::SceneActionEvent::Paste: {
                 auto board = QApplication::clipboard();
                 auto mime = board->mimeData();
                 if (mime->hasFormat(Qs::MIME_CLIPBOARD_NOTE)) {
@@ -1168,9 +1180,9 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
 
                 break;
             }
-            case QEventImpl::SceneActionRequestEvent::Cut:
-            case QEventImpl::SceneActionRequestEvent::Copy:
-            case QEventImpl::SceneActionRequestEvent::Remove: {
+            case QEventImpl::SceneActionEvent::Cut:
+            case QEventImpl::SceneActionEvent::Copy:
+            case QEventImpl::SceneActionEvent::Remove: {
                 QList<TONoteInsDel::NoteData> opNotes;
 
                 QList<TNRectNote *> notesToRemove;
@@ -1179,7 +1191,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                 for (const auto &pair : selection) {
                     const auto &set = pair.second;
                     for (auto note : set) {
-                        if (act != QEventImpl::SceneActionRequestEvent::Remove) {
+                        if (act != QEventImpl::SceneActionEvent::Remove) {
                             arr.append(TWNote::NoteAll{
                                 note->id,        // Id
                                 note->start,     // Start
@@ -1190,7 +1202,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                             }
                                            .toJson());
                         }
-                        if (act != QEventImpl::SceneActionRequestEvent::Copy) {
+                        if (act != QEventImpl::SceneActionEvent::Copy) {
                             opNotes.append(TONoteInsDel::NoteData{
                                 note->id,        // Id
                                 note->start,     // Start
@@ -1203,7 +1215,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                         }
                     }
                 }
-                if (act != QEventImpl::SceneActionRequestEvent::Copy) {
+                if (act != QEventImpl::SceneActionEvent::Copy) {
                     // Cut or Remove
                     TONoteInsDel::GroupData opGroup{
                         m_currentGroup->id,
@@ -1241,7 +1253,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                         e.dispatch(a);
                     }
                 }
-                if (act != QEventImpl::SceneActionRequestEvent::Remove) {
+                if (act != QEventImpl::SceneActionEvent::Remove) {
                     // Cut or Copy
                     if (!arr.isEmpty()) {
                         // Append to system clipboard
@@ -1254,15 +1266,15 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                 }
                 break;
             }
-            case QEventImpl::SceneActionRequestEvent::SelectAll: {
+            case QEventImpl::SceneActionEvent::SelectAll: {
                 selectAll();
                 break;
             }
-            case QEventImpl::SceneActionRequestEvent::Deselect: {
+            case QEventImpl::SceneActionEvent::Deselect: {
                 deselect();
                 break;
             }
-            case QEventImpl::SceneActionRequestEvent::Append: {
+            case QEventImpl::SceneActionEvent::Append: {
                 auto e2 = static_cast<TAppendEvent *>(e);
                 auto utterances = e2->utterances;
 
@@ -1339,7 +1351,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
 
                 break;
             }
-            case QEventImpl::SceneActionRequestEvent::Digital: {
+            case QEventImpl::SceneActionEvent::Digital: {
                 auto e2 = static_cast<TDigitalEvent *>(e);
                 switch (e2->dType()) {
                 case TDigitalEvent::Transpose: {
@@ -1377,7 +1389,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
 
                 break;
             }
-            case QEventImpl::SceneActionRequestEvent::Group: {
+            case QEventImpl::SceneActionEvent::Group: {
                 if (!m_selection->isEmpty() && m_selection->count() < m_currentGroup->count()) {
                     auto g = createGroup(0, QString(), QString(), QString());
                     QList<quint64> ids;
@@ -1415,7 +1427,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
 
                 break;
             }
-            case QEventImpl::SceneActionRequestEvent::Ungroup: {
+            case QEventImpl::SceneActionEvent::Ungroup: {
                 if (!m_selection->isEmpty() && m_currentGroup != m_mainGroup) {
 
                     QList<quint64> ids;
@@ -1470,6 +1482,14 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                 } else {
                     setNotesMovable(true);
                 }
+                break;
+            }
+            case QEventImpl::SceneStateChangeEvent::SceneRect: {
+                auto e = static_cast<TSSCSceneRectEvent *>(event);
+                if (e->size != e->oldSize) {
+                    adjustAllGeometry();
+                }
+                adjustAllGroupHintPos();
                 break;
             }
             default:

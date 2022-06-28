@@ -7,6 +7,7 @@
 #include <QFocusEvent>
 #include <QGraphicsSceneMouseEvent>
 
+#include "../Utils/Events/SceneStateChange/TSSCSceneRectEvent.h"
 #include "../Utils/Events/SceneStateQuery/TSSQCursorModeEvent.h"
 #include "../Utils/Events/TDigitTimeSigEvent.h"
 #include "../Utils/Events/TOperateEvent.h"
@@ -50,6 +51,11 @@ void TNotesArea::focusOutEvent(QFocusEvent *event) {
 
 void TNotesArea::customEvent(QEvent *event) {
     switch (event->type()) {
+    case QEventImpl::SceneStateChange: {
+        // Send a copy to window
+        qApp->sendEvent(view()->window(), event);
+        break;
+    }
     case QEventImpl::SceneStateQuery: {
         auto e = static_cast<QEventImpl::SceneStateQueryEvent *>(event);
         switch (e->cType()) {
@@ -61,17 +67,17 @@ void TNotesArea::customEvent(QEvent *event) {
         }
         break;
     }
-    case QEventImpl::SceneActionRequest: {
-        auto e = static_cast<QEventImpl::SceneActionRequestEvent *>(event);
-        auto act = e->action();
+    case QEventImpl::SceneAction: {
+        auto e = static_cast<QEventImpl::SceneActionEvent *>(event);
+        auto act = e->aType();
         switch (act) {
-        case QEventImpl::SceneActionRequestEvent::Digital: {
+        case QEventImpl::SceneActionEvent::Digital: {
             auto e2 = static_cast<TDigitalEvent *>(e);
             switch (e2->dType()) {
             case TDigitalEvent::TimeSig: {
                 auto e3 = static_cast<TDigitTimeSigEvent *>(e2);
                 auto oldTimeSig = m_timeSig;
-                setTimeSig(e3->a, e3->b);
+                setTimeSig(e3->at, e3->b);
 
                 if (oldTimeSig != m_timeSig) {
                     auto op = new TOTempoTimeSig();
@@ -101,7 +107,7 @@ void TNotesArea::customEvent(QEvent *event) {
                 break;
             }
         }
-        case QEventImpl::SceneActionRequestEvent::Append: {
+        case QEventImpl::SceneActionEvent::Append: {
             break;
         }
         default:
@@ -121,7 +127,13 @@ void TNotesArea::_q_sceneRectChanged(const QRectF &rect) {
 
     m_oldSizes = curSizes;
 
-    QEventImpl::SceneRectChangeEvent e(curSizes, oldSizes);
+    TSSCSceneRectEvent e;
+    e.size = QSize(currentWidth(), currentHeight());
+    e.oldSize = oldSizes.first;
+    e.sections = sectionCount();
+    e.oldSections = oldSizes.second;
+
+    // Send event to this and window
     QApplication::sendEvent(this, &e);
 
     adjustBackground();

@@ -9,7 +9,7 @@ public:
     ~TDigitTimeSigEvent();
 
 public:
-    int a;
+    int at;
     int b;
 };
 

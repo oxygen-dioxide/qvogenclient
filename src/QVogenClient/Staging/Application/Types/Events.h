@@ -7,17 +7,13 @@ namespace QEventImpl {
     enum Event {
         MenuUpdateRequest = QEvent::User + 1000,
 
-        SceneRectChange,
-
-        SceneRubberSelect,
-
         ItemGeometryUpdate,
 
-        EditorUpdate,
+        EditorRequest,
 
         StdinRequest,
 
-        SceneActionRequest,
+        SceneAction,
 
         SceneStateChange,
 
@@ -42,55 +38,22 @@ namespace QEventImpl {
         int m_menuIndex;
     };
 
-    // Scene Rect Change
-    class SceneRectChangeEvent : public QResizeEvent {
+    // Editor Request
+    class EditorRequestEvent : public QEvent {
     public:
-        SceneRectChangeEvent(const QPair<QSize, int> &cur, const QPair<QSize, int> &org);
-        ~SceneRectChangeEvent();
+        EditorRequestEvent(int type);
+        ~EditorRequestEvent();
 
-        bool sizeChanged() const;
-
-        inline const int &sections() const {
-            return sec;
-        }
-        inline const int &oldSections() const {
-            return oldSec;
-        }
-
-    protected:
-        int sec, oldSec;
-    };
-
-    // Scene Rubber Band Select
-    class SceneRubberSelectEvent : public QEvent {
-    public:
-        SceneRubberSelectEvent(const QRectF &rect);
-        ~SceneRubberSelectEvent();
-
-        inline const QRectF &rect() const {
-            return r;
-        }
-
-    protected:
-        QRectF r;
-    };
-
-    // Piano Roll Change
-    class EditorUpdateEvent : public QEvent {
-    public:
-        EditorUpdateEvent(int type);
-        ~EditorUpdateEvent();
-
-        enum UpdateType {
+        enum RequestType {
             PianoRoll,
         };
 
-        inline int uType() const {
-            return ut;
+        inline int rType() const {
+            return rt;
         }
 
     protected:
-        int ut;
+        int rt;
     };
 
     // Stdin Request
@@ -124,10 +87,10 @@ namespace QEventImpl {
         int ip;
     };
 
-    // Scene Action Request
-    class SceneActionRequestEvent : public QEvent {
+    // Scene Action
+    class SceneActionEvent : public QEvent {
     public:
-        enum Action {
+        enum ActionType {
             Cut,
             Copy,
             Paste,
@@ -140,15 +103,15 @@ namespace QEventImpl {
             Append,
         };
 
-        SceneActionRequestEvent(int a);
-        ~SceneActionRequestEvent();
+        SceneActionEvent(int a);
+        ~SceneActionEvent();
 
-        inline int action() const {
-            return a;
+        inline int aType() const {
+            return at;
         }
 
     protected:
-        int a;
+        int at;
     };
 
     // Scene State Change
@@ -159,6 +122,7 @@ namespace QEventImpl {
 
         enum ChangeType {
             CursorMode,
+            SceneRect,
             TimeSig,
             Tempo,
         };

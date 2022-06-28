@@ -13,31 +13,11 @@ int MenuUpdateRequestEvent::menuIndex() const {
     return m_menuIndex;
 }
 
-SceneRectChangeEvent::SceneRectChangeEvent(const QPair<QSize, int> &cur,
-                                           const QPair<QSize, int> &org)
-    : QResizeEvent(cur.first, org.first), sec(cur.second), oldSec(org.second) {
-    this->t = static_cast<QEvent::Type>(SceneRectChange);
+EditorRequestEvent::EditorRequestEvent(int t)
+    : QEvent(static_cast<QEvent::Type>(EditorRequest)), rt(t) {
 }
 
-SceneRectChangeEvent::~SceneRectChangeEvent() {
-}
-
-bool SceneRectChangeEvent::sizeChanged() const {
-    return s != olds;
-}
-
-SceneRubberSelectEvent::SceneRubberSelectEvent(const QRectF &rect)
-    : QEvent(static_cast<QEvent::Type>(SceneRubberSelect)), r(rect) {
-}
-
-SceneRubberSelectEvent::~SceneRubberSelectEvent() {
-}
-
-EditorUpdateEvent::EditorUpdateEvent(int t)
-    : QEvent(static_cast<QEvent::Type>(EditorUpdate)), ut(t) {
-}
-
-EditorUpdateEvent::~EditorUpdateEvent() {
+EditorRequestEvent::~EditorRequestEvent() {
 }
 
 StdinRequestEvent::StdinRequestEvent(InputType type, InputProcess process)
@@ -47,11 +27,11 @@ StdinRequestEvent::StdinRequestEvent(InputType type, InputProcess process)
 StdinRequestEvent::~StdinRequestEvent() {
 }
 
-SceneActionRequestEvent::SceneActionRequestEvent(int a)
-    : QEvent(static_cast<QEvent::Type>(SceneActionRequest)), a(a) {
+SceneActionEvent::SceneActionEvent(int a)
+    : QEvent(static_cast<QEvent::Type>(SceneAction)), at(a) {
 }
 
-SceneActionRequestEvent::~SceneActionRequestEvent() {
+SceneActionEvent::~SceneActionEvent() {
 }
 
 SceneStateChangeEvent::SceneStateChangeEvent(int type)
@@ -76,12 +56,10 @@ InterruptEvent::~InterruptEvent() {
 
 void QEventImpl::Register() {
     QEvent::registerEventType(MenuUpdateRequest);
-    QEvent::registerEventType(SceneRectChange);
-    QEvent::registerEventType(SceneRubberSelect);
     QEvent::registerEventType(ItemGeometryUpdate);
-    QEvent::registerEventType(EditorUpdate);
+    QEvent::registerEventType(EditorRequest);
     QEvent::registerEventType(StdinRequest);
-    QEvent::registerEventType(SceneActionRequest);
+    QEvent::registerEventType(SceneAction);
     QEvent::registerEventType(SceneStateChange);
     QEvent::registerEventType(SceneStateQuery);
     QEvent::registerEventType(Interrupt);

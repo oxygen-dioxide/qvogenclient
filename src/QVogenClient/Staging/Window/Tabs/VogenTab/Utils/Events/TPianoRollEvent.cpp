@@ -2,7 +2,7 @@
 
 #include <QApplication>
 
-TPianoRollEvent::TPianoRollEvent(int type) : QEventImpl::EditorUpdateEvent(PianoRoll), pt(type) {
+TPianoRollEvent::TPianoRollEvent(int type) : QEventImpl::EditorRequestEvent(PianoRoll), pt(type) {
 }
 
 TPianoRollEvent::~TPianoRollEvent() {

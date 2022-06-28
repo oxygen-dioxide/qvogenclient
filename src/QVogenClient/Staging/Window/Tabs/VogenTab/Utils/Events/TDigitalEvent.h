@@ -3,7 +3,7 @@
 
 #include "Types/Events.h"
 
-class TDigitalEvent : public QEventImpl::SceneActionRequestEvent {
+class TDigitalEvent : public QEventImpl::SceneActionEvent {
 public:
     TDigitalEvent(int type);
     ~TDigitalEvent();

@@ -5,7 +5,7 @@
 
 #include "../TWrappedData.h"
 
-class TAppendEvent : public QEventImpl::SceneActionRequestEvent {
+class TAppendEvent : public QEventImpl::SceneActionEvent {
 public:
     TAppendEvent();
     ~TAppendEvent();

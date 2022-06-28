@@ -186,32 +186,32 @@ void VogenTab::handleSpecificAction(ActionImpl::Action a) {
     Q_D(VogenTab);
     switch (a) {
     case ActionImpl::Edit_Cut: {
-        QEventImpl::SceneActionRequestEvent e(QEventImpl::SceneActionRequestEvent::Cut);
+        QEventImpl::SceneActionEvent e(QEventImpl::SceneActionEvent::Cut);
         qApp->sendEvent(d->piano->notesArea(), &e);
         break;
     }
     case ActionImpl::Edit_Copy: {
-        QEventImpl::SceneActionRequestEvent e(QEventImpl::SceneActionRequestEvent::Copy);
+        QEventImpl::SceneActionEvent e(QEventImpl::SceneActionEvent::Copy);
         qApp->sendEvent(d->piano->notesArea(), &e);
         break;
     }
     case ActionImpl::Edit_Paste: {
-        QEventImpl::SceneActionRequestEvent e(QEventImpl::SceneActionRequestEvent::Paste);
+        QEventImpl::SceneActionEvent e(QEventImpl::SceneActionEvent::Paste);
         qApp->sendEvent(d->piano->notesArea(), &e);
         break;
     }
     case ActionImpl::Edit_Remove: {
-        QEventImpl::SceneActionRequestEvent e(QEventImpl::SceneActionRequestEvent::Remove);
+        QEventImpl::SceneActionEvent e(QEventImpl::SceneActionEvent::Remove);
         qApp->sendEvent(d->piano->notesArea(), &e);
         break;
     }
     case ActionImpl::Edit_SelectAll: {
-        QEventImpl::SceneActionRequestEvent e(QEventImpl::SceneActionRequestEvent::SelectAll);
+        QEventImpl::SceneActionEvent e(QEventImpl::SceneActionEvent::SelectAll);
         qApp->sendEvent(d->piano->notesArea(), &e);
         break;
     }
     case ActionImpl::Edit_Deselect: {
-        QEventImpl::SceneActionRequestEvent e(QEventImpl::SceneActionRequestEvent::Deselect);
+        QEventImpl::SceneActionEvent e(QEventImpl::SceneActionEvent::Deselect);
         qApp->sendEvent(d->piano->notesArea(), &e);
         break;
     }
@@ -348,10 +348,10 @@ void VogenTab::setDeleted(bool deleted) {
 void VogenTab::customEvent(QEvent *event) {
     Q_D(VogenTab);
     switch (event->type()) {
-    case QEventImpl::EditorUpdate: {
-        auto e = static_cast<QEventImpl::EditorUpdateEvent *>(event);
-        switch (e->uType()) {
-        case QEventImpl::EditorUpdateEvent::PianoRoll:
+    case QEventImpl::EditorRequest: {
+        auto e = static_cast<QEventImpl::EditorRequestEvent *>(event);
+        switch (e->rType()) {
+        case QEventImpl::EditorRequestEvent::PianoRoll:
             d->dispatchEvent(static_cast<TPianoRollEvent *>(e));
             break;
         default:

@@ -164,9 +164,6 @@ void FilesActionEnginePrivate::setup() {
     help_aboutApp = NewAction(ActionImpl::Help_AboutApplication, helpMenu);
     help_aboutQt = NewAction(ActionImpl::Help_AboutQt, helpMenu);
 
-    help_aboutApp->setMenuRole(QAction::AboutRole);
-    help_aboutQt->setMenuRole(QAction::AboutQtRole);
-
     // ----------------- Setup -----------------
     // File
     exportMenu->addAction(file_exportSelection);
@@ -192,7 +189,9 @@ void FilesActionEnginePrivate::setup() {
     fileMenu->addMenu(exportMenu);
     fileMenu->addSeparator();
     fileMenu->addAction(file_fileSettings);
-    fileMenu->addMenu(preferencesMenu);
+
+    auto file_preferences = fileMenu->addMenu(preferencesMenu);
+
     fileMenu->addSeparator();
     fileMenu->addAction(file_closeFile);
     fileMenu->addAction(file_closeWindow);
@@ -289,6 +288,10 @@ void FilesActionEnginePrivate::setup() {
     menuBar->addMenu(modifyMenu);
     menuBar->addMenu(playMenu);
     menuBar->addMenu(helpMenu);
+
+    help_aboutApp->setMenuRole(QAction::AboutRole);
+    help_aboutQt->setMenuRole(QAction::AboutQtRole);
+    file_preferences->setMenuRole(QAction::PreferencesRole);
 
     // Signals
     Q_Q(FilesActionEngine);

@@ -14,6 +14,8 @@ public:
 public:
     virtual void install();
 
+    void sendInterrupt();
+
 protected:
     TNotesArea *a;
 
