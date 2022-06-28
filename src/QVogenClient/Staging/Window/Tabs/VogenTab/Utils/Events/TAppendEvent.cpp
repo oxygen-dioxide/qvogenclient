@@ -1,6 +1,6 @@
 #include "TAppendEvent.h"
 
-TAppendEvent::TAppendEvent() : QEventImpl::SceneActionRequestEvent(Append) {
+TAppendEvent::TAppendEvent() : QEventImpl::SceneActionEvent(Append) {
 }
 
 TAppendEvent::~TAppendEvent() {

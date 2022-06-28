@@ -3,6 +3,7 @@
 #include "../TNotesScroll.h"
 
 #include "Types/Events.h"
+#include "../../Utils/Events/TRubberBandEvent.h"
 
 #include <QApplication>
 
@@ -28,7 +29,7 @@ void TNSelectCtl::stopSelecting() {
     QRectF res;
     m_rubber->stop(&res);
 
-    QEventImpl::SceneRubberSelectEvent e(res);
+    TRubberBandEvent e(res);
     QApplication::sendEvent(a, &e);
 }
 

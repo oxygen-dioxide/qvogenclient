@@ -3,16 +3,17 @@
 
 #include "Types/Events.h"
 
-class TPianoRollEvent : public QEventImpl::EditorUpdateEvent {
+class TPianoRollEvent : public QEventImpl::EditorRequestEvent {
 public:
     TPianoRollEvent(int type);
     ~TPianoRollEvent();
 
     enum PianoUpdateType {
-        Operate,
+        RubberBand,
         Select,
         ChangeTimeSig,
         ChangeTempo,
+        Operate,
     };
 
     inline int pType() const {

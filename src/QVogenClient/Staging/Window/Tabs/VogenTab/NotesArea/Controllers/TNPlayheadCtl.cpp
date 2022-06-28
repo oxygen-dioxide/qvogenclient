@@ -39,10 +39,17 @@ bool TNPlayheadCtl::eventFilter(QObject *obj, QEvent *event) {
         switch (event->type()) {
         case QEvent::GraphicsSceneMove:
         case QEvent::GraphicsSceneResize:
-        case QEventImpl::SceneRectChange:
-            updatePlayhead();
+        case QEventImpl::SceneStateChange: {
+            auto e = static_cast<QEventImpl::SceneStateChangeEvent *>(event);
+            switch (e->cType()) {
+            case QEventImpl::SceneStateChangeEvent::SceneRect:
+                updatePlayhead();
+                break;
+            default:
+                break;
+            }
             break;
-
+        }
         default:
             break;
         }

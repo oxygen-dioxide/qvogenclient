@@ -76,6 +76,7 @@ void QCommandPalettePrivate::init() {
 void QCommandPalettePrivate::activateItem(QListWidgetItem *item) {
     Q_Q(QCommandPalette);
 
+     // Item can be null even if there're items in list widget
     if (item) {
         switch (curCmdType) {
         case QCommandPalette::Quantization: {

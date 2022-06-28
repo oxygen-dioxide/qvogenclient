@@ -102,10 +102,17 @@ bool TNSpriteCtl::eventFilter(QObject *obj, QEvent *event) {
         switch (event->type()) {
         case QEvent::GraphicsSceneMove:
         case QEvent::GraphicsSceneResize:
-        case QEventImpl::SceneRectChange:
-            updateSprite();
+        case QEventImpl::SceneStateChange: {
+            auto e = static_cast<QEventImpl::SceneStateChangeEvent *>(event);
+            switch (e->cType()) {
+            case QEventImpl::SceneStateChangeEvent::SceneRect:
+                updateSprite();
+                break;
+            default:
+                break;
+            }
             break;
-
+        }
         default:
             break;
         }

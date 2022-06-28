@@ -64,28 +64,28 @@ void TNPriorCtl::openContextMenu() {
     auto action = menu.exec(QCursor::pos());
 
     if (action == &newGroupAction) {
-        QEventImpl::SceneActionRequestEvent e(QEventImpl::SceneActionRequestEvent::Group);
+        QEventImpl::SceneActionEvent e(QEventImpl::SceneActionEvent::Group);
         qApp->sendEvent(a, &e);
     } else if (action == &dissolveGroupAction) {
-        QEventImpl::SceneActionRequestEvent e(QEventImpl::SceneActionRequestEvent::Ungroup);
+        QEventImpl::SceneActionEvent e(QEventImpl::SceneActionEvent::Ungroup);
         qApp->sendEvent(a, &e);
     } else if (action == &cutAction) {
-        QEventImpl::SceneActionRequestEvent e(QEventImpl::SceneActionRequestEvent::Cut);
+        QEventImpl::SceneActionEvent e(QEventImpl::SceneActionEvent::Cut);
         qApp->sendEvent(a, &e);
     } else if (action == &copyAction) {
-        QEventImpl::SceneActionRequestEvent e(QEventImpl::SceneActionRequestEvent::Copy);
+        QEventImpl::SceneActionEvent e(QEventImpl::SceneActionEvent::Copy);
         qApp->sendEvent(a, &e);
     } else if (action == &pasteAction) {
-        QEventImpl::SceneActionRequestEvent e(QEventImpl::SceneActionRequestEvent::Paste);
+        QEventImpl::SceneActionEvent e(QEventImpl::SceneActionEvent::Paste);
         qApp->sendEvent(a, &e);
     } else if (action == &removeAction) {
-        QEventImpl::SceneActionRequestEvent e(QEventImpl::SceneActionRequestEvent::Remove);
+        QEventImpl::SceneActionEvent e(QEventImpl::SceneActionEvent::Remove);
         qApp->sendEvent(a, &e);
     } else if (action == &selectAllAction) {
-        QEventImpl::SceneActionRequestEvent e(QEventImpl::SceneActionRequestEvent::SelectAll);
+        QEventImpl::SceneActionEvent e(QEventImpl::SceneActionEvent::SelectAll);
         qApp->sendEvent(a, &e);
     } else if (action == &deselectAction) {
-        QEventImpl::SceneActionRequestEvent e(QEventImpl::SceneActionRequestEvent::Deselect);
+        QEventImpl::SceneActionEvent e(QEventImpl::SceneActionEvent::Deselect);
         qApp->sendEvent(a, &e);
     }
 }
@@ -131,8 +131,8 @@ bool TNPriorCtl::eventFilter(QObject *obj, QEvent *event) {
                 // Handle Lyrics Input
                 switch (e->iProcess()) {
                 case QEventImpl::StdinRequestEvent::InputStart: {
-                    QEventImpl::InterruptEvent e;
-                    QApplication::sendEvent(a->view()->window(), &e);
+                    // Interrupt
+                    sendInterrupt();
                     break;
                 }
                 default:
@@ -147,24 +147,24 @@ bool TNPriorCtl::eventFilter(QObject *obj, QEvent *event) {
             break;
         }
 
-        case QEventImpl::SceneActionRequest: {
-            auto e = static_cast<QEventImpl::SceneActionRequestEvent *>(event);
-            auto act = e->action();
+        case QEventImpl::SceneAction: {
+            auto e = static_cast<QEventImpl::SceneActionEvent *>(event);
+            auto act = e->aType();
             switch (act) {
-            case QEventImpl::SceneActionRequestEvent::Paste:
-            case QEventImpl::SceneActionRequestEvent::Cut:
-            case QEventImpl::SceneActionRequestEvent::Remove:
-            case QEventImpl::SceneActionRequestEvent::Append:
-            case QEventImpl::SceneActionRequestEvent::Digital:
-            case QEventImpl::SceneActionRequestEvent::Group:
-            case QEventImpl::SceneActionRequestEvent::Ungroup: {
-                QEventImpl::InterruptEvent e;
-                QApplication::sendEvent(a->view()->window(), &e);
+            case QEventImpl::SceneActionEvent::Paste:
+            case QEventImpl::SceneActionEvent::Cut:
+            case QEventImpl::SceneActionEvent::Remove:
+            case QEventImpl::SceneActionEvent::Append:
+            case QEventImpl::SceneActionEvent::Digital:
+            case QEventImpl::SceneActionEvent::Group:
+            case QEventImpl::SceneActionEvent::Ungroup: {
+                // Interrupt
+                sendInterrupt();
                 break;
             }
-            case QEventImpl::SceneActionRequestEvent::Copy:
-            case QEventImpl::SceneActionRequestEvent::SelectAll: {
-            case QEventImpl::SceneActionRequestEvent::Deselect: {
+            case QEventImpl::SceneActionEvent::Copy:
+            case QEventImpl::SceneActionEvent::SelectAll: {
+            case QEventImpl::SceneActionEvent::Deselect: {
                 break;
             }
             default:

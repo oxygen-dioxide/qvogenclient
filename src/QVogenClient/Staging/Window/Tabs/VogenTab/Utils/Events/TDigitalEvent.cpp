@@ -1,6 +1,6 @@
 #include "TDigitalEvent.h"
 
-TDigitalEvent::TDigitalEvent(int type) : QEventImpl::SceneActionRequestEvent(Digital), dt(type) {
+TDigitalEvent::TDigitalEvent(int type) : QEventImpl::SceneActionEvent(Digital), dt(type) {
     digit = 0;
 }
 

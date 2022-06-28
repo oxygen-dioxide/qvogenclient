@@ -157,7 +157,6 @@ void TNotesArea::setDrawMode(DrawMode drawMode) {
 
     QEventImpl::SceneStateChangeEvent e(QEventImpl::SceneStateChangeEvent::CursorMode);
     QApplication::sendEvent(this, &e);
-    QApplication::sendEvent(view()->window(), &e);
 }
 
 TNotesArea::AddPointMode TNotesArea::pointMode() const {
