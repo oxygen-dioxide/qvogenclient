@@ -34,7 +34,7 @@ public:
 public:
     void localeLoad(int index);
     int localeCount() const;
-    QStringList localeNames() const;
+    QString localeName(int index) const;
 
 public:
     QString openFile(const QString &title, const QString &filter, const QString &flag,

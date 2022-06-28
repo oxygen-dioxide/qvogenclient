@@ -215,14 +215,25 @@ int DataManager::localeCount() const {
     return 4;
 }
 
-QStringList DataManager::localeNames() const {
-    QStringList list = {
-        "English",              // English
-        Q_FROM_UTFCODE(ZH_CN),  // 简体中文
-        Q_FROM_UTFCODE(ZH_CHT), // 繁體中文
-        Q_FROM_UTFCODE(JA_JP),  // 日本語
-    };
-    return list;
+QString DataManager::localeName(int index) const {
+    QString res;
+    switch (index) {
+    case 0:
+        res = "English"; // English
+        break;
+    case 1:
+        res = Q_FROM_UTFCODE(ZH_CN); // 简体中文
+        break;
+    case 2:
+        res = Q_FROM_UTFCODE(ZH_CHT); // 繁體中文
+        break;
+    case 3:
+        res = Q_FROM_UTFCODE(JA_JP); // 日本語
+        break;
+    default:
+        break;
+    }
+    return res;
 }
 
 QString DataManager::openFile(const QString &title, const QString &filter, const QString &flag,

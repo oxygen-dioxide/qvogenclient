@@ -28,6 +28,7 @@ public:
 
     QList<QListWidgetItem *> quantizationItems;
     QList<QListWidgetItem *> languageItems;
+    QList<QListWidgetItem *> themeItems;
 
     // Status
     QCommandPalette::CommandType curCmdType;
@@ -35,6 +36,7 @@ public:
     enum CommandItemTypes {
         Quantization = Qt::UserRole + 1000,
         LanguageIndex,
+        ThemeIndex,
     };
 
     void activateItem(QListWidgetItem *item);

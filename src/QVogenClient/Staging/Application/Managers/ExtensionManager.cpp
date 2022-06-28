@@ -79,12 +79,25 @@ int ExtensionManager::themeCount() const {
     return 4;
 }
 
-QStringList ExtensionManager::themeNames() const {
-    QStringList list = {tr("Multi-Color (Default)"), //
-                        tr("Dark (Default)"),        //
-                        tr("Light (Default)"),       //
-                        tr("None")};
-    return list;
+QString ExtensionManager::themeName(int index) const {
+    QString res;
+    switch (index) {
+    case 0:
+        res = tr("Multi-Color (Default)");
+        break;
+    case 1:
+        res = tr("Dark (Default)");
+        break;
+    case 2:
+        res = tr("Light (Default)");
+        break;
+    case 3:
+        res = tr("None");
+        break;
+    default:
+        break;
+    }
+    return res;
 }
 
 void ExtensionManager::reloadVoiceList() {

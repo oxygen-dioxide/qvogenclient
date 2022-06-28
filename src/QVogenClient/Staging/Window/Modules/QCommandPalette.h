@@ -34,14 +34,6 @@ public:
         Plugins,
     };
 
-    enum Languages {
-        English,
-        SimplifiedChinese,
-        TraditionalChinese,
-        Japanese,
-        LanguageMax,
-    };
-
     struct Hint {
         QString text;
         QString placeholder;

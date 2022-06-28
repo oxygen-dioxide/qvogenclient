@@ -28,8 +28,7 @@ public:
 public:
     void themeLoad(int index);
     int themeCount() const;
-
-    QStringList themeNames() const;
+    QString themeName(int index) const;
 
     void reloadVoiceList();
     const QList<QVogenVoiceInfo> &voiceList() const;

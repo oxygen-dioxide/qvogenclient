@@ -31,6 +31,9 @@ void QCommandPalette::showCommands(QCommandPalette::CommandType type) {
 
     d->curCmdType = type;
 
+    QSignalBlocker sb1(d->listWidget);
+    QSignalBlocker sb2(d->lineEdit);
+
     switch (type) {
     case Quantization: {
         // Show actions
@@ -70,6 +73,27 @@ void QCommandPalette::showCommands(QCommandPalette::CommandType type) {
 
         // Show hint
         d->lineEdit->setPlaceholderText(tr("Select translation (Up/down keys to preview)"));
+        break;
+    }
+
+    case ColorThemes: {
+        // Show actions
+        QListWidgetItem *curItem = nullptr;
+        for (auto item : qAsConst(d->themeItems)) {
+            d->listWidget->addItem(item);
+            if (item->data(QCommandPalettePrivate::ThemeIndex).toInt() ==
+                qRecordCData.themeIndex) {
+                curItem = item;
+            }
+        }
+
+        // Select Current
+        if (curItem) {
+            d->listWidget->setCurrentItem(curItem);
+        }
+
+        // Show hint
+        d->lineEdit->setPlaceholderText(tr("Select color theme (Up/down keys to preview)"));
         break;
     }
     default:

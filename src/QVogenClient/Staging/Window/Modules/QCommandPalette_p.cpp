@@ -3,14 +3,8 @@
 #include "Types/Actions.h"
 
 #include "DataManager.h"
+#include "ExtensionManager.h"
 #include "Logs/CRecordHolder.h"
-
-static const QChar ZH_CN_UTFCODE[] = {0x7B80, 0x4F53, 0x4E2D, 0x6587};
-static const QChar ZH_CHT_UTFCODE[] = {0x7E41, 0x9AD4, 0x4E2D, 0x6587};
-static const QChar JA_JP_UTFCODE[] = {0x65E5, 0x672C, 0x8A9E};
-
-#define Q_FROM_UTFCODE(Name)                                                                       \
-    QString::fromRawData(Name##_UTFCODE, sizeof(Name##_UTFCODE) / sizeof(QChar))
 
 QCommandPalettePrivate::QCommandPalettePrivate() {
 }
@@ -53,6 +47,7 @@ void QCommandPalettePrivate::init() {
     guard = new CommandPaletteEventGuard(q);
 
     // Init Actions
+    // Quantizations
     QList<int> quantizes{1, 2, 4, 6, 8, 12, 16, 24, 32 /*, 0*/};
     for (auto quantize : qAsConst(quantizes)) {
         auto item = createItem(QIcon(), QSize(), ActionImpl::View_Quantization, QString(),
@@ -61,11 +56,20 @@ void QCommandPalettePrivate::init() {
         quantizationItems.append(item);
     }
 
-    for (int i = 0; i <= QCommandPalette::SimplifiedChinese; ++i) {
+    // Languages
+    for (int i = 0; i < qData->localeCount(); ++i) {
         auto item = createItem(QIcon(), QSize(), ActionImpl::File_Languages, QString(), QString(),
                                QString());
         item->setData(CommandItemTypes::LanguageIndex, i);
         languageItems.append(item);
+    }
+
+    // Themes
+    for (int i = 0; i < qTheme->themeCount(); ++i) {
+        auto item = createItem(QIcon(), QSize(), ActionImpl::File_ColorThemes, QString(), QString(),
+                               QString());
+        item->setData(CommandItemTypes::ThemeIndex, i);
+        themeItems.append(item);
     }
 }
 
@@ -85,6 +89,12 @@ void QCommandPalettePrivate::activateItem(QListWidgetItem *item) {
             qData->localeLoad(index);
             break;
         }
+        case QCommandPalette::ColorThemes: {
+            int index = item->data(CommandItemTypes::ThemeIndex).toInt();
+            qRecordData.themeIndex = index;
+            qTheme->themeLoad(index);
+            break;
+        }
         default:
             break;
         }
@@ -101,6 +111,11 @@ void QCommandPalettePrivate::previewItem(QListWidgetItem *item) {
             qData->localeLoad(index);
             break;
         }
+        case QCommandPalette::ColorThemes: {
+            int index = item->data(CommandItemTypes::ThemeIndex).toInt();
+            qTheme->themeLoad(index);
+            break;
+        }
         default:
             break;
         }
@@ -113,6 +128,10 @@ void QCommandPalettePrivate::abandon() {
     switch (curCmdType) {
     case QCommandPalette::Languages: {
         qData->localeLoad(qRecordData.translationIndex);
+        break;
+    }
+    case QCommandPalette::ColorThemes: {
+        qTheme->themeLoad(qRecordData.themeIndex);
         break;
     }
     default:
@@ -170,16 +189,15 @@ void QCommandPalettePrivate::reloadStrings_helper() {
         item->setText(desc);
     }
 
-    QStringList locales = {
-        "English",              // English
-        Q_FROM_UTFCODE(ZH_CN),  // 简体中文
-        Q_FROM_UTFCODE(ZH_CHT), // 繁體中文
-        Q_FROM_UTFCODE(JA_JP),  // 日本語
-    };
-
     // Languages
     for (auto item : qAsConst(languageItems)) {
         auto index = item->data(CommandItemTypes::LanguageIndex).toInt();
-        item->setText(locales.at(index));
+        item->setText(qData->localeName(index));
+    }
+
+    // Themes
+    for (auto item : qAsConst(themeItems)) {
+        auto index = item->data(CommandItemTypes::ThemeIndex).toInt();
+        item->setText(qTheme->themeName(index));
     }
 }

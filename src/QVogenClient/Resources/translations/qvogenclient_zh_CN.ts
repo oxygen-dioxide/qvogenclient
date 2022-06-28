@@ -174,32 +174,32 @@
         <translation type="unfinished">Vogen 声库文件(*.vogeon);;所有文件(%1)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="369"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="380"/>
         <source>Error</source>
         <translation type="unfinished">错误</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="373"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="384"/>
         <source>Untitled</source>
         <translation type="unfinished">未命名</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="381"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="392"/>
         <source>(Deleted)</source>
         <translation type="unfinished">(已删除)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="386"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="397"/>
         <source>Explorer</source>
         <translation type="unfinished">文件资源管理器</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="388"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="399"/>
         <source>Finder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="390"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="401"/>
         <source>File Manager</source>
         <translation type="unfinished">文件管理器</translation>
     </message>
@@ -230,22 +230,22 @@
 <context>
     <name>ExtensionManager</name>
     <message>
-        <location filename="../../Staging/Application/Managers/ExtensionManager.cpp" line="83"/>
+        <location filename="../../Staging/Application/Managers/ExtensionManager.cpp" line="86"/>
         <source>Multi-Color (Default)</source>
         <translation type="unfinished">彩色（默认）</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/ExtensionManager.cpp" line="84"/>
+        <location filename="../../Staging/Application/Managers/ExtensionManager.cpp" line="89"/>
         <source>Dark (Default)</source>
         <translation type="unfinished">深色（默认)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/ExtensionManager.cpp" line="85"/>
+        <location filename="../../Staging/Application/Managers/ExtensionManager.cpp" line="92"/>
         <source>Light (Default)</source>
         <translation type="unfinished">浅色（默认）</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/ExtensionManager.cpp" line="86"/>
+        <location filename="../../Staging/Application/Managers/ExtensionManager.cpp" line="95"/>
         <source>None</source>
         <translation type="unfinished">无</translation>
     </message>
@@ -322,17 +322,22 @@
         <translation type="unfinished">选择翻译（按上下箭头键预览）</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Modules/QCommandPalette_p.cpp" line="161"/>
+        <location filename="../../Staging/Window/Modules/QCommandPalette.cpp" line="93"/>
+        <source>Select color theme (Up/down keys to preview)</source>
+        <translation type="unfinished">选择颜色主题（按上下箭头键预览）</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Modules/QCommandPalette_p.cpp" line="180"/>
         <source>None</source>
         <translation type="unfinished">无</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Modules/QCommandPalette_p.cpp" line="164"/>
+        <location filename="../../Staging/Window/Modules/QCommandPalette_p.cpp" line="183"/>
         <source>Quarter</source>
         <translation type="unfinished">四分音符</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Modules/QCommandPalette_p.cpp" line="167"/>
+        <location filename="../../Staging/Window/Modules/QCommandPalette_p.cpp" line="186"/>
         <source>1/%1 Quarter</source>
         <translation type="unfinished">1/%1 个四分音符</translation>
     </message>
@@ -935,43 +940,43 @@
 <context>
     <name>TabManager</name>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="279"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="286"/>
         <source>&lt;h3&gt;QVogenClient %1&lt;/h3&gt;&lt;p&gt;Vogen editor using &lt;span style=&quot;font-weight: bold;&quot;&gt;QSynthesis&lt;/span&gt; framework.&lt;/p&gt;&lt;p&gt;Copyright Sine Striker, 2020-2022. All rights reserved. &lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="284"/>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="288"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="291"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="295"/>
         <source>About %1</source>
         <translation type="unfinished">关于 %1</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="421"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="428"/>
         <source>Close</source>
         <translation type="unfinished">关闭</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="422"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="429"/>
         <source>Close Others</source>
         <translation type="unfinished">关闭其他</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="423"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="430"/>
         <source>Close Saved</source>
         <translation type="unfinished">关闭已保存</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="424"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="431"/>
         <source>Close All</source>
         <translation type="unfinished">全部关闭</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="433"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="440"/>
         <source>Show in %1(&amp;S)</source>
         <translation type="unfinished">在%1中显示(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="437"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="444"/>
         <source>Open in %1(&amp;S)</source>
         <translation type="unfinished">在%1中打开(&amp;S)</translation>
     </message>

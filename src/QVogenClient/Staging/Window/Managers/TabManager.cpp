@@ -19,6 +19,8 @@
 
 #include "Dialogs/VoiceManagerDialog.h"
 
+#include "Synth/SynthClient.h"
+
 #include <QApplication>
 #include <QEvent>
 #include <QMessageBox>
@@ -231,7 +233,7 @@ void TabManager::triggerCurrent(ActionImpl::Action a) {
         break;
     }
     case File_ColorThemes: {
-        qDebug() << "Color themes";
+        d->w->showCommands(QCommandPalette::ColorThemes);
         break;
     }
     case File_Languages: {
@@ -273,6 +275,11 @@ void TabManager::triggerCurrent(ActionImpl::Action a) {
         auto dlg = new VoiceManagerDialog(d->w);
         dlg->exec();
         dlg->deleteLater();
+        break;
+    }
+    case Help_Instructions:{
+        SynthClient cli;
+        cli.httpTest();
         break;
     }
     case Help_AboutApplication: {
