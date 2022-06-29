@@ -350,6 +350,7 @@ bool TabManager::eventFilter(QObject *obj, QEvent *event) {
         case QEventImpl::SceneStateChange: {
             auto e = static_cast<QEventImpl::SceneStateChangeEvent *>(event);
             switch (e->cType()) {
+            // switch type 2
             case QEventImpl::SceneStateChangeEvent::CursorMode: {
                 auto tab = d->w->tabMgr()->currentTab();
                 if (tab) {
@@ -371,6 +372,8 @@ bool TabManager::eventFilter(QObject *obj, QEvent *event) {
                 break;
             }
             }
+            // end switch type 2
+
             break;
         }
         case QEventImpl::MainMenuTrigger: {

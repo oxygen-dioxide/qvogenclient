@@ -85,7 +85,7 @@ void TabManagerPrivate::reloadActionStates(ActionImpl::StateTypes st) {
         }
     }
     if (st & ActionImpl::SelectState) {
-        states &= ~ActionImpl::SelectMask;
+        states &= ~ActionImpl::SelectionMask;
         if (tab) {
             if (tab->type() & CentralTab::Document) {
                 auto docTab = qobject_cast<DocumentTab *>(tab);

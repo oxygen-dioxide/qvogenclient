@@ -104,16 +104,15 @@ namespace ActionImpl {
         EditedFlag = 0x100,
         UntitledFlag = EditedFlag * 2,
         DeletedFlag = UntitledFlag * 2,
-
-        FileMask = DocumentFlag | EditedFlag | UntitledFlag | DeletedFlag,
+        FileMask = EditedFlag | UntitledFlag | DeletedFlag,
 
         UndoFlag = 0x1000,
         RedoFlag = UndoFlag * 2,
         EditMask = UndoFlag | RedoFlag,
 
-        SelectionFlag = 0x1000,
+        SelectionFlag = 0x10000,
         SelectNoteFlag = SelectionFlag * 2,
-        SelectMask = SelectionFlag | SelectNoteFlag,
+        SelectionMask = SelectionFlag | SelectNoteFlag,
     };
 
     Q_DECLARE_FLAGS(States, State);

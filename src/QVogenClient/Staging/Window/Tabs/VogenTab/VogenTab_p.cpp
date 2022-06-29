@@ -162,14 +162,14 @@ void VogenTabPrivate::inputLyrics() {
 
     // Temporary Struct
     struct Hint : public QCommandPalette::Hint {
-        QObject *obj;
-        Hint(QObject *obj, const QString &text, const QString &placeholder, bool hold = false)
-            : QCommandPalette::Hint(text, placeholder, hold), obj(obj){};
+        TNotesArea *notesArea;
+        Hint(TNotesArea *a, const QString &text, const QString &placeholder, bool hold = false)
+            : QCommandPalette::Hint(text, placeholder, hold), notesArea(a){};
         void preview(const QString &text) override {
             // Call editor to update stdin
             StdinRequestEvent e2(StdinRequestEvent::Lyrics, StdinRequestEvent::InputUpdate);
             e2.text = text;
-            qApp->sendEvent(obj, &e2);
+            qApp->sendEvent(notesArea, &e2);
         }
     };
 
@@ -191,7 +191,7 @@ void VogenTabPrivate::inputBeat() {
 
     auto w = qobject_cast<MainWindow *>(q->window());
     QCommandPalette::Hint hint(QString::asprintf(fmt, timeSig.first, timeSig.second),
-                               VogenTab::tr("Enter the new tempo (10 ~ 512)"), false);
+                               VogenTab::tr("Enter the new time signature, e.g. 3/4, 4/4"), false);
     int res = w->showLineEdit(&hint);
 
     if (res == 0) {

@@ -943,9 +943,11 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
 
         case QEventImpl::EditorRequest: {
             auto e = static_cast<QEventImpl::EditorRequestEvent *>(event);
+            // switch type 2
             switch (e->rType()) {
             case QEventImpl::EditorRequestEvent::PianoRoll: {
                 auto e2 = static_cast<TPianoRollEvent *>(e);
+                // switch type 3
                 switch (e2->pType()) {
                 case TPianoRollEvent::RubberBand: {
                     auto e3 = static_cast<TRubberBandEvent *>(event);
@@ -965,6 +967,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                 default:
                     break;
                 }
+                // end switch type 3
 
                 break;
             }
@@ -972,14 +975,18 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
             default:
                 break;
             }
+            // end switch type 2
+
             break;
         }
 
         case QEventImpl::StdinRequest: {
             auto e = static_cast<QEventImpl::StdinRequestEvent *>(event);
+            // switch type 2
             switch (e->iType()) {
             case QEventImpl::StdinRequestEvent::Lyrics: {
                 // Handle Lyrics Input
+                // switch type 3
                 switch (e->iProcess()) {
                 case QEventImpl::StdinRequestEvent::InputStart: {
                     if (m_selection->isEmpty() || !m_selection->isBeginSerialized()) {
@@ -1083,12 +1090,14 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                 default:
                     break;
                 }
+                // end switch type 3
 
                 break;
             }
             default:
                 break;
             }
+            // end switch type 2
 
             break;
         }
@@ -1353,6 +1362,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
             }
             case QEventImpl::SceneActionEvent::Digital: {
                 auto e2 = static_cast<TDigitalEvent *>(e);
+                // switch type 2
                 switch (e2->dType()) {
                 case TDigitalEvent::Transpose: {
                     QList<TONoteMove::MoveData> moves;
@@ -1386,6 +1396,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                 default:
                     break;
                 }
+                // end switch type 2
 
                 break;
             }
@@ -1475,6 +1486,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
 
         case QEventImpl::SceneStateChange: {
             auto e = static_cast<QEventImpl::SceneStateChangeEvent *>(event);
+            // switch type 2
             switch (e->cType()) {
             case QEventImpl::SceneStateChangeEvent::CursorMode: {
                 if (a->drawMode() == TNotesArea::DrawCurves) {
@@ -1495,6 +1507,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
             default:
                 break;
             }
+            // end switch type 2
 
             break;
         }

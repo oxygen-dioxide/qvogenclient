@@ -127,6 +127,7 @@ bool TNPriorCtl::eventFilter(QObject *obj, QEvent *event) {
         case QEventImpl::StdinRequest: {
             auto e = static_cast<QEventImpl::StdinRequestEvent *>(event);
             switch (e->iType()) {
+            // switch type 2
             case QEventImpl::StdinRequestEvent::Lyrics: {
                 // Handle Lyrics Input
                 switch (e->iProcess()) {
@@ -143,6 +144,7 @@ bool TNPriorCtl::eventFilter(QObject *obj, QEvent *event) {
             default:
                 break;
             }
+            // end switch type 2
 
             break;
         }

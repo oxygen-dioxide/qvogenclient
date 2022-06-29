@@ -58,21 +58,27 @@ void TNotesArea::customEvent(QEvent *event) {
     }
     case QEventImpl::SceneStateQuery: {
         auto e = static_cast<QEventImpl::SceneStateQueryEvent *>(event);
+        // switch type 2
         switch (e->cType()) {
         case QEventImpl::SceneStateQueryEvent::CursorMode: {
             auto e2 = static_cast<TSSQCursorModeEvent *>(event);
             e2->mode = m_drawMode;
             break;
         }
+        default:
+            break;
         }
+        // end switch type 2
+
         break;
     }
     case QEventImpl::SceneAction: {
         auto e = static_cast<QEventImpl::SceneActionEvent *>(event);
-        auto act = e->aType();
-        switch (act) {
+        // switch type 2
+        switch (e->aType()) {
         case QEventImpl::SceneActionEvent::Digital: {
             auto e2 = static_cast<TDigitalEvent *>(e);
+            // switch type 3
             switch (e2->dType()) {
             case TDigitalEvent::TimeSig: {
                 auto e3 = static_cast<TDigitTimeSigEvent *>(e2);
@@ -106,6 +112,9 @@ void TNotesArea::customEvent(QEvent *event) {
             default:
                 break;
             }
+            // end switch type 3
+
+            break;
         }
         case QEventImpl::SceneActionEvent::Append: {
             break;
@@ -113,6 +122,9 @@ void TNotesArea::customEvent(QEvent *event) {
         default:
             break;
         }
+        // end switch type 2
+
+        break;
     }
     default:
         break;

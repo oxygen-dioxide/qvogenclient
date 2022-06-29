@@ -17,8 +17,8 @@
 #include <QApplication>
 #include <QDir>
 #include <QFileInfo>
-#include <QScrollBar>
 #include <QMessageBox>
+#include <QScrollBar>
 
 VogenTab::VogenTab(QWidget *parent) : VogenTab(*new VogenTabPrivate(), parent) {
 }
@@ -350,6 +350,7 @@ void VogenTab::customEvent(QEvent *event) {
     switch (event->type()) {
     case QEventImpl::EditorRequest: {
         auto e = static_cast<QEventImpl::EditorRequestEvent *>(event);
+        // switch type 2
         switch (e->rType()) {
         case QEventImpl::EditorRequestEvent::PianoRoll:
             d->dispatchEvent(static_cast<TPianoRollEvent *>(e));
@@ -357,6 +358,8 @@ void VogenTab::customEvent(QEvent *event) {
         default:
             break;
         }
+        // end switch type 2
+
         break;
     }
     case QEventImpl::SceneStateQuery: {
@@ -365,6 +368,7 @@ void VogenTab::customEvent(QEvent *event) {
     }
     case QEventImpl::SceneStateChange: {
         auto e = static_cast<QEventImpl::SceneStateChangeEvent *>(event);
+        // switch type 2
         switch (e->cType()) {
         case QEventImpl::SceneStateChangeEvent::TimeSig: {
             auto pair = d->piano->notesArea()->timeSig();
@@ -379,6 +383,8 @@ void VogenTab::customEvent(QEvent *event) {
         default:
             break;
         }
+        // end switch type 2
+
         break;
     }
     default:
