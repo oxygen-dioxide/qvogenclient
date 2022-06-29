@@ -18,7 +18,11 @@
 #ifdef QUTAUSTD_BUILD_STATIC
 #define QUTAUSTD_EXPORT
 #else
+#ifdef Q_OS_WINDOWS
 #define QUTAUSTD_EXPORT Q_DECL_EXPORT
+#else
+#define QUTAUSTD_EXPORT
+#endif
 #endif
 
 const char NODEF_STRING[] = "%NODEF%";

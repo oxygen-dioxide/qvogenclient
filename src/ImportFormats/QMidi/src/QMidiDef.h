@@ -10,3 +10,4 @@
 #else
 #define Q_MIDI_API
 #endif
+#endif
