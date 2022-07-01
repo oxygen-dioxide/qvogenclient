@@ -52,6 +52,11 @@ int CentralTab::selectionFlags() const {
     return d->selectionFlags;
 }
 
+int CentralTab::playFlags() const {
+    Q_D(const CentralTab);
+    return d->playFlags;
+}
+
 void CentralTab::setTabName(const QString &tabName) {
     Q_D(CentralTab);
     BaseTab::setTabName(d->setTabNameProxy(tabName));

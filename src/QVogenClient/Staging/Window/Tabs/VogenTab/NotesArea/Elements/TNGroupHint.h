@@ -17,6 +17,8 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget = nullptr) override;
 
+    TNNoteGroup *noteGroup() const;
+
 protected:
     TNNoteGroup *g;
     QSize m_padding;

@@ -4,6 +4,7 @@
 #include "TNController.h"
 
 #include "../../Utils/TWrappedData.h"
+#include "../Elements/TNRectScreen.h"
 #include "../Utils/TNNoteGroup.h"
 
 class TNNotesCtl : public TNController {
@@ -17,6 +18,8 @@ public:
 
     void addUtterances(const QList<TWProject::Utterance> &utters);
     QList<TWProject::Utterance> utterances() const;
+    TWProject::Utterance currentValidUtterance() const;
+    TWProject::Utterance validUtterance(quint64 gid) const;
 
     void moveNotes(const QList<TWNote::Movement> &moves);
     void stretchNotes(const QList<TWNote::Stretch> &stretches);
@@ -24,6 +27,7 @@ public:
     void addNotes(const QList<TWNote::NoteAll> &notes, const TWNote::Group &group);
     void removeNotes(const QList<quint64> &ids);
     void changeGroup(const QList<quint64> &ids, const TWNote::Group &group);
+    void changeSinger(quint64 gid, const QString &singerId, const QString &rom);
 
 public:
     void selectAll();
@@ -36,6 +40,14 @@ public:
 
     bool hasSelection() const;
     quint64 currentGroupId() const;
+    QList<quint64> groupIdList() const;
+
+    void setGroupCache(quint64 id, const QList<double> &pitches, const QString &waveFile);
+    void removeGroupCache(quint64 id);
+    void removeAllCache();
+    bool hasCache(quint64 id) const;
+
+    QList<QPair<qint64, QWaveInfo *>> playData() const;
 
 protected:
     struct MovingData {
@@ -83,6 +95,7 @@ protected:
     TNNoteList *m_cachedSelection;
     QList<QPair<TNRectNote *, QString>> m_cachedLyrics;
 
+    TNRectScreen *m_waveScreen;
     void switchGroup(TNNoteGroup *group);
     TNNoteGroup *findGroup(quint64 gid) const;
 
@@ -102,7 +115,13 @@ protected:
     void adjustGeometry(TNRectNote *note);
     void adjustGroupGeometry(const TNNoteGroup *group);
 
+    // 牵一发而动全身
+    void invalidGroup(TNNoteGroup *group);
+    void updatePlayState();
+
 public:
+    void updateScreen();
+
     void adjustAllGeometry();
     void adjustAllGroupHintPos();
     void adjustCanvas();
@@ -118,6 +137,8 @@ protected:
     QList<TNRectNote *> tryApplyLyrics(int len, TNNoteList *s);
     void addUtterancesCore(const QList<TWProject::Utterance> &utters,
                            QList<QPair<TNNoteGroup *, QList<TNRectNote *>>> *res = nullptr);
+
+    TWProject::Utterance getUtterance(TNNoteGroup *group, bool ignore) const;
 
     bool eventFilter(QObject *obj, QEvent *event) override;
 

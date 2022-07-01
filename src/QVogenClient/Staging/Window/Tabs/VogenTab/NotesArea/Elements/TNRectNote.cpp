@@ -25,6 +25,7 @@ static void _q_hoverFromMouseEvent(QGraphicsSceneHoverEvent *hover,
 TNRectNote::TNRectNote(TNotesArea *area, QGraphicsItem *parent) : TNRectSelectable(area, parent) {
     m_movable = true;
     m_stretch = false;
+    m_ignored = false;
 
     // Initialize Default Properties
     start = 0;
@@ -48,6 +49,15 @@ void TNRectNote::setMovable(bool movable) {
     if (!m_movable) {
         setStretch(false);
     }
+    update();
+}
+
+bool TNRectNote::ignored() const {
+    return m_ignored;
+}
+
+void TNRectNote::setIgnored(bool ignored) {
+    m_ignored = ignored;
     update();
 }
 
@@ -172,8 +182,8 @@ void TNRectNote::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
 
     border = border > 6 ? 6 : border;
 
-    QColor lineColor = isEnabled() ? 0x78AD35 : 0x516834;
-    QColor fillColor = 0xB0E56D;
+    QColor lineColor = isEnabled() ? (m_ignored ? 0x516834 : 0x78AD35) : 0x516834;
+    QColor fillColor = m_ignored ? 0x74944C : 0xB0E56D;
 
     QRectF originRect(padding, padding, rect.width() - 2 * padding, rect.height() - 2 * padding);
     QRectF entityRect(originRect);

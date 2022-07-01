@@ -122,5 +122,6 @@
         <file>themes/dark-v3.qss</file>
         <file>svg/app/logo.svg</file>
         <file>svg/app/logo-custom.svg</file>
+        <file>svg/tuning-tool-bar/hammer-solid.svg</file>
     </qresource>
 </RCC>

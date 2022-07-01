@@ -14,6 +14,12 @@ public:
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget = nullptr) override;
+
+    QPixmap pixmap() const;
+    void setPixmap(const QPixmap &pixmap);
+
+protected:
+    QPixmap m_pixmap;
 };
 
 #endif // TNRECTSCREEN_H

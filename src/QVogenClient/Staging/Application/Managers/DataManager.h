@@ -90,9 +90,10 @@ public:
     QString fileManagerName() const;
 
 public:
-    QString getRandomDirName() const;
+    QString getRandomDirName(const QString &prefix = "Temporary") const;
     QString allocGlobalTempDirName() const;
     QString allocVoiceTempDirName() const;
+    QString allocProjectTempDirName() const;
 
 protected:
     DataManager(DataManagerPrivate &d, QObject *parent = nullptr);

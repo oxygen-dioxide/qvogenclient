@@ -5,7 +5,7 @@
 #include "ExtensionManager.h"
 #include "SystemHelper.h"
 
-#include "QVogenVoiceFile.h"
+#include "RHProtocol.h"
 
 #include <QApplication>
 #include <QDesktopWidget>
@@ -27,11 +27,11 @@ void VoiceManagerDialog::reloadStrings() {
 
 VoiceManagerDialog::VoiceManagerDialog(VoiceManagerDialogPrivate &d, QWidget *parent)
     : BaseDialog(d, parent) {
-	d.init();
+    d.init();
 
     Q_TR_NOTIFY(VoiceManagerDialog);
 
-	setWindowTitle(tr("Voice Database Manager"));
+    setWindowTitle(tr("Voice Database Manager"));
 
     auto desktop = qApp->desktop();
     resize(desktop->width() / 2, desktop->height() / 2);
@@ -43,18 +43,42 @@ VoiceManagerDialog::VoiceManagerDialog(VoiceManagerDialogPrivate &d, QWidget *pa
 void VoiceManagerDialog::_q_installVoice() {
     Q_D(VoiceManagerDialog);
 
-	QStringList paths = qData->openFiles(tr("Open"), qData->getFileFilter(DataManager::VoicePackage), FLAG_VOICE, this);
+    QStringList paths = qData->openFiles(
+        tr("Open"), qData->getFileFilter(DataManager::VoicePackage), FLAG_VOICE, this);
+    if (paths.isEmpty()) {
+        return;
+    }
+
     for (auto it = paths.begin(); it != paths.end(); ++it) {
-        QVogenVoiceFile voice(*it);
-        // Extract to temp dir to check integrity
-        if (!voice.load()) {
-            QMessageBox::critical(this, qData->errorTitle(), tr("Failed to load voice package."));
+        const auto &filename = *it;
+
+        RH::VoiceLibMetadata meta;
+        int code;
+        bool res = qTheme->server()->install(filename, &meta, &code);
+
+        if (!res || code == RH::INSTALL_FAILED) {
+            QMessageBox::critical(
+                this, qData->errorTitle(),
+                tr("Failed to install voice package \"%1\".").arg(Sys::PathFindFileName(filename)));
             continue;
         }
-        // Extract to app data dir to install
-        if (!voice.install()) {
-			QMessageBox::critical(this, qData->errorTitle(), tr("Failed to install voice package."));
-            continue;
+
+        switch (code) {
+        case RH::INSTALL_REPEATED: {
+            QMessageBox::warning(
+                this, qData->mainTitle(),
+                tr("Voice library \"%1\" has already been installed, please remove it first.")
+                    .arg(meta.id));
+            break;
+        }
+        case RH::INSTALL_INVALID_PACKAGE: {
+            QMessageBox::critical(
+                this, qData->errorTitle(),
+                tr("Voice package \"%1\" is invalid.").arg(Sys::PathFindFileName(filename)));
+            break;
+        }
+        default:
+            break;
         }
     }
 
@@ -66,14 +90,34 @@ void VoiceManagerDialog::_q_removeVoice() {
     Q_D(VoiceManagerDialog);
 
     auto selection = d->tree->selectedItems();
+    if (selection.isEmpty()) {
+        return;
+    }
+
     for (auto it = selection.begin(); it != selection.end(); ++it) {
         auto item = *it;
         if (item->type() != VoiceManagerDialogPrivate::VoiceItem) {
             continue;
         }
-        QString path = item->data(0, VoiceManagerDialogPrivate::VoicePath).toString();
-        if (!path.isEmpty()) {
-            Sys::rmDir(path);
+        QString id = item->data(0, VoiceManagerDialogPrivate::VoiceIdentity).toString();
+
+        int code;
+        bool res = qTheme->server()->uninstall(id, &code);
+
+        if (!res || code == RH::UNINSTALL_FAILED) {
+            QMessageBox::critical(this, qData->errorTitle(),
+                                  tr("Failed to uninstall voice library \"%1\".").arg(id));
+            continue;
+        }
+
+        switch (code) {
+        case RH::UNINSTALL_NOT_FOUND: {
+            QMessageBox::critical(this, qData->errorTitle(),
+                                  tr("Voice library \"%1\" not found.").arg(id));
+            break;
+        }
+        default:
+            break;
         }
     }
 

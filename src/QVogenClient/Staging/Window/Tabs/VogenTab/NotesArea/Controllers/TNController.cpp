@@ -19,3 +19,9 @@ void TNController::sendInterrupt() {
     QEventImpl::InterruptEvent ei;
     QApplication::sendEvent(a->view()->window(), &ei);
 }
+
+void TNController::forceStopPlay() {
+    if (a->isPlaying()) {
+        a->stop();
+    }
+}

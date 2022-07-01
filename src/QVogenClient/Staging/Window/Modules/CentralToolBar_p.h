@@ -21,7 +21,7 @@ public:
     QHBoxLayout *layout;
 
     CToolButton *m_cursorButton, *m_noteButton, *m_freehandButton;
-    CToolButton *m_playButton, *m_stopButton, *m_replayButton;
+    CToolButton *m_playButton, *m_stopButton, *m_synthButton;
 
     QButtonGroup *m_cursorGroup;
 };

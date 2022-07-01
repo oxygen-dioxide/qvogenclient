@@ -12,11 +12,18 @@ public:
     QSvgUri(const QString &filename, const QColor &color);
     ~QSvgUri();
 
-    Q_DECLARE_FLAGS(Modes, QIcon::Mode)
+    enum Mode {
+        Normal = 1,
+        Disabled = 2,
+        Active = 4,
+        Selected = 8,
+    };
+
+    Q_DECLARE_FLAGS(Modes, Mode)
 
 public:
     QStringList toStringList() const;
-    QIcon toIcon(Modes = QIcon::Normal) const;
+    QIcon toIcon(int modes = Normal) const;
 
     QString filename() const;
     void setFilename(const QString &filename);

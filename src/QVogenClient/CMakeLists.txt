@@ -33,7 +33,6 @@ endmacro()
 # ------------------------------ Include/Import/Link ------------------------------
 add_qt_module(QT_LIBS Widgets)
 add_qt_module(QT_LIBS Svg)
-add_qt_module(QT_LIBS Network)
 add_qt_module(QT_LIBS Multimedia)
 
 include_qt_private(Gui)
@@ -116,6 +115,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE QMidi)
 target_link_libraries(${PROJECT_NAME} PRIVATE QUtauStd)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE QuaZip::QuaZip)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE RenderHost)
 
 # Link Qt libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE ${QT_LIBS})

@@ -29,15 +29,15 @@ void CentralToolBarPrivate::init() {
     m_playButton = new CToolButton();
     m_playButton->setProperty("type", "play");
     m_playButton->setObjectName("play-button");
-    m_playButton->setCheckable(true);
+    // m_playButton->setCheckable(true);
 
     m_stopButton = new CToolButton();
     m_stopButton->setProperty("type", "play");
     m_stopButton->setObjectName("stop-button");
 
-    m_replayButton = new CToolButton();
-    m_replayButton->setProperty("type", "play");
-    m_replayButton->setObjectName("replay-button");
+    m_synthButton = new CToolButton();
+    m_synthButton->setProperty("type", "play");
+    m_synthButton->setObjectName("synth-button");
 
     m_cursorGroup = new QButtonGroup(q);
     m_cursorGroup->setExclusive(true);
@@ -56,7 +56,7 @@ void CentralToolBarPrivate::init() {
 
     layout->addWidget(m_playButton);
     layout->addWidget(m_stopButton);
-    layout->addWidget(m_replayButton);
+    layout->addWidget(m_synthButton);
 
     layout->addStretch();
 
@@ -67,5 +67,5 @@ void CentralToolBarPrivate::init() {
     q->connect(m_freehandButton, &QAbstractButton::clicked, q, &CentralToolBar::_q_buttonClicked);
     q->connect(m_playButton, &QAbstractButton::clicked, q, &CentralToolBar::_q_buttonClicked);
     q->connect(m_stopButton, &QAbstractButton::clicked, q, &CentralToolBar::_q_buttonClicked);
-    q->connect(m_replayButton, &QAbstractButton::clicked, q, &CentralToolBar::_q_buttonClicked);
+    q->connect(m_synthButton, &QAbstractButton::clicked, q, &CentralToolBar::_q_buttonClicked);
 }

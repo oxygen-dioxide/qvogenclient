@@ -4,6 +4,7 @@
 
 TNPlayhead::TNPlayhead(TNotesArea *area, QGraphicsItem *parent) : TNRectObject(area, parent) {
     setPen(Qt::NoPen);
+    setBrush(QColor(0x666666));
 }
 
 TNPlayhead::~TNPlayhead() {
@@ -20,6 +21,10 @@ double TNPlayhead::right() const {
 
 QPainterPath TNPlayhead::shape() const {
     return QPainterPath();
+}
+
+void TNPlayhead::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+    return TNRectObject::paint(painter, option, widget);
 }
 
 bool TNPlayhead::alwaysShow() const {

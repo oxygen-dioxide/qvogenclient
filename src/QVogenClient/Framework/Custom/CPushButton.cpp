@@ -98,7 +98,7 @@ QSvgUri CPushButton::iconDisabled() const {
 
 void CPushButton::setIconDisabled(const QSvgUri &iconDisabled) {
     m_svgUris[6] = iconDisabled;
-    m_iconDownChecked = iconDisabled.toIcon();
+    m_iconDisabled = iconDisabled.toIcon(QSvgUri::Normal | QSvgUri::Disabled);
     reloadIcon();
     emit iconChanged();
 }

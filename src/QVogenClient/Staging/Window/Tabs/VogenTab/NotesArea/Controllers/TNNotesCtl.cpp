@@ -5,6 +5,7 @@
 #include "Types/Events.h"
 #include "Types/Graphics.h"
 
+#include "../../Utils/Events/PianoRoll/TChangeVoiceEvent.h"
 #include "../../Utils/Events/SceneStateChange/TSSCSceneRectEvent.h"
 #include "../../Utils/Events/TAppendEvent.h"
 #include "../../Utils/Events/TDigitalEvent.h"
@@ -16,6 +17,7 @@
 #include "../../Utils/Operations/TONoteInsDel.h"
 #include "../../Utils/Operations/TONoteMove.h"
 #include "../../Utils/Operations/TONoteStretch.h"
+#include "../../Utils/Operations/TOSingerChange.h"
 
 #include "MathHelper.h"
 #include "ViewHelper.h"
@@ -55,6 +57,10 @@ TNNotesCtl::~TNNotesCtl() {
 
 void TNNotesCtl::install() {
     a->installEventFilter(this);
+
+    m_waveScreen = new TNRectScreen(a);
+    a->addItem(m_waveScreen);
+    m_waveScreen->setZValue(TNotesArea::Waveform);
 }
 
 void TNNotesCtl::addUtterances(const QList<TWProject::Utterance> &utters) {
@@ -75,34 +81,25 @@ QList<TWProject::Utterance> TNNotesCtl::utterances() const {
         if (group->isEmpty()) {
             continue;
         }
-
-        TWProject::Utterance u;
-
-        u.name = group->name;
-        u.singer = group->singer;
-        u.romScheme = group->rom;
-
-        QList<TWProject::Note> notes;
-        const auto &all = group->begins();
-        for (const auto &pair : qAsConst(all)) {
-            const auto &set = pair.second;
-            for (auto note : set) {
-                TWProject::Note n;
-                n.start = note->start;
-                n.length = note->length;
-                n.noteNum = note->tone;
-                n.rom = note->lyric;
-                notes.append(n);
-            }
-        }
-
-        u.notes = std::move(notes);
-        utters.append(u);
+        utters.append(getUtterance(group, false));
     }
     return utters;
 }
 
+TWProject::Utterance TNNotesCtl::currentValidUtterance() const {
+    return getUtterance(m_currentGroup, true);
+}
+
+TWProject::Utterance TNNotesCtl::validUtterance(quint64 gid) const {
+    auto g = findGroup(gid);
+    if (!g) {
+        return TWProject::Utterance{};
+    }
+    return getUtterance(g, true);
+}
+
 void TNNotesCtl::moveNotes(const QList<TWNote::Movement> &moves) {
+    QSet<TNNoteGroup *> groups;
     for (const auto &move : qAsConst(moves)) {
         auto it = m_noteMap.find(move.id);
         if (it == m_noteMap.end()) {
@@ -111,12 +108,22 @@ void TNNotesCtl::moveNotes(const QList<TWNote::Movement> &moves) {
         auto note = it.value();
         note->start += move.hMove;
         note->tone += move.vMove;
+
         adjustGeometry(note);
+
+        groups.insert(note->group);
     }
+
+    for (auto g : groups) {
+        invalidGroup(g);
+    }
+    updatePlayState();
+
     adjustCanvas();
 }
 
 void TNNotesCtl::stretchNotes(const QList<TWNote::Stretch> &stretches) {
+    QSet<TNNoteGroup *> groups;
     for (const auto &stretch : qAsConst(stretches)) {
         auto it = m_noteMap.find(stretch.id);
         if (it == m_noteMap.end()) {
@@ -125,11 +132,20 @@ void TNNotesCtl::stretchNotes(const QList<TWNote::Stretch> &stretches) {
         auto note = it.value();
         note->length += stretch.hStretch;
         adjustGeometry(note);
+
+        groups.insert(note->group);
     }
+
+    for (auto g : groups) {
+        invalidGroup(g);
+    }
+    updatePlayState();
+
     adjustCanvas();
 }
 
 void TNNotesCtl::changeLyrics(const QList<TWNote::Lyric> &lyrics) {
+    QSet<TNNoteGroup *> groups;
     for (const auto &lrc : qAsConst(lyrics)) {
         auto it = m_noteMap.find(lrc.id);
         if (it == m_noteMap.end()) {
@@ -138,7 +154,13 @@ void TNNotesCtl::changeLyrics(const QList<TWNote::Lyric> &lyrics) {
         auto note = it.value();
         note->lyric = lrc.lyric;
         note->update();
+
+        groups.insert(note->group);
     }
+    for (auto g : groups) {
+        invalidGroup(g);
+    }
+    updatePlayState();
 }
 
 void TNNotesCtl::addNotes(const QList<TWNote::NoteAll> &notes, const TWNote::Group &group) {
@@ -153,6 +175,9 @@ void TNNotesCtl::addNotes(const QList<TWNote::NoteAll> &notes, const TWNote::Gro
         auto p = createNote(note.id, note.start, note.length, note.noteNum, note.lyric, g);
         adjustGeometry(p);
     }
+
+    invalidGroup(g);
+    updatePlayState();
 
     adjustCanvas();
 }
@@ -169,9 +194,7 @@ void TNNotesCtl::removeNotes(const QList<quint64> &ids) {
 
         removeNote(p);
 
-        if (oldGroup != m_mainGroup && oldGroup->isEmpty()) {
-            groups.insert(oldGroup);
-        }
+        groups.insert(oldGroup);
     }
 
     // Switch group if necessary
@@ -181,8 +204,13 @@ void TNNotesCtl::removeNotes(const QList<quint64> &ids) {
 
     // Remove empty groups
     for (auto group : qAsConst(groups)) {
-        removeGroup(group);
+        if (group != m_mainGroup && group->isEmpty()) {
+            removeGroup(group);
+        } else {
+            invalidGroup(group);
+        }
     }
+    updatePlayState();
 
     adjustCanvas();
 }
@@ -205,17 +233,37 @@ void TNNotesCtl::changeGroup(const QList<quint64> &ids, const TWNote::Group &gro
         // Modify group
         changeNoteGroup(p, g);
 
-        if (oldGroup != m_mainGroup && oldGroup->isEmpty()) {
-            groups.insert(oldGroup);
-        }
+        groups.insert(oldGroup);
     }
 
     switchGroup(g);
+    invalidGroup(g);
+    updatePlayState();
 
     // Remove empty groups
     for (auto group : qAsConst(groups)) {
-        removeGroup(group);
+        if (group != m_mainGroup && group->isEmpty()) {
+            removeGroup(group);
+        } else {
+            invalidGroup(group);
+        }
     }
+    updatePlayState();
+}
+
+void TNNotesCtl::changeSinger(quint64 gid, const QString &singerId, const QString &rom) {
+    auto g = findGroup(gid);
+    if (!g) {
+        return;
+    }
+
+    g->singerId = singerId;
+    g->rom = rom;
+
+    g->adjustHintGeometry();
+
+    invalidGroup(g);
+    updatePlayState();
 }
 
 void TNNotesCtl::selectAll() {
@@ -235,35 +283,6 @@ void TNNotesCtl::deselect() {
     // Update Menu
     TPianoRollEvent e(TPianoRollEvent::Select);
     e.dispatch(a);
-}
-
-void TNNotesCtl::switchGroup(TNNoteGroup *group) {
-    if (m_currentGroup == group) {
-        return;
-    }
-    m_currentGroup = group;
-    for (auto &g : m_noteGroups) {
-        if (g != m_currentGroup) {
-            setGroupSelected(g, false);
-            setGroupEnabled(g, false);
-        }
-    }
-    if (m_mainGroup != m_currentGroup) {
-        setGroupSelected(m_mainGroup, false);
-        setGroupEnabled(m_mainGroup, false);
-    }
-    setGroupEnabled(m_currentGroup, true);
-}
-
-TNNoteGroup *TNNotesCtl::findGroup(quint64 gid) const {
-    if (gid == m_mainGroup->id) {
-        return m_mainGroup;
-    }
-    auto it = m_noteGroups.find(gid);
-    if (it == m_noteGroups.end()) {
-        return nullptr;
-    }
-    return it.value();
 }
 
 bool TNNotesCtl::isMoving() const {
@@ -288,6 +307,113 @@ bool TNNotesCtl::hasSelection() const {
 
 quint64 TNNotesCtl::currentGroupId() const {
     return m_currentGroup->id;
+}
+
+QList<quint64> TNNotesCtl::groupIdList() const {
+    QList<quint64> ids;
+    ids.append(m_mainGroup->id);
+    for (const auto &g : m_noteGroups) {
+        ids.append(g->id);
+    }
+    return ids;
+}
+
+void TNNotesCtl::setGroupCache(quint64 id, const QList<double> &pitches, const QString &waveFile) {
+    auto g = findGroup(id);
+    if (!g) {
+        return;
+    }
+
+    QWaveInfo wave;
+    if (!wave.load(waveFile)) {
+        return;
+    }
+
+    qDebug() << "Synth Result Samples:" << wave.totalSample();
+
+    g->setCache(TWAudio::Audio{pitches, wave});
+
+    updatePlayState();
+    updateScreen();
+}
+
+void TNNotesCtl::removeGroupCache(quint64 id) {
+    auto g = findGroup(id);
+    if (!g) {
+        return;
+    }
+    g->removeCache();
+    updateScreen();
+    updatePlayState();
+}
+
+void TNNotesCtl::removeAllCache() {
+    for (auto g : qAsConst(m_noteGroups)) {
+        g->removeCache();
+    }
+    m_mainGroup->removeCache();
+    updateScreen();
+    updatePlayState();
+}
+
+bool TNNotesCtl::hasCache(quint64 id) const {
+    auto g = findGroup(id);
+    if (!g) {
+        return false;
+    }
+    return g->cache() != nullptr;
+}
+
+QList<QPair<qint64, QWaveInfo *>> TNNotesCtl::playData() const {
+    QList<QPair<qint64, QWaveInfo *>> res;
+
+    auto getter = [this, &res](TNNoteGroup *g) {
+        auto cache = g->cache();
+        if (!cache) {
+            return;
+        }
+        qint64 startTime = a->tickToTime(g->firstBegin()) - 500;
+        res.append(qMakePair(startTime, &cache->wave));
+    };
+
+    for (auto g : qAsConst(m_noteGroups)) {
+        getter(g);
+    }
+    getter(m_mainGroup);
+
+    return res;
+}
+
+void TNNotesCtl::switchGroup(TNNoteGroup *group) {
+    if (m_currentGroup == group) {
+        return;
+    }
+    m_currentGroup = group;
+    for (auto &g : m_noteGroups) {
+        if (g != m_currentGroup) {
+            setGroupSelected(g, false);
+            setGroupEnabled(g, false);
+        }
+    }
+    if (m_mainGroup != m_currentGroup) {
+        setGroupSelected(m_mainGroup, false);
+        setGroupEnabled(m_mainGroup, false);
+    }
+    setGroupEnabled(m_currentGroup, true);
+
+    updatePlayState();
+    updateScreen();
+}
+
+TNNoteGroup *TNNotesCtl::findGroup(quint64 gid) const {
+    if (gid == m_mainGroup->id) {
+        return m_mainGroup;
+    }
+    auto it = m_noteGroups.find(gid);
+    if (it == m_noteGroups.end()) {
+        return nullptr;
+    }
+    return it.value();
 }
 
 TNRectNote *TNNotesCtl::createNote(quint64 id, int start, int len, int tone, const QString &lrc,
@@ -358,7 +484,7 @@ TNNoteGroup *TNNotesCtl::createGroup(quint64 id, const QString &name, const QStr
     auto g = new TNNoteGroup(a, this);
     g->id = (id == 0) ? (++m_maxGroupId) : id;
     g->name = name.isEmpty() ? ("utt-" + QString::number(g->id)) : name;
-    g->singer = singer;
+    g->singerId = singer;
     g->rom = rom.isEmpty() ? "man" : rom;
 
     // Insert to groups
@@ -409,6 +535,152 @@ void TNNotesCtl::adjustGroupGeometry(const TNNoteGroup *group) {
     for (auto note : notes) {
         adjustGeometry(note);
     }
+}
+
+void TNNotesCtl::invalidGroup(TNNoteGroup *group) {
+    forceStopPlay();
+
+    group->removeCache();
+
+    const auto &all = group->begins();
+    QSet<const QSet<TNRectNote *> *> ignores;
+
+    int prevEnd = 0;
+    const QSet<TNRectNote *> *prevSet = nullptr;
+    for (const auto &pair : all) {
+        int tick = pair.first;
+        const auto &set = pair.second;
+        if (set.size() > 1) {
+            ignores.insert(&set);
+        }
+        if (prevEnd > tick) {
+            if (prevSet) {
+                ignores.insert(prevSet);
+            }
+            ignores.insert(&set);
+        }
+        for (auto note : set) {
+            tick = qMax(tick, note->start + note->length);
+        }
+        prevEnd = qMax(prevEnd, tick);
+        prevSet = &set;
+    }
+
+    for (const auto &pair : all) {
+        const auto &set = pair.second;
+        bool ignore = ignores.contains(&set);
+        for (auto note : set) {
+            note->setIgnored(ignore);
+        }
+    }
+
+    updateScreen();
+}
+
+void TNNotesCtl::updatePlayState() {
+    TPianoRollEvent e(TPianoRollEvent::PlayState);
+    e.dispatch(a);
+}
+
+void TNNotesCtl::updateScreen() {
+    QRectF rect = a->view()->viewportRect();
+    m_waveScreen->setPos(rect.topLeft());
+    m_waveScreen->setRect(QRectF(QPointF(0, 0), rect.size()));
+
+    int curWidth = a->currentWidth();
+
+    QList<QPair<double, QPixmap>> pixmaps;
+
+    // Calculate Bounding Rects
+    for (auto g : qAsConst(m_noteGroups)) {
+        auto cache = g->cache();
+        if (!cache) {
+            continue;
+        }
+
+        int startTick = g->firstBegin() - a->timeToTick(500);
+        int endTick = g->firstBegin() + a->timeToTick(cache->wave.duration() * 1000.0 - 500);
+
+        double x1 = double(startTick) / 480 * curWidth + a->zeroLine();
+        double x2 = double(endTick) / 480 * curWidth + a->zeroLine();
+
+        if (x2 < rect.left() || x1 > rect.right()) {
+            continue;
+        }
+
+        double W = x2 - x1;
+        double H = 4 * a->currentHeight();
+
+        double left = qMax(0.0, rect.left() - x1);
+        double right = qMin(W, rect.right() - x1);
+
+        double W2 = right - left;
+        double H2 = H / 2 - 10;
+
+        if (W2 < 1) {
+            continue;
+        }
+
+        QPixmap pixmap(W2, H);
+        pixmap.fill(Qt::transparent);
+
+        QPainter painter(&pixmap);
+        painter.setPen((m_currentGroup == g) ? QColor(255, 255, 255, 64)
+                                             : QColor(255, 255, 255, 32));
+        painter.translate(-left, 0);
+
+        // Draw Pixmap
+        {
+            const auto &data = cache->wave.channel1();
+
+            double A = pow(2.0, 8.0 * cache->wave.bytesPerSample() - 1);
+
+            int count = data.size();
+            double delta = 0.5;
+
+            double x = left;
+            double y = double(H) / 2;
+            while (x < right) {
+                int min = INT_MAX, max = INT_MIN;
+                for (int j = x * count / W; j < (x + 1) * count / W; j++) {
+                    if (j > 0 && j < count) {
+                        if (data[j] < min) {
+                            min = data[j];
+                        }
+                        if (data[j] > max) {
+                            max = data[j];
+                        }
+                    }
+                }
+                double y1 = y + (max * H2 / A);
+                double y2 = y + (min * H2 / A);
+                painter.drawLine(QPointF(x, y1), QPointF(x, y2));
+                x += delta;
+            }
+        }
+
+        pixmaps.append(qMakePair(x1, pixmap));
+    }
+
+    // Draw
+    if (!pixmaps.isEmpty()) {
+        QPixmap pixmap(rect.size().toSize());
+        pixmap.fill(Qt::transparent);
+
+        QPainter painter(&pixmap);
+
+        for (const auto &pair : qAsConst(pixmaps)) {
+            const auto &bmp = pair.second;
+            double pos = qMax(0.0, pair.first - rect.left());
+            painter.drawPixmap(QRect(QPoint(pos, rect.height() - bmp.height()), bmp.size()), bmp);
+        }
+
+        m_waveScreen->setPixmap(pixmap);
+    } else {
+        m_waveScreen->setPixmap(QPixmap());
+    }
+
+    m_waveScreen->update();
 }
 
 void TNNotesCtl::adjustAllGeometry() {
@@ -553,6 +825,7 @@ void TNNotesCtl::addUtterancesCore(const QList<TWProject::Utterance> &utters,
             }
             notesAdded.append(p);
         }
+        invalidGroup(g);
 
         if (res) {
             res->append(qMakePair(g, notesAdded));
@@ -560,12 +833,43 @@ void TNNotesCtl::addUtterancesCore(const QList<TWProject::Utterance> &utters,
     }
 
     adjustCanvas();
+    updatePlayState();
 
     // Move scroll
     if (firstNote) {
         a->setVisionFitToItem(firstNote, Qt::AnchorVerticalCenter, false);
         a->setVisionFitToItem(firstNote, Qt::AnchorHorizontalCenter, false);
     }
+}
+
+TWProject::Utterance TNNotesCtl::getUtterance(TNNoteGroup *group, bool ignore) const {
+    TWProject::Utterance u;
+
+    u.name = group->name;
+    u.singer = group->singerId;
+    u.romScheme = group->rom;
+
+    QList<TWProject::Note> notes;
+    const auto &all = group->begins();
+    for (const auto &pair : qAsConst(all)) {
+        const auto &set = pair.second;
+        for (auto note : set) {
+            if (ignore && note->ignored()) {
+                continue;
+            }
+
+            TWProject::Note n;
+            n.start = note->start;
+            n.length = note->length;
+            n.noteNum = note->tone;
+            n.rom = note->lyric;
+            n.lyric = note->lyric;
+            notes.append(n);
+        }
+    }
+
+    u.notes = std::move(notes);
+    return u;
 }
 
 bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
@@ -669,6 +973,66 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
             } else if (modifiers != data.selectS) {
                 deselect();
             }
+
+            // Change Singer Or Rom
+            if (item && item->type() == GraphicsImpl::GroupHintItem) {
+                auto hint = static_cast<TNGroupHint *>(item);
+                if (e->button() == Qt::LeftButton) {
+                    auto g = hint->noteGroup();
+                    TChangeVoiceEvent e(TChangeVoiceEvent::Singer);
+                    e.groupId = g->id;
+                    e.singerId = g->singerId;
+                    e.rom = g->rom;
+                    e.dispatch(a);
+
+                    QString oldSingerId = g->singerId;
+
+                    if (oldSingerId != e.singerId) {
+                        g->singerId = e.singerId;
+                        g->adjustHintGeometry();
+
+                        auto op = new TOSingerChange();
+                        op->rom = op->oldRom = g->rom;
+                        op->singerId = g->singerId;
+                        op->oldSingerId = oldSingerId;
+                        op->gid = g->id;
+
+                        TOperateEvent e;
+                        e.setData(op);
+                        e.dispatch(a);
+
+                        invalidGroup(g);
+                        updatePlayState();
+                    }
+                } else if (e->button() == Qt::RightButton) {
+                    auto g = hint->noteGroup();
+                    TChangeVoiceEvent e(TChangeVoiceEvent::Rom);
+                    e.groupId = g->id;
+                    e.singerId = g->singerId;
+                    e.rom = g->rom;
+                    e.dispatch(a);
+
+                    QString oldRom = g->rom;
+
+                    if (oldRom != e.rom) {
+                        g->rom = e.rom;
+                        g->adjustHintGeometry();
+
+                        auto op = new TOSingerChange();
+                        op->rom = g->rom;
+                        op->oldRom = oldRom;
+                        op->singerId = op->oldSingerId = g->singerId;
+                        op->gid = g->id;
+
+                        TOperateEvent e;
+                        e.setData(op);
+                        e.dispatch(a);
+
+                        invalidGroup(g);
+                        updatePlayState();
+                    }
+                }
+            }
             m_startPoint = e->scenePos();
             break;
         }
@@ -697,6 +1061,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
 
                     if (!m_movingData.isEmpty()) {
                         // Interrupt
+                        forceStopPlay();
                         sendInterrupt();
 
                         // Adjust delta
@@ -745,6 +1110,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                         }
                     } else if (!m_stretchingData.isEmpty()) {
                         // Interrupt
+                        forceStopPlay();
                         sendInterrupt();
 
                         for (auto &s : m_stretchingData) {
@@ -776,6 +1142,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                 } else {
                     if (!a->isSelecting() && !item && a->drawMode() == TNotesArea::DrawNote) {
                         // Interrupt
+                        forceStopPlay();
                         sendInterrupt();
 
                         // Start draw
@@ -841,6 +1208,9 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                         TOperateEvent e;
                         e.setData(op);
                         e.dispatch(a);
+
+                        invalidGroup(m_currentGroup);
+                        updatePlayState();
                     }
                 } else if (!m_stretchingData.isEmpty()) {
                     QList<TONoteStretch::StretchData> stretches;
@@ -868,6 +1238,9 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                         TOperateEvent e;
                         e.setData(op);
                         e.dispatch(a);
+
+                        invalidGroup(m_currentGroup);
+                        updatePlayState();
                     }
                 } else if (!m_drawingData.isEmpty()) {
                     auto &s = m_drawingData.front();
@@ -894,7 +1267,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                         TONoteInsDel::GroupData opGroup{
                             m_currentGroup->id,
                             m_currentGroup->name,
-                            m_currentGroup->singer,
+                            m_currentGroup->singerId,
                             m_currentGroup->rom,
                         };
 
@@ -909,6 +1282,9 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                         TOperateEvent e;
                         e.setData(op);
                         e.dispatch(a);
+
+                        invalidGroup(m_currentGroup);
+                        updatePlayState();
                     }
                 }
             }
@@ -938,6 +1314,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
         case QEvent::GraphicsSceneResize:
         case QEvent::GraphicsSceneMove: {
             adjustAllGroupHintPos();
+            updateScreen();
             break;
         }
 
@@ -1065,6 +1442,9 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                             TOperateEvent e;
                             e.setData(op);
                             e.dispatch(a);
+
+                            invalidGroup(m_currentGroup);
+                            updatePlayState();
                         }
 
                         m_cachedLyrics.clear();
@@ -1150,6 +1530,8 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
 
                         if (!ptrs.isEmpty()) {
                             adjustCanvas();
+                            invalidGroup(m_currentGroup);
+                            updatePlayState();
                             deselect();
 
                             QList<TONoteInsDel::NoteData> opNotes;
@@ -1168,7 +1550,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                             TONoteInsDel::GroupData opGroup{
                                 m_currentGroup->id,
                                 m_currentGroup->name,
-                                m_currentGroup->singer,
+                                m_currentGroup->singerId,
                                 m_currentGroup->rom,
                             };
 
@@ -1229,7 +1611,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                     TONoteInsDel::GroupData opGroup{
                         m_currentGroup->id,
                         m_currentGroup->name,
-                        m_currentGroup->singer,
+                        m_currentGroup->singerId,
                         m_currentGroup->rom,
                     };
 
@@ -1245,7 +1627,10 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                         switchGroup(m_mainGroup);
 
                         removeGroup(oldGroup);
+                    } else {
+                        invalidGroup(m_currentGroup);
                     }
+                    updatePlayState();
 
                     if (!opNotes.isEmpty()) {
                         // New Operation
@@ -1338,7 +1723,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                         TONoteInsDel::GroupData opGroup{
                             group->id,
                             group->name,
-                            group->singer,
+                            group->singerId,
                             group->rom,
                         };
 
@@ -1401,7 +1786,8 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                 break;
             }
             case QEventImpl::SceneActionEvent::Group: {
-                if (!m_selection->isEmpty() && m_selection->count() < m_currentGroup->count()) {
+                if (!m_selection->isEmpty() && (m_selection->count() < m_currentGroup->count() ||
+                                                m_currentGroup == m_mainGroup)) {
                     auto g = createGroup(0, QString(), QString(), QString());
                     QList<quint64> ids;
 
@@ -1418,10 +1804,10 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                     // New Operation
                     auto op = new TOGroupChange(TOGroupChange::Move);
                     op->ids = std::move(ids);
-                    op->group = TOGroupChange::GroupData{g->id, g->name, g->singer, g->rom};
+                    op->group = TOGroupChange::GroupData{g->id, g->name, g->singerId, g->rom};
                     op->oldGroup =
                         TOGroupChange::GroupData{m_currentGroup->id, m_currentGroup->name,
-                                                 m_currentGroup->singer, m_currentGroup->rom};
+                                                 m_currentGroup->singerId, m_currentGroup->rom};
 
                     // Dispatch
                     TOperateEvent e;
@@ -1430,10 +1816,14 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
 
                     auto oldGroup = m_currentGroup;
                     switchGroup(g);
+                    invalidGroup(g);
 
                     if (oldGroup != m_mainGroup && oldGroup->isEmpty()) {
                         removeGroup(oldGroup);
+                    } else {
+                        invalidGroup(oldGroup);
                     }
+                    updatePlayState();
                 }
 
                 break;
@@ -1457,10 +1847,10 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                     auto op = new TOGroupChange(TOGroupChange::Move);
                     op->ids = std::move(ids);
                     op->group = TOGroupChange::GroupData{m_mainGroup->id, m_mainGroup->name,
-                                                         m_mainGroup->singer, m_mainGroup->rom};
+                                                         m_mainGroup->singerId, m_mainGroup->rom};
                     op->oldGroup =
                         TOGroupChange::GroupData{m_currentGroup->id, m_currentGroup->name,
-                                                 m_currentGroup->singer, m_currentGroup->rom};
+                                                 m_currentGroup->singerId, m_currentGroup->rom};
 
                     // Dispatch
                     TOperateEvent e;
@@ -1469,10 +1859,14 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
 
                     auto oldGroup = m_currentGroup;
                     switchGroup(m_mainGroup);
+                    invalidGroup(m_mainGroup);
 
-                    if (oldGroup->isEmpty()) {
+                    if (oldGroup->isEmpty() && oldGroup != m_mainGroup) {
                         removeGroup(oldGroup);
+                    } else {
+                        invalidGroup(oldGroup);
                     }
+                    updatePlayState();
                 }
 
                 break;
@@ -1502,6 +1896,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                     adjustAllGeometry();
                 }
                 adjustAllGroupHintPos();
+                updateScreen();
                 break;
             }
             default:

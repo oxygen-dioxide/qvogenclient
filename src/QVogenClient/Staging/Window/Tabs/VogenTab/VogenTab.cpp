@@ -2,6 +2,7 @@
 #include "VogenTab_p.h"
 
 #include "DataManager.h"
+#include "ExtensionManager.h"
 #include "Logs/CRecordHolder.h"
 
 #include "Macros.h"
@@ -13,6 +14,8 @@
 #include "Utils/Events/TPianoRollEvent.h"
 
 #include "Utils/TWrappedData.h"
+
+#include "RHProtocol.h"
 
 #include <QApplication>
 #include <QDir>
@@ -139,6 +142,7 @@ void VogenTab::undo() {
         case TBaseOperation::NoteAddDelete:
         case TBaseOperation::GroupChange:
         case TBaseOperation::TempoTimeSig:
+        case TBaseOperation::SingerChange:
             success = d->piano->notesArea()->processOperation(op, true);
             break;
         default:
@@ -163,6 +167,7 @@ void VogenTab::redo() {
         case TBaseOperation::NoteAddDelete:
         case TBaseOperation::GroupChange:
         case TBaseOperation::TempoTimeSig:
+        case TBaseOperation::SingerChange:
             success = d->piano->notesArea()->processOperation(op, false);
             break;
         default:
@@ -241,6 +246,27 @@ void VogenTab::handleSpecificAction(ActionImpl::Action a) {
     }
     case ActionImpl::Modify_OctaveDown: {
         d->transpose(-12);
+        break;
+    }
+    case ActionImpl::Playback_Play: {
+        auto a = d->piano->notesArea();
+        if (!a->isPlaying()) {
+            a->play();
+        } else {
+            a->stop();
+        }
+        break;
+    }
+    case ActionImpl::Playback_Stop: {
+        d->piano->notesArea()->stop();
+        break;
+    }
+    case ActionImpl::Playback_Render: {
+        d->lazyRender();
+        break;
+    }
+    case ActionImpl::Playback_RemoveCache: {
+        d->piano->notesArea()->removeGroupCache(d->piano->notesArea()->currentGroupId());
         break;
     }
     default:

@@ -40,6 +40,7 @@ public:
 
     int showCommands(QCommandPalette::CommandType type);
     int showLineEdit(QCommandPalette::Hint *hint);
+    int showList(const QStringList &list, int current, const QString &placeholder);
 
 protected:
     // UI

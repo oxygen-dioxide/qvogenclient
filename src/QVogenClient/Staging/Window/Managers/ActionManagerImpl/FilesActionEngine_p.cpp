@@ -149,7 +149,7 @@ void FilesActionEnginePrivate::setup() {
     // Play
     play_play = NewAction(ActionImpl::Playback_Play, playMenu);
     play_stop = NewAction(ActionImpl::Playback_Stop, playMenu);
-    play_replay = NewAction(ActionImpl::Playback_Replay, playMenu);
+    play_render = NewAction(ActionImpl::Playback_Render, playMenu);
     play_moveStart = NewAction(ActionImpl::Playback_MoveStart, playMenu);
     play_moveEnd = NewAction(ActionImpl::Playback_MoveEnd, playMenu);
     play_removeCache = NewAction(ActionImpl::Playback_RemoveCache, playMenu);
@@ -262,7 +262,8 @@ void FilesActionEnginePrivate::setup() {
     // Play
     playMenu->addAction(play_play);
     playMenu->addAction(play_stop);
-    playMenu->addAction(play_replay);
+    playMenu->addSeparator();
+    playMenu->addAction(play_render);
     playMenu->addSeparator();
     playMenu->addAction(play_moveStart);
     playMenu->addAction(play_moveEnd);
@@ -392,7 +393,7 @@ void FilesActionEnginePrivate::reloadStrings() {
     // Play
     play_play->setText(QObject::tr("Play"));
     play_stop->setText(QObject::tr("Stop"));
-    play_replay->setText(QObject::tr("Replay"));
+    play_render->setText(QObject::tr("Render"));
     play_moveStart->setText(QObject::tr("Move to Start"));
     play_moveEnd->setText(QObject::tr("Move to End"));
     play_removeCache->setText(QObject::tr("Remove Cache"));
@@ -456,7 +457,7 @@ void FilesActionEnginePrivate::reloadShortcuts() {
     // Play
     play_play->setShortcut(QKeySequence("Space"));
     play_stop->setShortcut(QKeySequence("F6"));
-    play_replay->setShortcut(QKeySequence("Shift+F5"));
+    play_render->setShortcut(QKeySequence("F5"));
     play_exportAudio->setShortcut(QKeySequence("Ctrl+Shift+P"));
 
     // Help

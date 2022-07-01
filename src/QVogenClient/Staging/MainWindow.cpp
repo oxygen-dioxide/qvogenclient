@@ -217,6 +217,43 @@ int MainWindow::showLineEdit(QCommandPalette::Hint *hint) {
 
     return result;
 }
+
+int MainWindow::showList(const QStringList &list, int current, const QString &placeholder) {
+    int result = -1;
+
+    QEventLoop loop;
+
+    // Pipes
+    auto slot1 = [&loop]() mutable { loop.quit(); };
+    auto slot2 = [&result, &loop, this](QListWidgetItem *item) mutable {
+        Q_UNUSED(item);
+        result = m_cp->indexOf(item);
+        loop.quit();
+    };
+
+    // Connections
+    auto conn1 = connect(m_cp, &QCommandPalette::abandoned, this, slot1);
+    auto conn2 = connect(m_cp, &QCommandPalette::activated, this, slot2);
+
+    // Show
+    m_cp->showList(list, current, placeholder);
+    adjustSelector();
+
+    // Block
+    m_loops.insert(&loop);
+    loop.exec();
+    m_loops.remove(&loop);
+
+    // Disconnect: Don't use obj->disconnect() casually because it's really dangerous!
+    disconnect(conn1);
+    disconnect(conn2);
+
+    // Hide
+    m_cp->finish();
+
+    return result;
+}
+
 void MainWindow::resizeEvent(QResizeEvent *event) {
     BasicWindow::resizeEvent(event);
 

@@ -25,7 +25,7 @@ QStringList QSvgUri::toStringList() const {
                                    m_currentColor)};
 }
 
-QIcon QSvgUri::toIcon(Modes modes) const {
+QIcon QSvgUri::toIcon(int modes) const {
     if (!m_filename.isEmpty()) {
         QFileInfo info(m_filename);
         QString suffix = info.suffix();
@@ -39,13 +39,13 @@ QIcon QSvgUri::toIcon(Modes modes) const {
         if (info.isFile() && !suffix.compare("svg", Qt::CaseInsensitive)) {
             QIcon icon(new CSvgIconEngine(m_currentColor));
             icon.addFile(m_filename);
-            if (modes & QIcon::Disabled) {
+            if (modes & Disabled) {
                 icon.addFile(m_filename, {}, QIcon::Disabled);
             }
-            if (modes & QIcon::Active) {
+            if (modes & Active) {
                 icon.addFile(m_filename, {}, QIcon::Active);
             }
-            if (modes & QIcon::Selected) {
+            if (modes & Selected) {
                 icon.addFile(m_filename, {}, QIcon::Selected);
             }
             return icon;

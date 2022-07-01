@@ -13,12 +13,16 @@ public:
 public:
     void install() override;
 
+    void setPlaying(bool visible);
+    bool isPlaying() const;
+
+    void setCurrentTick(int tick);
+    int currentTick() const;
+
 protected:
     TNPlayhead *m_playhead;
 
-    int m_playToNote;
-    qint64 m_playToPosition;
-    double m_playToTick;
+    int m_playToTick;
 
     void updatePlayhead();
 

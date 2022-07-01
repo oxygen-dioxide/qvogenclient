@@ -1,6 +1,7 @@
 #ifndef TNNOTEGROUP_H
 #define TNNOTEGROUP_H
 
+#include "../../Utils/TWrappedData.h"
 #include "../Elements/TNGroupHint.h"
 
 #include "TNNoteListTmp.h"
@@ -21,7 +22,7 @@ public:
     quint64 id;
 
     QString name;
-    QString singer;
+    QString singerId;
     QString rom;
 
     TNGroupHint *hintItem() const;
@@ -29,18 +30,26 @@ public:
     void adjustHintGeometry();
     void adjustHintPos();
 
+    TWAudio::Audio *cache() const;
+    void setCache(const TWAudio::Audio &cache);
+    void removeCache();
+
+    QPixmap waveform() const;
+
 protected:
     TNotesArea *m_area;
 
     TNGroupHint *m_hintItem;
     TNRectNote *m_firstNote;
 
+    TWAudio::Audio *m_cache;
+
+    bool eventFilter(QObject *obj, QEvent *event) override;
+
 private:
     void _q_inserted(int beginIndex, int endIndex, TNRectNote *p);
     void _q_removed(int beginIndex, int endIndex, TNRectNote *p);
     void _q_beginChanged(int index, int oldIndex, TNRectNote *p);
-
-signals:
 };
 
 #endif // TNNOTEGROUP_H

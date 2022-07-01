@@ -106,6 +106,8 @@ void TNotesArea::customEvent(QEvent *event) {
                     TOperateEvent oe;
                     oe.setData(op);
                     oe.dispatch(this);
+
+                    removeAllCache();
                 }
                 break;
             }
@@ -128,6 +130,12 @@ void TNotesArea::customEvent(QEvent *event) {
     }
     default:
         break;
+    }
+}
+
+void TNotesArea::timerEvent(QTimerEvent *event) {
+    if (event->timerId() == m_playerTimerId) {
+        m_playCtl->setCurrentTick(timeToTick(m_player->pos()));
     }
 }
 

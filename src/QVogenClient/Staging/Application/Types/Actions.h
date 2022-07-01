@@ -69,7 +69,7 @@ namespace ActionImpl {
 
         Playback_Play,
         Playback_Stop,
-        Playback_Replay,
+        Playback_Render,
         Playback_MoveStart,
         Playback_MoveEnd,
         Playback_RemoveCache,
@@ -90,7 +90,8 @@ namespace ActionImpl {
         FileState = 0x1,
         EditState = 0x2,
         SelectState = 0x4,
-        StateMask = FileState | EditState | SelectState,
+        PlayState = 0x8,
+        StateMask = FileState | EditState | SelectState | PlayState,
     };
     Q_DECLARE_FLAGS(StateTypes, StateType);
 
@@ -113,6 +114,11 @@ namespace ActionImpl {
         SelectionFlag = 0x10000,
         SelectNoteFlag = SelectionFlag * 2,
         SelectionMask = SelectionFlag | SelectNoteFlag,
+
+        PlayFlag = 0x100000,
+        StopFlag = PlayFlag * 2,
+        RenderFlag = PlayFlag * 4,
+        PlayMask = PlayFlag | StopFlag | RenderFlag,
     };
 
     Q_DECLARE_FLAGS(States, State);

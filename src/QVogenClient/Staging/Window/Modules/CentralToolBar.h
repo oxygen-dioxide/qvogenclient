@@ -21,11 +21,20 @@ public:
         Free,
     };
 
+    enum PlayButton {
+        Play,
+        Stop,
+        Synth,
+    };
+
     CursorModes cursorMode() const;
     void setCursorMode(CursorModes mode);
 
+    void setPlayFlags(int flags);
+
 signals:
     void cursorModeChanged(int mode);
+    void playButtonClicked(int id);
 
 protected:
     CentralToolBar(CentralToolBarPrivate &d, QWidget *parent = nullptr);

@@ -402,8 +402,8 @@ QString DataManager::fileManagerName() const {
 #endif
 }
 
-QString DataManager::getRandomDirName() const {
-    return QString("Temporary_%1").arg(makeRandomString(8));
+QString DataManager::getRandomDirName(const QString &prefix) const {
+    return QString("%1_%2").arg(prefix, makeRandomString(8));
 }
 
 QString DataManager::allocGlobalTempDirName() const {
@@ -413,4 +413,9 @@ QString DataManager::allocGlobalTempDirName() const {
 
 QString DataManager::allocVoiceTempDirName() const {
     return getStandardPath(Voice) + Slash + getRandomDirName();
+}
+
+QString DataManager::allocProjectTempDirName() const {
+    Q_D(const DataManager);
+    return d->appTempPath + Slash + "projects" + Slash + getRandomDirName("Vog");
 }

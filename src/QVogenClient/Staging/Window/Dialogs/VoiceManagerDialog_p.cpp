@@ -78,7 +78,6 @@ void VoiceManagerDialogPrivate::reloadVoices() {
         item->setText(2, info.builtBy);
         item->setText(3, info.voiceBy);
 
-        item->setData(0, DataRole::VoicePath, info.dirname());
         item->setData(0, DataRole::VoiceIdentity, info.id);
 
         voiceItem->addChild(item);

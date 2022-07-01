@@ -7,6 +7,8 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
+#include "Import/QWaveInfo.h"
+
 class TWProject {
 public:
     TWProject();
@@ -80,7 +82,15 @@ namespace TWNote {
         QString rom;
     };
 
-
 } // namespace TWNote
+
+namespace TWAudio {
+
+    struct Audio {
+        QList<double> pitches;
+        QWaveInfo wave;
+    };
+
+} // namespace TWAudio
 
 #endif // TWRAPPEDDATA_H

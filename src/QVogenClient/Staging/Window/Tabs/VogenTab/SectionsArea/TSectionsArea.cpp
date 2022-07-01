@@ -5,6 +5,7 @@
 
 #include <QtMath>
 
+#include "../Utils/Events/PianoRoll/TSetPlayheadEvent.h"
 #include "../Utils/Events/TPianoRollEvent.h"
 #include "../VogenTab.h"
 
@@ -242,7 +243,18 @@ void TSectionsArea::mousePressEvent(QMouseEvent *event) {
     } else if (rects.second.contains(pos)) {
         TPianoRollEvent e(TPianoRollEvent::ChangeTempo);
         e.dispatch(this);
+    } else {
+        TSetPlayheadEvent e;
+        e.x = m_horizontalValue + event->pos().x();
+        e.dispatch(this);
     }
 
     QWidget::mousePressEvent(event);
+}
+
+void TSectionsArea::mouseMoveEvent(QMouseEvent *event) {
+    TSetPlayheadEvent e;
+    e.x = m_horizontalValue + event->pos().x();
+    e.dispatch(this);
+    QWidget::mouseMoveEvent(event);
 }

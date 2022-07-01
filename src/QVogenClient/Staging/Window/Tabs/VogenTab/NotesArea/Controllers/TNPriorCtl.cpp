@@ -4,6 +4,7 @@
 
 #include "CMenu.h"
 #include "Types/Events.h"
+#include "Types/Graphics.h"
 
 #include <QApplication>
 #include <QDebug>
@@ -117,7 +118,14 @@ bool TNPriorCtl::eventFilter(QObject *obj, QEvent *event) {
             }
             if (btn == Qt::RightButton) {
                 if (!a->isSelecting()) {
-                    openContextMenu();
+                    if (!m_itemUnderMouse) {
+                        openContextMenu();
+                    } else if (m_itemUnderMouse->type() == GraphicsImpl::NoteItem) {
+                        auto noteItem = static_cast<TNRectNote *>(m_itemUnderMouse);
+                        if (noteItem->isEnabled()) {
+                            openContextMenu();
+                        }
+                    }
                 }
             }
             m_downButton = Qt::NoButton;
@@ -139,6 +147,8 @@ bool TNPriorCtl::eventFilter(QObject *obj, QEvent *event) {
                 default:
                     break;
                 }
+
+                forceStopPlay();
                 break;
             }
             default:
@@ -161,6 +171,7 @@ bool TNPriorCtl::eventFilter(QObject *obj, QEvent *event) {
             case QEventImpl::SceneActionEvent::Group:
             case QEventImpl::SceneActionEvent::Ungroup: {
                 // Interrupt
+                forceStopPlay();
                 sendInterrupt();
                 break;
             }

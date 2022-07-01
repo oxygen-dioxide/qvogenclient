@@ -50,6 +50,7 @@ public:
     bool canRedo() const;
 
     int selectionFlags() const;
+    int playFlags() const;
 
 protected:
     void setTabName(const QString &tabName) override final; // Set the title of tab

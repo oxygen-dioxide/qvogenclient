@@ -7,7 +7,7 @@
 #include "BaseManager.h"
 #include "Macros.h"
 
-#include "QVogenVoiceInfo.h"
+#include "RenderHost.h"
 
 #define qTheme ExtensionManager::instance()
 
@@ -31,7 +31,9 @@ public:
     QString themeName(int index) const;
 
     void reloadVoiceList();
-    const QList<QVogenVoiceInfo> &voiceList() const;
+    const QList<RH::VoiceLibMetadata> &voiceList() const;
+
+    RH::RenderHost *server() const;
 
 protected:
     ExtensionManager(ExtensionManagerPrivate &d, QObject *parent = nullptr);

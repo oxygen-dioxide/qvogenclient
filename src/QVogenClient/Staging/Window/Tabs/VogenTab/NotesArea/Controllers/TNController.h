@@ -15,6 +15,7 @@ public:
     virtual void install();
 
     void sendInterrupt();
+    void forceStopPlay();
 
 protected:
     TNotesArea *a;

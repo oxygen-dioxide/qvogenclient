@@ -17,6 +17,7 @@ public:
     QString filename;
 
     int selectionFlags;
+    int playFlags;
 
     virtual bool earliest() const;
     virtual bool latest() const;

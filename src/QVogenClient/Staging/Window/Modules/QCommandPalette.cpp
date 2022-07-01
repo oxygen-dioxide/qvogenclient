@@ -81,8 +81,7 @@ void QCommandPalette::showCommands(QCommandPalette::CommandType type) {
         QListWidgetItem *curItem = nullptr;
         for (auto item : qAsConst(d->themeItems)) {
             d->listWidget->addItem(item);
-            if (item->data(QCommandPalettePrivate::ThemeIndex).toInt() ==
-                qRecordCData.themeIndex) {
+            if (item->data(QCommandPalettePrivate::ThemeIndex).toInt() == qRecordCData.themeIndex) {
                 curItem = item;
             }
         }
@@ -124,6 +123,32 @@ void QCommandPalette::showLineEdit(Hint *hint) {
     show();
 }
 
+void QCommandPalette::showList(const QStringList &list, int current, const QString &placeholder) {
+    Q_D(QCommandPalette);
+
+    if (isVisible()) {
+        d->abandon();
+        d->reset();
+    }
+
+    d->curCmdType = Custom;
+
+    d->lineEdit->setPlaceholderText(placeholder);
+
+    for (int i = 0; i < list.size(); ++i) {
+        auto item = d->createItem(QIcon(), QSize(), 0, QString(), QString(), QString());
+        item->setData(QCommandPalettePrivate::TempIndex, i);
+        item->setText(list.at(i));
+        d->listWidget->addItem(item);
+        if (i == current) {
+            d->listWidget->setCurrentItem(item);
+        }
+    }
+
+    d->listWidget->show();
+    show();
+}
+
 void QCommandPalette::finish() {
     Q_D(QCommandPalette);
 
@@ -144,6 +169,16 @@ bool QCommandPalette::asStdin() const {
 QString QCommandPalette::text() const {
     Q_D(const QCommandPalette);
     return d->lineEdit->text();
+}
+
+int QCommandPalette::indexOf(QListWidgetItem *item) const {
+    Q_D(const QCommandPalette);
+    for (int i = 0; i < d->listWidget->count(); ++i) {
+        if (d->listWidget->item(i) == item) {
+            return i;
+        }
+    }
+    return -1;
 }
 
 void QCommandPalette::showEvent(QShowEvent *event) {

@@ -41,6 +41,8 @@ bool EventManager::load() {
     // Handle cursor mode
     connect(d->w->toolBar(), &CentralToolBar::cursorModeChanged, this,
             &EventManager::_q_cursorModeChanged);
+    connect(d->w->toolBar(), &CentralToolBar::playButtonClicked, this,
+            &EventManager::_q_playButtonClicked);
 
     return true;
 }
@@ -243,6 +245,23 @@ void EventManager::_q_cursorModeChanged(int mode) {
         break;
     case CentralToolBar::Free:
         d->w->tabMgr()->triggerCurrent(ActionImpl::View_Cursor_Freehand);
+        break;
+    default:
+        break;
+    }
+}
+
+void EventManager::_q_playButtonClicked(int id) {
+    Q_D(EventManager);
+    switch (id) {
+    case CentralToolBar::Play:
+        d->w->tabMgr()->triggerCurrent(ActionImpl::Playback_Play);
+        break;
+    case CentralToolBar::Stop:
+        d->w->tabMgr()->triggerCurrent(ActionImpl::Playback_Stop);
+        break;
+    case CentralToolBar::Synth:
+        d->w->tabMgr()->triggerCurrent(ActionImpl::Playback_Render);
         break;
     default:
         break;

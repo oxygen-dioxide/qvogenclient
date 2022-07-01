@@ -49,6 +49,9 @@ TNotesArea::TNotesArea(TNotesAreaPrivate &d, TNotesScroll *parent)
     m_tempo = 120.0;
     m_timeSig = qMakePair(4, 4);
 
+    m_player = new TMultiPlayer(this);
+    m_playerTimerId = 0;
+
     m_priorCtl = new TNPriorCtl(this);
     m_transCtl = new TNTransformCtl(this);
     m_selectCtl = new TNSelectCtl(this);
@@ -203,6 +206,16 @@ double TNotesArea::convertWidthToLength(int width) const {
     return double(width) / curWidth * 480;
 }
 
+double TNotesArea::tickToTime(int tick) const {
+    double unit = 120.0 / m_tempo / 0.96;
+    return tick * unit;
+}
+
+int TNotesArea::timeToTick(double time) const {
+    double unit = 120.0 / m_tempo / 0.96;
+    return time / unit;
+}
+
 void TNotesArea::adjustBackground() {
     int curWidth = currentWidth();
     int curHeight = currentHeight();
@@ -287,6 +300,7 @@ void TNotesArea::setTimeSig(int a, int b) {
     m_notesCtl->adjustAllGeometry();
     m_notesCtl->adjustAllGroupHintPos();
     m_notesCtl->adjustCanvas();
+    m_notesCtl->updateScreen();
     adjustBackground();
 
     QEventImpl::SceneStateChangeEvent e(QEventImpl::SceneStateChangeEvent::TimeSig);
@@ -331,6 +345,34 @@ bool TNotesArea::hasSelection() const {
 
 quint64 TNotesArea::currentGroupId() const {
     return m_notesCtl->currentGroupId();
+}
+
+QList<quint64> TNotesArea::groupIdList() const {
+    return m_notesCtl->groupIdList();
+}
+
+void TNotesArea::setGroupCache(quint64 id, const QList<double> &pitches, const QString &waveFile) {
+    m_notesCtl->setGroupCache(id, pitches, waveFile);
+}
+
+void TNotesArea::removeGroupCache(quint64 id) {
+    m_notesCtl->removeGroupCache(id);
+}
+
+void TNotesArea::removeAllCache() {
+    m_notesCtl->removeAllCache();
+}
+
+bool TNotesArea::hasCache(quint64 id) const {
+    return m_notesCtl->hasCache(id);
+}
+
+TWProject::Utterance TNotesArea::currentValidUtterance() const {
+    return m_notesCtl->currentValidUtterance();
+}
+
+TWProject::Utterance TNotesArea::validUtterance(quint64 gid) const {
+    return m_notesCtl->validUtterance(gid);
 }
 
 QPair<int, int> TNotesArea::timeSig() const {

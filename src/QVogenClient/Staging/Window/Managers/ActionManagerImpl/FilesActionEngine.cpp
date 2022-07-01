@@ -43,6 +43,17 @@ void FilesActionEngine::updateStates(ActionImpl::StateTypes st) {
         d->edit_selectAll->setEnabled(states & ActionImpl::DocumentFlag);
         d->edit_deselect->setEnabled(states & ActionImpl::SelectionFlag);
     }
+
+    if (st & ActionImpl::PlayState) {
+        d->play_play->setEnabled(states & (ActionImpl::PlayFlag | ActionImpl::StopFlag));
+        d->play_stop->setEnabled(states & ActionImpl::StopFlag);
+        d->play_render->setEnabled(states & ActionImpl::RenderFlag);
+        d->play_moveStart->setEnabled(states & ActionImpl::DocumentFlag);
+        d->play_moveEnd->setEnabled(states & ActionImpl::DocumentFlag);
+        d->play_removeCache->setEnabled((states & ActionImpl::DocumentFlag) &&
+                                        !d->play_render->isEnabled());
+        d->play_exportAudio->setEnabled(false);
+    }
 }
 
 FilesActionEngine::FilesActionEngine(FilesActionEnginePrivate &d, QObject *parent)

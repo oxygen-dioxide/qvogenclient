@@ -4,6 +4,8 @@
 #include "MainWindow.h"
 #include "Managers/TabManager.h"
 
+#include "Types/Actions.h"
+
 CentralToolBar::CentralToolBar(QWidget *parent)
     : CentralToolBar(*new CentralToolBarPrivate(), parent) {
 }
@@ -34,6 +36,13 @@ void CentralToolBar::setCursorMode(CursorModes mode) {
     }
 }
 
+void CentralToolBar::setPlayFlags(int flags) {
+    Q_D(CentralToolBar);
+    d->m_playButton->setEnabled(flags & ActionImpl::PlayFlag);
+    d->m_stopButton->setEnabled(flags & ActionImpl::StopFlag);
+    d->m_synthButton->setEnabled(flags & ActionImpl::RenderFlag);
+}
+
 CentralToolBar::CentralToolBar(CentralToolBarPrivate &d, QWidget *parent)
     : QWidget(parent), d_ptr(&d) {
     d.q_ptr = this;
@@ -50,5 +59,11 @@ void CentralToolBar::_q_buttonClicked() {
         emit cursorModeChanged(CursorModes::Sketch);
     } else if (button == d->m_freehandButton) {
         emit cursorModeChanged(CursorModes::Free);
+    } else if (button == d->m_playButton) {
+        emit playButtonClicked(PlayButton::Play);
+    } else if (button == d->m_stopButton) {
+        emit playButtonClicked(PlayButton::Stop);
+    } else if (button == d->m_synthButton) {
+        emit playButtonClicked(PlayButton::Synth);
     }
 }

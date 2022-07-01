@@ -32,6 +32,7 @@ protected:
 
 private:
     void _q_cursorModeChanged(int mode);
+    void _q_playButtonClicked(int id);
 };
 
 #endif // EVENTMANAGER_H

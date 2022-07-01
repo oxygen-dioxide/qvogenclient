@@ -44,8 +44,12 @@ void TNGroupHint::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
     painter->drawText(originRect, Qt::AlignCenter, hintText());
 }
 
+TNNoteGroup *TNGroupHint::noteGroup() const {
+    return g;
+}
+
 QString TNGroupHint::hintText() const {
-    return QString("%1 | %2").arg(g->singer.isEmpty() ? "(None)" : g->singer,
+    return QString("%1 | %2").arg(g->singerId.isEmpty() ? "(None)" : g->singerId,
                                   g->rom.isEmpty() ? "(None)" : g->rom);
 }
 

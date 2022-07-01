@@ -25,6 +25,8 @@ ExtensionManager::~ExtensionManager() {
 bool ExtensionManager::load() {
     Q_D(ExtensionManager);
 
+    Q_UNUSED(d);
+
     // Load Voice
     reloadVoiceList();
 
@@ -103,22 +105,20 @@ QString ExtensionManager::themeName(int index) const {
 void ExtensionManager::reloadVoiceList() {
     Q_D(ExtensionManager);
     d->voices.clear();
-    QDir voiceDir(qData->getStandardPath(DataManager::Voice));
-    if (voiceDir.exists()) {
-        QStringList flist = voiceDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name);
-        for (auto it = flist.begin(); it != flist.end(); ++it) {
-            QString subPath = voiceDir.absoluteFilePath(*it);
-            QVogenVoiceInfo info(subPath);
-            if (info.load()) {
-                d->voices.append(info);
-            }
-        }
+    bool res = d->host->getVoiceLibs(&d->voices);
+    if (!res) {
+        qDebug() << "Failed to get voice libraries";
     }
 }
 
-const QList<QVogenVoiceInfo> &ExtensionManager::voiceList() const {
+const QList<RH::VoiceLibMetadata> &ExtensionManager::voiceList() const {
     Q_D(const ExtensionManager);
     return d->voices;
+}
+
+RH::RenderHost *ExtensionManager::server() const {
+    Q_D(const ExtensionManager);
+    return d->host;
 }
 
 ExtensionManager::ExtensionManager(ExtensionManagerPrivate &d, QObject *parent)

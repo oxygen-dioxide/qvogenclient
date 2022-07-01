@@ -10,7 +10,13 @@ QCommandPalettePrivate::QCommandPalettePrivate() {
 }
 
 QCommandPalettePrivate::~QCommandPalettePrivate() {
-    for (auto item : qAsConst(cachedItems)) {
+    for (auto item : qAsConst(quantizationItems)) {
+        delete item;
+    }
+    for (auto item : qAsConst(languageItems)) {
+        delete item;
+    }
+    for (auto item : qAsConst(themeItems)) {
         delete item;
     }
 }
@@ -50,23 +56,21 @@ void QCommandPalettePrivate::init() {
     // Quantizations
     QList<int> quantizes{1, 2, 4, 6, 8, 12, 16, 24, 32 /*, 0*/};
     for (auto quantize : qAsConst(quantizes)) {
-        auto item = createItem(QIcon(), QSize(), ActionImpl::View_Quantization, QString(),
-                               QString(), QString());
+        auto item = createItem(QIcon(), QSize(), 0, QString(), QString(), QString());
         item->setData(CommandItemTypes::Quantization, quantize);
         quantizationItems.append(item);
     }
 
     // Languages
     for (int i = 0; i < qData->localeCount(); ++i) {
-        auto item = createItem(QIcon(), QSize(), ActionImpl::File_Languages, QString(), QString(),
-                               QString());
+        auto item = createItem(QIcon(), QSize(), 0, QString(), QString(), QString());
         item->setData(CommandItemTypes::LanguageIndex, i);
         languageItems.append(item);
     }
 
     // Themes
     for (int i = 0; i < qTheme->themeCount(); ++i) {
-        auto item = createItem(QIcon(), QSize(), ActionImpl::File_ColorThemes, QString(), QString(),
+        auto item = createItem(QIcon(), QSize(), 0, QString(), QString(),
                                QString());
         item->setData(CommandItemTypes::ThemeIndex, i);
         themeItems.append(item);
@@ -76,7 +80,7 @@ void QCommandPalettePrivate::init() {
 void QCommandPalettePrivate::activateItem(QListWidgetItem *item) {
     Q_Q(QCommandPalette);
 
-     // Item can be null even if there're items in list widget
+    // Item can be null even if there're items in list widget
     if (item) {
         switch (curCmdType) {
         case QCommandPalette::Quantization: {
@@ -148,7 +152,10 @@ void QCommandPalettePrivate::reset() {
     QSignalBlocker sb2(lineEdit);
 
     while (listWidget->count() > 0) {
-        listWidget->takeItem(0);
+        auto item = listWidget->takeItem(0);
+        if (item->data(TempIndex).type() == QVariant::Int) {
+            delete item;
+        }
     }
     lineEdit->clear();
     lineEdit->setPlaceholderText(QString());
@@ -167,7 +174,6 @@ QListWidgetItem *QCommandPalettePrivate::createItem(const QIcon &icon, const QSi
     item->setData(QCommandPaletteItemDelegate::Icon, icon);
     item->setData(QCommandPaletteItemDelegate::IconSize, size);
     item->setData(QCommandPaletteItemDelegate::Type, type);
-    cachedItems.append(item);
     return item;
 }
 

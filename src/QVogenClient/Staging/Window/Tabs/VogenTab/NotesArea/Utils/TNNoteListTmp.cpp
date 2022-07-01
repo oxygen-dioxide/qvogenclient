@@ -8,6 +8,24 @@ TNNoteList::TNNoteList(QObject *parent) : QObject(parent) {
 TNNoteList::~TNNoteList() {
 }
 
+TNNoteList::TimeData::TimeData() : first(0) {
+}
+
+TNNoteList::TimeData::TimeData(int tick, const std::initializer_list<TNRectNote *> &list)
+    : first(tick) {
+    for (auto note : list) {
+        second.insert(note);
+    }
+}
+
+void TNNoteList::TimeData::insert(TNRectNote *item) {
+    second.insert(item);
+}
+
+void TNNoteList::TimeData::remove(TNRectNote *item) {
+    second.remove(item);
+}
+
 bool TNNoteList::insert(TNRectNote *item) {
     // Insert to set
     if (m_set.contains(item)) {
@@ -104,11 +122,11 @@ int TNNoteList::findEnd(TNRectNote *item, int *pos) {
     return -1;
 }
 
-const QList<QPair<int, QSet<TNRectNote *>>> &TNNoteList::begins() const {
+const QList<TNNoteList::TimeData> &TNNoteList::begins() const {
     return m_begins;
 }
 
-const QList<QPair<int, QSet<TNRectNote *>>> &TNNoteList::ends() const {
+const QList<TNNoteList::TimeData> &TNNoteList::ends() const {
     return m_ends;
 }
 
@@ -184,13 +202,12 @@ int TNNoteList::insert_begin(TNRectNote *item, int val) {
     int index = lowerBound_begin(val);
     if (index < m_begins.size()) {
         auto &pair = m_begins[index];
-        auto &set = pair.second;
         if (pair.first == val) {
-            set.insert(item);
+            pair.insert(item);
             return index;
         }
     }
-    m_begins.insert(index, qMakePair(val, QSet({item})));
+    m_begins.insert(index, TimeData(val, {item}));
     return index;
 }
 
@@ -198,13 +215,12 @@ int TNNoteList::insert_end(TNRectNote *item, int val) {
     int index = lowerBound_end(val);
     if (index < m_ends.size()) {
         auto &pair = m_ends[index];
-        auto &set = pair.second;
         if (pair.first == val) {
-            set.insert(item);
+            pair.insert(item);
             return index;
         }
     }
-    m_ends.insert(index, qMakePair(val, QSet({item})));
+    m_ends.insert(index, TimeData(val, {item}));
     return index;
 }
 

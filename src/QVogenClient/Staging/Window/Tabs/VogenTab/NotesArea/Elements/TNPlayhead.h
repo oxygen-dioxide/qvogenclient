@@ -19,9 +19,13 @@ public:
     bool alwaysShow() const;
     void setAlwaysShow(bool alwaysShow);
 
-private:
+public:
     QPainterPath shape() const override;
 
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+               QWidget *widget = nullptr) override;
+
+protected:
     bool m_playing;
     bool m_alwaysShow;
 };

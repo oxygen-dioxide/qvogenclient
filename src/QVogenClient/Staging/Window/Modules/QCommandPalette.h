@@ -23,6 +23,7 @@ public:
 
     enum CommandType {
         NoCommands,
+        Custom,
         All,
         RecentFiles,
         RecentDirs,
@@ -48,11 +49,14 @@ public:
 public:
     void showCommands(CommandType type);
     void showLineEdit(Hint *hint);
+    void showList(const QStringList &list, int current, const QString &placeholder);
     void finish();
 
     int count() const;
     bool asStdin() const;
     QString text() const;
+
+    int indexOf(QListWidgetItem *item) const;
 
 signals:
     void activated(QListWidgetItem *item);

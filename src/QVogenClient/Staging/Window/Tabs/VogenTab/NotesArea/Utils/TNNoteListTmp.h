@@ -6,13 +6,27 @@
 #include <QPair>
 #include <QSet>
 
+#include <list>
+
 #include "../Elements/TNRectNote.h"
+#include "QNavigatableList.h"
 
 class TNNoteList : public QObject {
     Q_OBJECT
 public:
     explicit TNNoteList(QObject *parent = nullptr);
     ~TNNoteList();
+
+    struct TimeData {
+        int first;
+        QSet<TNRectNote *> second;
+
+        TimeData();
+        TimeData(int tick, const std::initializer_list<TNRectNote *> &list);
+
+        void insert(TNRectNote *item);
+        void remove(TNRectNote *item);
+    };
 
 public:
     bool insert(TNRectNote *item);
@@ -27,8 +41,8 @@ public:
     int findBegin(TNRectNote *item, int *pos = nullptr);
     int findEnd(TNRectNote *item, int *pos = nullptr);
 
-    const QList<QPair<int, QSet<TNRectNote *>>> &begins() const;
-    const QList<QPair<int, QSet<TNRectNote *>>> &ends() const;
+    const QList<TimeData> &begins() const;
+    const QList<TimeData> &ends() const;
 
     int firstBegin() const;
     int lastEnd() const;
@@ -44,8 +58,8 @@ signals:
     void endChanged(int index, int oldIndex, TNRectNote *p);
 
 protected:
-    QList<QPair<int, QSet<TNRectNote *>>> m_begins;
-    QList<QPair<int, QSet<TNRectNote *>>> m_ends;
+    QList<TimeData> m_begins;
+    QList<TimeData> m_ends;
     QSet<TNRectNote *> m_set;
 
     int lowerBound_begin(int val) const;

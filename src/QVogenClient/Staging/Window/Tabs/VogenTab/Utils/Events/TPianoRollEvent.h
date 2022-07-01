@@ -14,6 +14,9 @@ public:
         ChangeTimeSig,
         ChangeTempo,
         Operate,
+        ChangeVoice,
+        PlayState,
+        SetPlayhead,
     };
 
     inline int pType() const {

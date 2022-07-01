@@ -5,6 +5,7 @@
 CentralTabPrivate::CentralTabPrivate() {
     edited = false;
     selectionFlags = 0;
+    playFlags = 0;
 }
 
 CentralTabPrivate::~CentralTabPrivate() {

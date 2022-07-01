@@ -2,6 +2,7 @@
 #define QSAPPLICATION_H
 
 #include "CApplication.h"
+#include "RenderHost.h"
 
 #ifdef qApp
 #undef qApp

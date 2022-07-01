@@ -95,6 +95,23 @@ void TabManagerPrivate::reloadActionStates(ActionImpl::StateTypes st) {
         }
     }
 
+    if (st & ActionImpl::PlayState) {
+        states &= ~ActionImpl::PlayMask;
+        if (tab) {
+            if (tab->type() & CentralTab::Document) {
+                auto docTab = qobject_cast<DocumentTab *>(tab);
+                states |= ActionImpl::DocumentFlag;
+                states |= (docTab->playFlags() & ActionImpl::PlayFlag) ? ActionImpl::PlayFlag
+                                                                       : ActionImpl::NoFlag;
+                states |= (docTab->playFlags() & ActionImpl::StopFlag) ? ActionImpl::StopFlag
+                                                                       : ActionImpl::NoFlag;
+                states |= (docTab->playFlags() & ActionImpl::RenderFlag) ? ActionImpl::RenderFlag
+                                                                         : ActionImpl::NoFlag;
+            }
+        }
+        w->toolBar()->setPlayFlags(states);
+    }
+
     w->actionMgr()->reloadStates(st);
 }
 

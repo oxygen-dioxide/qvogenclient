@@ -15,6 +15,8 @@ public:
         NoteAddDelete,
         GroupChange,
         TempoTimeSig,
+        SingerChange,
+        RomChange,
     };
 
 public:

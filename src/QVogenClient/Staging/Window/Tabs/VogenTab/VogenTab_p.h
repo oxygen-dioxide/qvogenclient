@@ -8,6 +8,7 @@
 
 #include "QVogenFile.h"
 
+#include "Utils/Events/PianoRoll/TChangeVoiceEvent.h"
 #include "Utils/Events/TPianoRollEvent.h"
 
 #include "Utils/Operations/TBaseOperation.h"
@@ -34,6 +35,8 @@ public:
     // Data
     QVogenFile vog;
 
+    QString tempDir;
+
     bool saveFile(const QString &filename);
 
     // Operations
@@ -58,6 +61,10 @@ public:
 
     void inputTranspose();
     void transpose(int val);
+
+    void changeVoice(TChangeVoiceEvent *event);
+
+    void lazyRender();
 
     QString setTabNameProxy(const QString &tabName) override;
 };

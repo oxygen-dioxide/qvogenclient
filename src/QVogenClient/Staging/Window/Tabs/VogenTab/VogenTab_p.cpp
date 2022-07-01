@@ -2,11 +2,18 @@
 
 #include "DataManager.h"
 
+#include "Utils/Events/PianoRoll/TSetPlayheadEvent.h"
 #include "Utils/Events/TDigitTimeSigEvent.h"
 #include "Utils/Events/TOperateEvent.h"
 
+#include "SystemHelper.h"
+
 #include "MainWindow.h"
 #include "Modules/QCommandPalette.h"
+
+#include "ExtensionManager.h"
+
+#include "RHProtocol.h"
 
 #include <QApplication>
 #include <QMessageBox>
@@ -22,6 +29,9 @@ VogenTabPrivate::VogenTabPrivate() {
 
 VogenTabPrivate::~VogenTabPrivate() {
     clearHistory();
+
+    // Remove Temp Dir
+    Sys::rmDir(tempDir);
 }
 
 void VogenTabPrivate::init() {
@@ -43,6 +53,10 @@ void VogenTabPrivate::init() {
     layout->addWidget(piano, 0, 0);
 
     q->setLayout(layout);
+
+    // Init Temp Dir
+    tempDir = qData->allocProjectTempDirName();
+    Sys::mkDir(tempDir);
 }
 
 bool VogenTabPrivate::saveFile(const QString &filename) {
@@ -144,6 +158,31 @@ void VogenTabPrivate::dispatchEvent(TPianoRollEvent *event) {
         inputTempo();
         break;
     }
+    case TPianoRollEvent::ChangeVoice: {
+        auto e = static_cast<TChangeVoiceEvent *>(event);
+        changeVoice(e);
+        break;
+    }
+    case TPianoRollEvent::PlayState: {
+        auto a = piano->notesArea();
+
+        playFlags = 0;
+        playFlags |= a->isPlaying() ? ActionImpl::StopFlag : ActionImpl::PlayFlag;
+        playFlags |= a->hasCache(a->currentGroupId()) ? ActionImpl::NoFlag : ActionImpl::RenderFlag;
+
+        QEventImpl::MenuUpdateRequestEvent e(ActionImpl::PlayState);
+        qApp->sendEvent(q->window(), &e);
+        break;
+    }
+    case TPianoRollEvent::SetPlayhead: {
+        auto e = static_cast<TSetPlayheadEvent *>(event);
+        auto a = piano->notesArea();
+        if (!a->isPlaying()) {
+            int tick = a->convertPositionToValue(QPointF(e->x, 0)).first;
+            a->setCurrentTick(tick);
+        }
+        break;
+    }
     default:
         break;
     }
@@ -151,6 +190,8 @@ void VogenTabPrivate::dispatchEvent(TPianoRollEvent *event) {
 
 void VogenTabPrivate::inputLyrics() {
     Q_Q(VogenTab);
+
+    piano->notesArea()->stop();
 
     // Call editor to start accepting stdin
     StdinRequestEvent e1(StdinRequestEvent::Lyrics, StdinRequestEvent::InputStart);
@@ -186,6 +227,9 @@ void VogenTabPrivate::inputLyrics() {
 
 void VogenTabPrivate::inputBeat() {
     Q_Q(VogenTab);
+
+    piano->notesArea()->stop();
+
     auto timeSig = piano->notesArea()->timeSig();
     const char fmt[] = "%d/%d";
 
@@ -216,6 +260,8 @@ void VogenTabPrivate::inputBeat() {
 void VogenTabPrivate::inputTempo() {
     Q_Q(VogenTab);
 
+    piano->notesArea()->stop();
+
     auto w = qobject_cast<MainWindow *>(q->window());
     QCommandPalette::Hint hint(QString::number(piano->notesArea()->tempo()),
                                VogenTab::tr("Enter the new tempo (10 ~ 512)"), false);
@@ -238,6 +284,8 @@ void VogenTabPrivate::inputTempo() {
 void VogenTabPrivate::inputTranspose() {
     Q_Q(VogenTab);
 
+    piano->notesArea()->stop();
+
     auto w = qobject_cast<MainWindow *>(q->window());
     QCommandPalette::Hint hint(QString(), VogenTab::tr("Enter the transpose offset (0 ~ 84)"),
                                false);
@@ -253,9 +301,126 @@ void VogenTabPrivate::inputTranspose() {
 }
 
 void VogenTabPrivate::transpose(int val) {
+    piano->notesArea()->stop();
+
     TDigitalEvent e(TDigitalEvent::Transpose);
     e.digit = val;
     qApp->sendEvent(piano->notesArea(), &e);
+}
+
+void VogenTabPrivate::changeVoice(TChangeVoiceEvent *event) {
+    Q_Q(VogenTab);
+
+    piano->notesArea()->stop();
+
+    auto w = qobject_cast<MainWindow *>(q->window());
+
+    if (event->vType() == TChangeVoiceEvent::Singer) {
+        const auto &voiceList = qTheme->voiceList();
+        QStringList names;
+        int index = -1;
+        for (int i = 0; i < voiceList.size(); ++i) {
+            const auto &voice = voiceList.at(i);
+            if (voice.id == event->singerId) {
+                index = i;
+            }
+            names.append(QString("%1 (%2)").arg(voice.name, voice.id));
+        }
+
+        int res = w->showList(names, index, VogenTab::tr("Select Voice Library"));
+        if (res >= 0) {
+            event->singerId = voiceList.at(res).id;
+        }
+    } else {
+        QStringList ids{"man", "yue", "yue-wz"};
+
+        int index = -1;
+        for (int i = 0; i < ids.size(); ++i) {
+            const auto &id = ids.at(i);
+            if (id == event->rom) {
+                index = i;
+            }
+        }
+
+        QStringList names{
+            VogenTab::tr("Mandarin (man)"),
+            VogenTab::tr("Cantonese (yue)"),
+            VogenTab::tr("Cantonese-Wuzhou (yue-wz)"),
+        };
+
+        int res = w->showList(names, index, VogenTab::tr("Select Dictionary"));
+        if (res >= 0) {
+            event->rom = ids.at(res);
+        }
+    }
+}
+
+void VogenTabPrivate::lazyRender() {
+    Q_Q(VogenTab);
+
+    auto a = piano->notesArea();
+    a->stop();
+
+    auto bpm0 = a->tempo();
+
+    quint64 gid = a->currentGroupId();
+    if (gid == 0) {
+        // Render All
+    } else {
+        // Render Current
+        auto utter = a->currentValidUtterance();
+
+        if (!utter.notes.isEmpty()) {
+
+            // Wrap
+            RH::FUtt u;
+            u.name = utter.name;
+            u.singerId = utter.singer;
+            u.romScheme = utter.romScheme;
+
+            QList<RH::FNote> notes;
+            for (const auto &note : qAsConst(utter.notes)) {
+                RH::FNote p{note.noteNum, note.lyric, note.rom, note.start, note.length};
+                notes.append(p);
+            }
+            u.notes = std::move(notes);
+
+            QString path = tempDir + "/temp_" + QString::number(a->currentGroupId()) + ".wav";
+
+            // Render
+            RH::SynthArgs args{bpm0, u, path};
+            int code;
+            QList<double> pitches;
+
+            QDialog msgbox(q);
+            {
+                auto label = new QLabel(VogenTab::tr("Synthesizing, please wait..."));
+                label->setAlignment(Qt::AlignCenter);
+
+                auto layout = new QHBoxLayout();
+                layout->setMargin(0);
+                layout->setSpacing(0);
+                layout->addWidget(label);
+                msgbox.setLayout(layout);
+                msgbox.resize(300, 100);
+
+                msgbox.setWindowTitle(qData->mainTitle());
+                msgbox.setWindowModality(Qt::ApplicationModal);
+                msgbox.setWindowFlags(msgbox.windowFlags() & ~Qt::WindowCloseButtonHint);
+                msgbox.show();
+            }
+
+            bool res = qTheme->server()->synthAll(args, &pitches, &code);
+
+            msgbox.close();
+
+            if (!res || code == RH::SYNTH_FAILED) {
+                QMessageBox::warning(q, qData->mainTitle(), VogenTab::tr("Synthesizing failed."));
+                return;
+            }
+            a->setGroupCache(gid, pitches, path);
+        }
+    }
 }
 
 QString VogenTabPrivate::setTabNameProxy(const QString &tabName) {

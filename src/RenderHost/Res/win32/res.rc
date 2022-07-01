@@ -1,6 +1,6 @@
 #define VERSION      0,0,0,1
 #define VERSION_STR  "0,0,0,1"
-#define FILE_NAME    "RenderHost.exe"
+#define FILE_NAME    "RenderHost.dll"
 #define COPYRIGHT    "Copyright 2020-2022 QSynthesis Team"
 
 #pragma code_page(65001)

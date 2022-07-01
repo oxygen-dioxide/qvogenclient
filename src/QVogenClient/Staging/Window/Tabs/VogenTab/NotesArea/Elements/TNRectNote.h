@@ -24,12 +24,16 @@ public:
     bool movable() const;
     void setMovable(bool movable);
 
+    bool ignored() const;
+    void setIgnored(bool ignored);
+
     QRectF geometry() const;
 
     Behavior mousePressBehavior() const;
 
 protected:
     bool m_movable;
+    bool m_ignored;
 
     bool m_stretch;
     QCursor m_oldCursor;

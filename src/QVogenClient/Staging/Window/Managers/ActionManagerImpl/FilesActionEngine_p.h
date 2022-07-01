@@ -115,7 +115,7 @@ public:
     // Play
     QAction *play_play;
     QAction *play_stop;
-    QAction *play_replay;
+    QAction *play_render;
     QAction *play_moveStart;
     QAction *play_moveEnd;
     QAction *play_removeCache;

@@ -22,8 +22,7 @@ public:
     };
 
     enum DataRole {
-        VoicePath = Qt::UserRole + 1,
-        VoiceIdentity,
+        VoiceIdentity = Qt::UserRole + 1,
     };
 
     void init();

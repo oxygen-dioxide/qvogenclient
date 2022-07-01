@@ -8,18 +8,22 @@
 
 TNNoteGroup::TNNoteGroup(TNotesArea *area, QObject *parent) : TNNoteList(parent), m_area(area) {
     m_firstNote = nullptr;
+    m_cache = nullptr;
+
     connect(this, &TNNoteList::inserted, this, &TNNoteGroup::_q_inserted);
     connect(this, &TNNoteList::removed, this, &TNNoteGroup::_q_removed);
     connect(this, &TNNoteList::beginChanged, this, &TNNoteGroup::_q_beginChanged);
 }
 
 TNNoteGroup::~TNNoteGroup() {
+    removeCache();
 }
 
 void TNNoteGroup::install() {
     m_hintItem = new TNGroupHint(this);
     m_area->addItem(m_hintItem);
     m_hintItem->setZValue(TNotesArea::GroupHint);
+    m_hintItem->installEventFilter(this);
     adjustHintPos();
 }
 
@@ -52,6 +56,26 @@ void TNNoteGroup::adjustHintPos() {
         m_hintItem->show();
         m_hintItem->update();
     }
+}
+
+TWAudio::Audio *TNNoteGroup::cache() const {
+    return m_cache;
+}
+
+void TNNoteGroup::setCache(const TWAudio::Audio &cache) {
+    removeCache();
+    m_cache = new TWAudio::Audio(cache);
+}
+
+void TNNoteGroup::removeCache() {
+    if (m_cache) {
+        delete m_cache;
+        m_cache = nullptr;
+    }
+}
+
+bool TNNoteGroup::eventFilter(QObject *obj, QEvent *event) {
+    return TNNoteList::eventFilter(obj, event);
 }
 
 void TNNoteGroup::_q_inserted(int beginIndex, int endIndex, TNRectNote *p) {

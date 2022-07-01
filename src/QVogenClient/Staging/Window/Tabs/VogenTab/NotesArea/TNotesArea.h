@@ -16,6 +16,8 @@
 #include "Controllers/TNSpriteCtl.h"
 #include "Controllers/TNTransformCtl.h"
 
+#include "../Utils/Play/TMultiPlayer.h"
+
 #include "../Utils/Operations/TBaseOperation.h"
 #include "../Utils/TWrappedData.h"
 
@@ -43,6 +45,7 @@ protected:
 public:
     enum ElementZIndex {
         Sprite = 1,
+        Waveform,
         Note,
         Point,
         Lines,
@@ -97,6 +100,9 @@ protected:
     TNScreenCtl *m_screenCtl;
 
     TNNotesCtl *m_notesCtl;
+
+    TMultiPlayer *m_player;
+    int m_playerTimerId;
 
     TNotesScroll *m_view;
     TNotesArea::StyleData m_styleData;
@@ -153,6 +159,9 @@ public:
     QPair<int, int> convertPositionToValue(QPointF pos) const;
     double convertWidthToLength(int width) const;
 
+    double tickToTime(int tick) const;
+    int timeToTick(double time) const;
+
     // ----------------------------------------  Select  ----------------------------------------
 public:
     bool isSelecting() const;
@@ -166,7 +175,17 @@ public:
     bool itemOperating() const;
 
     bool hasSelection() const;
+
     quint64 currentGroupId() const;
+    QList<quint64> groupIdList() const;
+
+    void setGroupCache(quint64 id, const QList<double> &pitches, const QString &waveFile);
+    void removeGroupCache(quint64 id);
+    void removeAllCache();
+    bool hasCache(quint64 id) const;
+
+    TWProject::Utterance currentValidUtterance() const;
+    TWProject::Utterance validUtterance(quint64 gid) const;
 
     QPair<int, int> timeSig() const;
     double tempo() const;
@@ -197,6 +216,13 @@ public:
 
     bool processOperation(TBaseOperation *op, bool undo);
 
+public:
+    void play();
+    void stop();
+    bool isPlaying() const;
+
+    void setCurrentTick(int tick) const;
+
     // ----------------------------------------  Events  ----------------------------------------
 
 protected:
@@ -208,6 +234,7 @@ protected:
     void focusOutEvent(QFocusEvent *event) override;
 
     void customEvent(QEvent *event) override;
+    void timerEvent(QTimerEvent *event) override;
 
 private:
     void _q_sceneRectChanged(const QRectF &rect);

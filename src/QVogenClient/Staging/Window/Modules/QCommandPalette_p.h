@@ -34,7 +34,8 @@ public:
     QCommandPalette::CommandType curCmdType;
 
     enum CommandItemTypes {
-        Quantization = Qt::UserRole + 1000,
+        TempIndex = Qt::UserRole + 1000,
+        Quantization,
         LanguageIndex,
         ThemeIndex,
     };
@@ -49,7 +50,6 @@ public:
     QListWidgetItem *createItem(const QIcon &icon, const QSize &size, int type,
                                 const QString &filename, const QString &location,
                                 const QString &date);
-    QList<QListWidgetItem *> cachedItems;
 
     // Event Guard
     CommandPaletteEventGuard *guard;

@@ -30,6 +30,8 @@ bool TNScreenCtl::eventFilter(QObject *obj, QEvent *event) {
         switch (event->type()) {
         case QEvent::GraphicsSceneMove:
         case QEvent::GraphicsSceneResize:
+            updateScreen();
+            break;
         case QEventImpl::SceneStateChange: {
             auto e = static_cast<QEventImpl::SceneStateChangeEvent *>(event);
             // switch type 2

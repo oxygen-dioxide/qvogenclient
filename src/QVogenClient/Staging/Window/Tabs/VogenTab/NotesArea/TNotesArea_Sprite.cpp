@@ -6,7 +6,10 @@
 #include "../Utils/Operations/TONoteInsDel.h"
 #include "../Utils/Operations/TONoteMove.h"
 #include "../Utils/Operations/TONoteStretch.h"
+#include "../Utils/Operations/TOSingerChange.h"
 #include "../Utils/Operations/TOTempoTimeSig.h"
+
+#include "../Utils/Events/TPianoRollEvent.h"
 
 #include "Types/Events.h"
 
@@ -141,12 +144,71 @@ bool TNotesArea::processOperation(TBaseOperation *op, bool undo) {
     case TBaseOperation::TempoTimeSig: {
         auto op1 = static_cast<TOTempoTimeSig *>(op);
         const auto &val = undo ? op1->oldVal : op1->val;
+        bool tempoChanged = val.tempo != m_tempo;
         setTimeSig(val.timeSig.first, val.timeSig.second);
         setTempo(val.tempo);
+
+        // Remove cache
+        if (tempoChanged) {
+            removeAllCache();
+        }
         break;
+    }
+    case TBaseOperation::SingerChange: {
+        auto op1 = static_cast<TOSingerChange *>(op);
+        const QString &singerId = undo ? op1->oldSingerId : op1->singerId;
+        const QString &rom = undo ? op1->oldRom : op1->rom;
+        m_notesCtl->changeSinger(op1->gid, singerId, rom);
     }
     default:
         break;
     }
     return true;
+}
+
+void TNotesArea::play() {
+    if (isPlaying()) {
+        return;
+    }
+
+    auto playData = m_notesCtl->playData();
+    for (const auto &data : qAsConst(playData)) {
+        m_player->addTrack(data.first, data.second);
+    }
+
+    qint64 time = tickToTime(m_playCtl->currentTick());
+
+    m_player->start(time);
+    m_playCtl->setPlaying(true);
+
+    m_playCtl->setCurrentTick(timeToTick(m_player->pos()));
+    m_playerTimerId = this->startTimer(20);
+
+    TPianoRollEvent e(TPianoRollEvent::PlayState);
+    e.dispatch(this);
+}
+
+void TNotesArea::stop() {
+    if (!isPlaying()) {
+        return;
+    }
+
+    killTimer(m_playerTimerId);
+    m_playerTimerId = 0;
+
+    m_playCtl->setPlaying(false);
+
+    m_player->stop();
+    m_player->clear();
+
+    TPianoRollEvent e(TPianoRollEvent::PlayState);
+    e.dispatch(this);
+}
+
+bool TNotesArea::isPlaying() const {
+    return m_player->isRunning();
+}
+
+void TNotesArea::setCurrentTick(int tick) const {
+    m_playCtl->setCurrentTick(tick);
 }

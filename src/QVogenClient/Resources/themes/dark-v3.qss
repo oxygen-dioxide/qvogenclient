@@ -575,14 +575,17 @@ CentralToolBar>CToolButton#freehand-button {
 CentralToolBar>CToolButton#play-button {
     qproperty-iconUp: svg(":/svg/tuning-tool-bar/play-solid.svg", #499C54);
     qproperty-iconUpChecked: svg(":/svg/tuning-tool-bar/pause-solid.svg", #C75450);
+    qproperty-iconDisabled: svg(":/svg/tuning-tool-bar/play-solid.svg", #606060);
 }
 
 CentralToolBar>CToolButton#stop-button {
-    qproperty-iconUp: svg(":/svg/tuning-tool-bar/stop-solid.svg", #999999);
+    qproperty-iconUp: svg(":/svg/tuning-tool-bar/stop-solid.svg", #C75450);
+    qproperty-iconDisabled: svg(":/svg/tuning-tool-bar/stop-solid.svg", #606060);
 }
 
-CentralToolBar>CToolButton#replay-button {
-    qproperty-iconUp: svg(":/svg/tuning-tool-bar/reply-solid.svg", #999999);
+CentralToolBar>CToolButton#synth-button {
+    qproperty-iconUp: svg(":/svg/tuning-tool-bar/hammer-solid.svg", #6786C7);
+    qproperty-iconDisabled: svg(":/svg/tuning-tool-bar/hammer-solid.svg", #606060);
 }
 
 

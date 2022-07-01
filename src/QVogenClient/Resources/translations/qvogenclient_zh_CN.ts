@@ -207,22 +207,22 @@
 <context>
     <name>EventManager</name>
     <message>
-        <location filename="../../Staging/Window/Managers/EventManager.cpp" line="58"/>
+        <location filename="../../Staging/Window/Managers/EventManager.cpp" line="60"/>
         <source>Open</source>
         <translation type="unfinished">打开</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/EventManager.cpp" line="74"/>
+        <location filename="../../Staging/Window/Managers/EventManager.cpp" line="76"/>
         <source>Import</source>
         <translation type="unfinished">导入</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/EventManager.cpp" line="99"/>
+        <location filename="../../Staging/Window/Managers/EventManager.cpp" line="101"/>
         <source>Append</source>
         <translation type="unfinished">追加导入</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/EventManager.cpp" line="139"/>
+        <location filename="../../Staging/Window/Managers/EventManager.cpp" line="141"/>
         <source>Save As</source>
         <translation type="unfinished">另存为</translation>
     </message>
@@ -230,22 +230,22 @@
 <context>
     <name>ExtensionManager</name>
     <message>
-        <location filename="../../Staging/Application/Managers/ExtensionManager.cpp" line="86"/>
+        <location filename="../../Staging/Application/Managers/ExtensionManager.cpp" line="88"/>
         <source>Multi-Color (Default)</source>
         <translation type="unfinished">彩色（默认）</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/ExtensionManager.cpp" line="89"/>
+        <location filename="../../Staging/Application/Managers/ExtensionManager.cpp" line="91"/>
         <source>Dark (Default)</source>
         <translation type="unfinished">深色（默认)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/ExtensionManager.cpp" line="92"/>
+        <location filename="../../Staging/Application/Managers/ExtensionManager.cpp" line="94"/>
         <source>Light (Default)</source>
         <translation type="unfinished">浅色（默认）</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/ExtensionManager.cpp" line="95"/>
+        <location filename="../../Staging/Application/Managers/ExtensionManager.cpp" line="97"/>
         <source>None</source>
         <translation type="unfinished">无</translation>
     </message>
@@ -322,22 +322,22 @@
         <translation type="unfinished">选择翻译（按上下箭头键预览）</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Modules/QCommandPalette.cpp" line="96"/>
+        <location filename="../../Staging/Window/Modules/QCommandPalette.cpp" line="95"/>
         <source>Select color theme (Up/down keys to preview)</source>
         <translation type="unfinished">选择颜色主题（按上下箭头键预览）</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Modules/QCommandPalette_p.cpp" line="181"/>
+        <location filename="../../Staging/Window/Modules/QCommandPalette_p.cpp" line="187"/>
         <source>None</source>
         <translation type="unfinished">无</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Modules/QCommandPalette_p.cpp" line="184"/>
+        <location filename="../../Staging/Window/Modules/QCommandPalette_p.cpp" line="190"/>
         <source>Quarter</source>
         <translation type="unfinished">四分音符</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Modules/QCommandPalette_p.cpp" line="187"/>
+        <location filename="../../Staging/Window/Modules/QCommandPalette_p.cpp" line="193"/>
         <source>1/%1 Quarter</source>
         <translation type="unfinished">1/%1 个四分音符</translation>
     </message>
@@ -345,92 +345,92 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="303"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="304"/>
         <source>File(&amp;F)</source>
         <translation type="unfinished">文件(&amp;F)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="304"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="305"/>
         <source>Edit(&amp;E)</source>
         <translation type="unfinished">编辑(&amp;E)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="305"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="306"/>
         <source>View(&amp;V)</source>
         <translation type="unfinished">视图(&amp;V)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="306"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="307"/>
         <source>Modify(&amp;M)</source>
         <translation type="unfinished">修改(&amp;M)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="307"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="308"/>
         <source>Playback(&amp;P)</source>
         <translation type="unfinished">播放(&amp;P)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="308"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="309"/>
         <source>Help(&amp;H)</source>
         <translation type="unfinished">帮助(&amp;H)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="311"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="312"/>
         <source>Recent</source>
         <translation type="unfinished">最近</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="312"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="313"/>
         <source>Export</source>
         <translation type="unfinished">导出</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="313"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="314"/>
         <source>Preferences</source>
         <translation type="unfinished">首选项</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="315"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="316"/>
         <source>New File</source>
         <translation type="unfinished">新建文件</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="316"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="317"/>
         <source>New Window</source>
         <translation type="unfinished">新建窗口</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="317"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="318"/>
         <source>Open...</source>
         <translation type="unfinished">打开...</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="318"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="319"/>
         <source>Save</source>
         <translation type="unfinished">保存</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="319"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="320"/>
         <source>Save As...</source>
         <translation type="unfinished">另存为...</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="320"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="321"/>
         <source>Save All</source>
         <translation type="unfinished">保存全部</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="321"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="322"/>
         <source>Import...</source>
         <translation type="unfinished">导入...</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="322"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="323"/>
         <source>Append...</source>
         <translation type="unfinished">追加导入...</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="323"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="324"/>
         <source>File Settings</source>
         <translation type="unfinished">文件设置</translation>
     </message>
@@ -439,114 +439,119 @@
         <translation type="obsolete">关闭文件</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="324"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="325"/>
         <source>Close</source>
         <translation type="unfinished">关闭</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="325"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="326"/>
         <source>Close Window</source>
         <translation type="unfinished">关闭窗口</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="327"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="328"/>
         <source>Export Selection...</source>
         <translation type="unfinished">导出选区...</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="328"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="329"/>
         <source>Export Track...</source>
         <translation type="unfinished">导出音轨...</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="330"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="331"/>
         <source>Settings</source>
         <translation type="unfinished">设置</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="331"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="332"/>
         <source>Keyboard Shortcuts</source>
         <translation type="unfinished">键盘映射</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="332"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="333"/>
         <source>Color Themes</source>
         <translation type="unfinished">颜色主题</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="333"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="334"/>
         <source>Multilingual</source>
         <translation type="unfinished">多语言</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="336"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="337"/>
         <source>More Paste Options</source>
         <translation type="unfinished">其他粘贴选项</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="337"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="338"/>
         <source>More Remove Options</source>
         <translation type="unfinished">其他删除选项</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="339"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="340"/>
         <source>Undo</source>
         <translation type="unfinished">撤销</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="340"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="341"/>
         <source>Redo</source>
         <translation type="unfinished">重做</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="342"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="343"/>
         <source>Cut</source>
         <translation type="unfinished">剪切</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="343"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="344"/>
         <source>Copy</source>
         <translation type="unfinished">复制</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="344"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="345"/>
         <source>Paste</source>
         <translation type="unfinished">粘贴</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="345"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="346"/>
         <source>Paste Pitch</source>
         <translation type="unfinished">粘贴音高</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="347"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="348"/>
         <source>Remove</source>
         <translation type="unfinished">删除</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="348"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="349"/>
         <source>Remove Points</source>
         <translation type="unfinished">删除控制点</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="350"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="351"/>
         <source>Select All</source>
         <translation type="unfinished">全选</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="351"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="352"/>
         <source>Deselect</source>
         <translation type="unfinished">取消选择</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="354"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="355"/>
         <source>Appearance</source>
         <translation type="unfinished">外观</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="355"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="356"/>
         <source>Tool Panels</source>
         <translation type="unfinished">工具面板</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="396"/>
+        <source>Render</source>
+        <translation type="unfinished">渲染</translation>
     </message>
     <message>
         <source>Quantization</source>
@@ -557,47 +562,47 @@
         <translation type="obsolete">播放头</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="356"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="357"/>
         <source>Note Display</source>
         <translation type="unfinished">音符显示</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="357"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="358"/>
         <source>Cursor Mode</source>
         <translation type="unfinished">指针模式</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="359"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="360"/>
         <source>Quantization...</source>
         <translation type="unfinished">量化...</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="360"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="361"/>
         <source>Playhead...</source>
         <translation type="unfinished">播放头...</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="362"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="363"/>
         <source>Tool Bar</source>
         <translation type="unfinished">工具栏</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="363"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="364"/>
         <source>Navigation Bar</source>
         <translation type="unfinished">导航栏</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="364"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="365"/>
         <source>Status Bar</source>
         <translation type="unfinished">状态栏</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="365"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="366"/>
         <source>Tool Panel Bars</source>
         <translation type="unfinished">工具面板栏</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="366"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="367"/>
         <source>Menu Bar</source>
         <translation type="unfinished">菜单栏</translation>
     </message>
@@ -634,12 +639,12 @@
         <translation type="obsolete">平滑</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="375"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="376"/>
         <source>Show Note</source>
         <translation type="unfinished">显示音符</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="376"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="377"/>
         <source>Show Pitch</source>
         <translation type="unfinished">显示音高</translation>
     </message>
@@ -648,17 +653,17 @@
         <translation type="obsolete">显示音量包络</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="378"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="379"/>
         <source>Select Mode</source>
         <translation type="unfinished">选择模式</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="379"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="380"/>
         <source>Sketch Mode</source>
         <translation type="unfinished">绘制模式</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="380"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="381"/>
         <source>Freehand Mode</source>
         <translation type="unfinished">自由模式</translation>
     </message>
@@ -667,123 +672,122 @@
         <translation type="obsolete">插入歌词</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="389"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="390"/>
         <source>Build-in Tools</source>
         <translation type="unfinished">内置工具</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="390"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="391"/>
         <source>Plugins</source>
         <translation type="unfinished">插件</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="383"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="384"/>
         <source>Insert Lyrics...</source>
         <translation type="unfinished">插入歌词...</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="384"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="385"/>
         <source>Find/Replace</source>
         <translation type="unfinished">查找/替换</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="385"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="386"/>
         <source>Transpose...</source>
         <translation type="unfinished">变调...</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="386"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="387"/>
         <source>Shift Up by an Octave</source>
         <translation type="unfinished">升高八度</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="387"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="388"/>
         <source>Shift Down by an Octave</source>
         <translation type="unfinished">降低八度</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="393"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="394"/>
         <source>Play</source>
         <translation type="unfinished">播放</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="394"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="395"/>
         <source>Stop</source>
         <translation type="unfinished">停止</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="395"/>
         <source>Replay</source>
-        <translation type="unfinished">重播</translation>
+        <translation type="obsolete">重播</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="396"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="397"/>
         <source>Move to Start</source>
         <translation type="unfinished">移动到开始</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="397"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="398"/>
         <source>Move to End</source>
         <translation type="unfinished">移动到结束</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="398"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="399"/>
         <source>Remove Cache</source>
         <translation type="unfinished">清除缓存</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="399"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="400"/>
         <source>Export Recent Audio...</source>
         <translation type="unfinished">导出最近的音频...</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="402"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="403"/>
         <source>Welcome</source>
         <translation type="unfinished">欢迎使用</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="403"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="404"/>
         <source>Show All Actions</source>
         <translation type="unfinished">显示所有命令</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="404"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="405"/>
         <source>Voice Database Manager</source>
         <translation type="unfinished">声库管理器</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="405"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="406"/>
         <source>Instructions</source>
         <translation type="unfinished">使用说明</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="406"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="407"/>
         <source>Check Update</source>
         <translation type="unfinished">检查更新</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="407"/>
         <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="408"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="409"/>
         <source>About %1</source>
         <translation type="unfinished">关于 %1</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="547"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="548"/>
         <source>Null</source>
         <translation type="unfinished">无</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="550"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="551"/>
         <source>More Files...</source>
         <translation type="unfinished">更多文件...</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="553"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="554"/>
         <source>More Folders...</source>
         <translation type="unfinished">更多文件夹...</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="556"/>
+        <location filename="../../Staging/Window/Managers/ActionManagerImpl/FilesActionEngine_p.cpp" line="557"/>
         <source>Clear Recent List</source>
         <translation type="unfinished">清空最近列表</translation>
     </message>
@@ -897,42 +901,42 @@
 <context>
     <name>TNPriorCtl</name>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/NotesArea/Controllers/TNPriorCtl.cpp" line="31"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/NotesArea/Controllers/TNPriorCtl.cpp" line="32"/>
         <source>Move to New Utterance</source>
         <translation type="unfinished">移至新音符组</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/NotesArea/Controllers/TNPriorCtl.cpp" line="32"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/NotesArea/Controllers/TNPriorCtl.cpp" line="33"/>
         <source>Dissolve from Utterance</source>
         <translation type="unfinished">从当前音符组分离</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/NotesArea/Controllers/TNPriorCtl.cpp" line="33"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/NotesArea/Controllers/TNPriorCtl.cpp" line="34"/>
         <source>Cut</source>
         <translation type="unfinished">剪切</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/NotesArea/Controllers/TNPriorCtl.cpp" line="34"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/NotesArea/Controllers/TNPriorCtl.cpp" line="35"/>
         <source>Copy</source>
         <translation type="unfinished">复制</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/NotesArea/Controllers/TNPriorCtl.cpp" line="35"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/NotesArea/Controllers/TNPriorCtl.cpp" line="36"/>
         <source>Paste</source>
         <translation type="unfinished">粘贴</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/NotesArea/Controllers/TNPriorCtl.cpp" line="36"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/NotesArea/Controllers/TNPriorCtl.cpp" line="37"/>
         <source>Remove</source>
         <translation type="unfinished">删除</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/NotesArea/Controllers/TNPriorCtl.cpp" line="37"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/NotesArea/Controllers/TNPriorCtl.cpp" line="38"/>
         <source>Select All</source>
         <translation type="unfinished">全选</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/NotesArea/Controllers/TNPriorCtl.cpp" line="38"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/NotesArea/Controllers/TNPriorCtl.cpp" line="39"/>
         <source>Deselect</source>
         <translation type="unfinished">取消选择</translation>
     </message>
@@ -951,62 +955,62 @@
         <translation type="unfinished">关于 %1</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="433"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="436"/>
         <source>Close</source>
         <translation type="unfinished">关闭</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="434"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="437"/>
         <source>Close Others</source>
         <translation type="unfinished">关闭其他</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="435"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="438"/>
         <source>Close Saved</source>
         <translation type="unfinished">关闭已保存</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="436"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="439"/>
         <source>Close All</source>
         <translation type="unfinished">全部关闭</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="445"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="448"/>
         <source>Show in %1(&amp;S)</source>
         <translation type="unfinished">在%1中显示(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="449"/>
+        <location filename="../../Staging/Window/Managers/TabManager.cpp" line="452"/>
         <source>Open in %1(&amp;S)</source>
         <translation type="unfinished">在%1中打开(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager_p.cpp" line="110"/>
+        <location filename="../../Staging/Window/Managers/TabManager_p.cpp" line="127"/>
         <source>You have not saved the file, do you want to save it?</source>
         <translation type="unfinished">是否将更改保存到文件中？</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager_p.cpp" line="113"/>
+        <location filename="../../Staging/Window/Managers/TabManager_p.cpp" line="130"/>
         <source>You have not saved the directory, do you want to save it?</source>
         <translation type="unfinished">是否将更改保存到目录中？</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager_p.cpp" line="116"/>
+        <location filename="../../Staging/Window/Managers/TabManager_p.cpp" line="133"/>
         <source>You have not saved the configuration, do you want to save it?</source>
         <translation type="unfinished">是否将更改保存到配置中？</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager_p.cpp" line="130"/>
+        <location filename="../../Staging/Window/Managers/TabManager_p.cpp" line="147"/>
         <source>Save(&amp;S)</source>
         <translation type="unfinished">保存(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager_p.cpp" line="131"/>
+        <location filename="../../Staging/Window/Managers/TabManager_p.cpp" line="148"/>
         <source>Don&apos;t save(&amp;N)</source>
         <translation type="unfinished">不保存(&amp;N)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Managers/TabManager_p.cpp" line="132"/>
+        <location filename="../../Staging/Window/Managers/TabManager_p.cpp" line="149"/>
         <source>Cancel</source>
         <translation type="unfinished">取消</translation>
     </message>
@@ -1014,34 +1018,69 @@
 <context>
     <name>VogenTab</name>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab.cpp" line="49"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab.cpp" line="52"/>
         <source>Failed to open file &quot;%1&quot;!</source>
         <translation type="unfinished">无法打开文件“%1”！</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="79"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="383"/>
+        <source>Synthesizing failed.</source>
+        <translation type="unfinished">合成失败。</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="92"/>
         <source>Failed to save file!</source>
         <translation type="unfinished">无法保存文件！</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="178"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="207"/>
         <source>Enter the lyrics, separated by white space</source>
         <translation type="unfinished">输入歌词，使用空格分隔</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="194"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="223"/>
         <source>Enter the new time signature, e.g. 3/4, 4/4</source>
         <translation type="unfinished">输入新的拍号，如3/4、4/4</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="221"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="250"/>
         <source>Enter the new tempo (10 ~ 512)</source>
         <translation type="unfinished">输入新的曲速（10 ~ 512）</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="242"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="271"/>
         <source>Enter the transpose offset (0 ~ 84)</source>
         <translation type="unfinished">输入变调偏移量（0 ~ 84）</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="306"/>
+        <source>Select Voice Library</source>
+        <translation type="unfinished">选择声库</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="322"/>
+        <source>Mandarin (man)</source>
+        <translation type="unfinished">普通话 (man)</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="323"/>
+        <source>Cantonese (yue)</source>
+        <translation type="unfinished">粤语-广东话 (yue)</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="324"/>
+        <source>Cantonese-Wuzhou (yue-wz)</source>
+        <translation type="unfinished">粤语-梧州话 (yue-wz)</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="327"/>
+        <source>Select Dictionary</source>
+        <translation type="unfinished">选择字典</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="369"/>
+        <source>Synthesizing, please wait...</source>
+        <translation type="unfinished">合成中，请稍等...</translation>
     </message>
 </context>
 <context>
@@ -1052,52 +1091,91 @@
         <translation type="unfinished">声库管理器</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog.cpp" line="46"/>
+        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog.cpp" line="47"/>
         <source>Open</source>
         <translation type="unfinished">打开</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog.cpp" line="51"/>
+        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog.cpp" line="62"/>
+        <source>Failed to install voice package &quot;%1&quot;.</source>
+        <translation type="unfinished">无法安装声库文件“%1”。</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog.cpp" line="70"/>
+        <source>Voice library &quot;%1&quot; has already been installed, please remove it first.</source>
+        <translation type="unfinished">声库“%1”已安装，请先将其卸载。</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog.cpp" line="77"/>
+        <source>Voice package &quot;%1&quot; is invalid.</source>
+        <translation type="unfinished">非法的声库文件“%1”。</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog.cpp" line="109"/>
+        <source>Failed to uninstall voice library &quot;%1&quot;.</source>
+        <translation type="unfinished">无法卸载声库“%1”。</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog.cpp" line="116"/>
+        <source>Voice library &quot;%1&quot; not found.</source>
+        <translation type="unfinished">找不到声库“%1”。</translation>
+    </message>
+    <message>
+        <source>Voice library has already been installed, please remove it first.</source>
+        <translation type="obsolete">该声库已安装，请先删除。</translation>
+    </message>
+    <message>
+        <source>Voice package is invalid.</source>
+        <translation type="obsolete">非法的声库格式。</translation>
+    </message>
+    <message>
+        <source>Failed to uninstall voice package.</source>
+        <translation type="obsolete">无法卸载声库。</translation>
+    </message>
+    <message>
+        <source>Voice library not found.</source>
+        <translation type="obsolete">没有找到声库。</translation>
+    </message>
+    <message>
         <source>Failed to load voice package.</source>
-        <translation type="unfinished">无法加载声库文件。</translation>
+        <translation type="obsolete">无法加载声库文件。</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog.cpp" line="56"/>
         <source>Failed to install voice package.</source>
-        <translation type="unfinished">无法安装声库文件。</translation>
+        <translation type="obsolete">无法安装声库文件。</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog_p.cpp" line="91"/>
+        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog_p.cpp" line="90"/>
         <source>Install</source>
         <translation type="unfinished">安装</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog_p.cpp" line="92"/>
+        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog_p.cpp" line="91"/>
         <source>Remove</source>
         <translation type="unfinished">删除</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog_p.cpp" line="94"/>
+        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog_p.cpp" line="93"/>
         <source>Voice Name</source>
         <translation type="unfinished">声库名称</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog_p.cpp" line="95"/>
+        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog_p.cpp" line="94"/>
         <source>Version</source>
         <translation type="unfinished">版本</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog_p.cpp" line="96"/>
+        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog_p.cpp" line="95"/>
         <source>Author</source>
         <translation type="unfinished">作者</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog_p.cpp" line="97"/>
+        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog_p.cpp" line="96"/>
         <source>Origin</source>
         <translation type="unfinished">源</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog_p.cpp" line="99"/>
+        <location filename="../../Staging/Window/Dialogs/VoiceManagerDialog_p.cpp" line="98"/>
         <source>Default</source>
         <translation type="unfinished">默认</translation>
     </message>

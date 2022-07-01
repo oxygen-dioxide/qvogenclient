@@ -5,7 +5,7 @@
 
 #include "ExtensionManager.h"
 
-#include "QVogenVoiceInfo.h"
+#include "RenderHost.h"
 
 class ExtensionManagerPrivate : public BaseManagerPrivate {
     Q_DECLARE_PUBLIC(ExtensionManager)
@@ -17,7 +17,9 @@ public:
 
     static void reloadAppFont();
 
-    QList<QVogenVoiceInfo> voices;
+    RH::RenderHost *host;
+
+    QList<RH::VoiceLibMetadata> voices;
 };
 
 #endif // EXTENSIONMANAGERPRIVATE_H
