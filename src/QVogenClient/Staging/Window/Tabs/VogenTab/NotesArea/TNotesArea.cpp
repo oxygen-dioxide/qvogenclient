@@ -368,6 +368,10 @@ bool TNotesArea::hasCache(quint64 id) const {
     return m_notesCtl->hasCache(id);
 }
 
+double TNotesArea::groupDuration(quint64 id) const {
+    return m_notesCtl->groupDuration(id);
+}
+
 QList<QPair<qint64, QWaveInfo *>> TNotesArea::audioData() const {
     return m_notesCtl->audioData();
 }

@@ -184,6 +184,7 @@ public:
     void removeGroupCache(quint64 id);
     void removeAllCache();
     bool hasCache(quint64 id) const;
+    double groupDuration(quint64 id) const;
 
     QList<QPair<qint64, QWaveInfo *>> audioData() const;
 

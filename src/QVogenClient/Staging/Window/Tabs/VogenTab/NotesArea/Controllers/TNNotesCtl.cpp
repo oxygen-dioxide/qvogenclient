@@ -312,9 +312,29 @@ quint64 TNNotesCtl::currentGroupId() const {
 }
 
 QList<quint64> TNNotesCtl::groupIdList() const {
-    QList<quint64> ids;
-    ids.append(m_mainGroup->id);
+    QList<TNNoteGroup *> groups;
+    auto traverse = [&groups](TNNoteGroup *g) {
+        int i, j, mid;
+        i = 0;
+        j = groups.size() - 1;
+        while (i <= j) {
+            mid = i + (j - i) / 2;
+            if (groups.at(mid)->firstBegin() < g->firstBegin()) {
+                i = mid + 1;
+            } else {
+                j = mid - 1;
+            }
+        }
+        groups.insert(i, g);
+    };
+
+    traverse(m_mainGroup);
     for (const auto &g : qAsConst(m_noteGroups)) {
+        traverse(g);
+    }
+
+    QList<quint64> ids;
+    for (auto g : qAsConst(groups)) {
         ids.append(g->id);
     }
     return ids;
@@ -372,6 +392,14 @@ bool TNNotesCtl::hasCache(quint64 id) const {
     return g->cache() != nullptr;
 }
 
+double TNNotesCtl::groupDuration(quint64 id) const {
+    auto g = findGroup(id);
+    if (!g) {
+        return 0;
+    }
+    return a->tickToTime(g->lastEnd() - g->firstBegin());
+}
+
 QList<QPair<qint64, QWaveInfo *>> TNNotesCtl::audioData() const {
     QList<QPair<qint64, QWaveInfo *>> res;
 
@@ -398,7 +426,7 @@ void TNNotesCtl::switchGroup(TNNoteGroup *group) {
     }
     m_currentGroup = group;
 
-    auto traverse = [&](TNNoteGroup *g) {
+    auto traverse = [this](TNNoteGroup *g) {
         if (g != m_currentGroup) {
             setGroupSelected(g, false);
             setGroupEnabled(g, false);

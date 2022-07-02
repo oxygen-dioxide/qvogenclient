@@ -1046,7 +1046,7 @@
         <translation type="unfinished">无法打开文件“%1”！</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="424"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="434"/>
         <source>Synthesizing failed.</source>
         <translation type="unfinished">渲染失败。</translation>
     </message>
@@ -1102,36 +1102,42 @@
     </message>
     <message>
         <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="402"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="481"/>
+        <source>The current note sequence is too long, are you sure to render?</source>
+        <translation type="unfinished">当前音符序列过长，是否确认参与渲染？</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="412"/>
         <source>Synthesizing, please wait...</source>
         <translation type="unfinished">渲染中，请稍等...</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="460"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="470"/>
         <source>Synthesizing %1/%2, please wait...</source>
         <translation type="unfinished">渲染中 %1/%2，请稍等...</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="483"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="503"/>
         <source>Synthesizing completed, but failure occured.</source>
         <translation type="unfinished">渲染完毕，但是有错误发生。</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="495"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="515"/>
         <source>No audio generated recently.</source>
         <translation type="unfinished">最近没有生成音频。</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="507"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="527"/>
         <source>Export Recent Audio</source>
         <translation type="unfinished">导出最近的音频</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="551"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="571"/>
         <source>Failed to create file.</source>
         <translation type="unfinished">无法创建文件。</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="566"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="586"/>
         <source>Failed to write wave file.</source>
         <translation type="unfinished">无法写入 Wave 文件。</translation>
     </message>

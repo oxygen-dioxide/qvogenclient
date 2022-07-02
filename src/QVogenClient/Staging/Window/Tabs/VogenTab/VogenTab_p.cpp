@@ -396,6 +396,16 @@ void VogenTabPrivate::violentRender() {
         return;
     }
 
+    if (a->groupDuration(gid) > 30000) {
+        auto btn = QMessageBox::question(
+            q, qData->mainTitle(),
+            VogenTab::tr("The current note sequence is too long, are you sure to render?"),
+            QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+        if (btn != QMessageBox::Yes) {
+            return;
+        }
+    }
+
     QDialog msgbox(q);
     msgbox.setObjectName("block-message-box");
     {
@@ -463,6 +473,16 @@ void VogenTabPrivate::violentRenderAll() {
         quint64 gid = gids.at(i);
         if (a->hasCache(gid)) {
             continue;
+        }
+
+        if (a->groupDuration(gid) > 30000) {
+            auto btn = QMessageBox::question(
+                q, qData->mainTitle(),
+                VogenTab::tr("The current note sequence is too long, are you sure to render?"),
+                QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+            if (btn != QMessageBox::Yes) {
+                break;
+            }
         }
 
         auto utter = a->validUtterance(gid);
