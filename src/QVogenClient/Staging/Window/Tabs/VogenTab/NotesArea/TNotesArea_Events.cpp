@@ -135,10 +135,11 @@ void TNotesArea::customEvent(QEvent *event) {
 
 void TNotesArea::timerEvent(QTimerEvent *event) {
     if (event->timerId() == m_playerTimerId) {
-        int tick = timeToTick(m_player->pos());
-        if (tick > sectionCount() * 4 * 480) {
+        auto pos = m_player->pos();
+        if (pos >= m_playerEndTime) {
             stop();
         } else {
+            int tick = timeToTick(pos);
             m_playCtl->setCurrentTick(tick, true);
         }
     }

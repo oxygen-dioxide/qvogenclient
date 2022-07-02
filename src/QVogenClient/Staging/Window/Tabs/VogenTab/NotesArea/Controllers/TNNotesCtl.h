@@ -145,6 +145,8 @@ protected:
 public:
     int startTick() const;
     int totalLength() const;
+    double audioStartTime() const;
+    double audioEndTime() const;
 
 private:
     void _q_beginChanged(int index, int oldIndex, TNRectNote *p);

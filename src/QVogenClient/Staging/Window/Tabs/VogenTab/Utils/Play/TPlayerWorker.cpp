@@ -2,6 +2,7 @@
 
 #include "TMultiPlayer_p.h"
 
+#include <QDateTime>
 #include <QThread>
 
 #define SAMPLE_RATE 44100
@@ -39,8 +40,12 @@ void TPlayerWorker::start() {
     auto dev = out.start();
 
     QList<int> indexes;
+
     qint64 startTime = time;
-    int aheadSamples = 5 * SAMPLE_RATE;
+    qint64 procTime = startTime; // Buffer End Time
+
+    double aheadTime = 2.5;
+    int aheadSamples = aheadTime * SAMPLE_RATE;
 
     // Init Index List
     for (int i = 0; i < ref->tracks.size(); ++i) {
@@ -68,51 +73,55 @@ void TPlayerWorker::start() {
         this->time = time;
 
         int samples_needed = qMax(0, aheadSamples - pcm.size() / 2);
-        qint64 time_ahead = double(samples_needed) / SAMPLE_RATE * 1000;
 
-        QVector<qint32> mergedSamples;
-        mergedSamples.reserve(samples_needed);
-        for (int i = 0; i < samples_needed; ++i) {
-            mergedSamples.append(0);
-        }
+        qint64 time_needed = double(samples_needed) / SAMPLE_RATE * 1000;
+        qint64 time_ahead = procTime + time_needed;
+        procTime = time_ahead;
 
-        // Update Buffer
-        for (int i = 0; i < indexes.size(); ++i) {
-            const auto &track = ref->tracks.at(i);
-            const auto &samples = track.wave->channel1();
-
-            int &index = indexes[i];
-            if (index >= samples.size()) {
-                continue;
-            } else if (index < 0) {
-                qint64 delta_time = track.time - time;
-                if (delta_time >= time_ahead) {
-                    // One More Wait
-                    continue;
-                } else {
-                    // Cut First
-                    int cut_samples = double(time_ahead - delta_time) / 1000 * SAMPLE_RATE;
-                    cut_samples = qMin(samples.size(), cut_samples);
-
-                    for (int i = 0; i < cut_samples; ++i) {
-                        mergedSamples[mergedSamples.size() - cut_samples + i] += samples[i];
-                    }
-                    index = cut_samples;
-                }
-            } else {
-                // Cut
-                int cut_samples = double(time_ahead) / 1000 * SAMPLE_RATE;
-                cut_samples = qMin(samples.size() - index, cut_samples);
-
-                for (int i = 0; i < cut_samples; ++i) {
-                    mergedSamples[i] += samples[index + i];
-                }
-                index += cut_samples;
+        if (samples_needed > 0) {
+            QVector<qint32> mergedSamples;
+            mergedSamples.reserve(samples_needed);
+            for (int i = 0; i < samples_needed; ++i) {
+                mergedSamples.append(0);
             }
-        }
-        for (auto sample : qAsConst(mergedSamples)) {
-            short num = sample;
-            pcm.append(QByteArray((char *) &num, 2));
+
+            // Update Buffer
+            for (int i = 0; i < indexes.size(); ++i) {
+                const auto &track = ref->tracks.at(i);
+                const auto &samples = track.wave->channel1();
+
+                int &index = indexes[i];
+                if (index >= samples.size()) {
+                    continue;
+                } else if (index < 0) {
+                    qint64 delta = time_ahead - track.time;
+                    if (delta < 0) {
+                        // One More Wait
+                        continue;
+                    } else {
+                        // Cut First
+                        int cut_samples = double(delta) / 1000 * SAMPLE_RATE;
+                        int real_cut_samples = qMin(samples.size(), cut_samples);
+                        int offset = mergedSamples.size() - cut_samples;
+                        for (int i = 0; i < real_cut_samples; ++i) {
+                            mergedSamples[offset + i] += samples[i];
+                        }
+                        index = real_cut_samples;
+                    }
+                } else {
+                    // Cut
+                    int cut_samples = double(time_needed) / 1000 * SAMPLE_RATE;
+                    int real_cut_samples = qMin(samples.size() - index, cut_samples);
+                    for (int i = 0; i < real_cut_samples; ++i) {
+                        mergedSamples[i] += samples[index + i];
+                    }
+                    index += real_cut_samples;
+                }
+            }
+            for (auto sample : qAsConst(mergedSamples)) {
+                short num = sample;
+                pcm.append(QByteArray((char *) &num, 2));
+            }
         }
 
         // Update Output

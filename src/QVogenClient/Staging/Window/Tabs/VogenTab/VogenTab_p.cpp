@@ -388,67 +388,99 @@ void VogenTabPrivate::violentRender() {
     auto a = piano->notesArea();
     a->stop();
 
-    auto bpm0 = a->tempo();
-
+    // Render Current Group
     quint64 gid = a->currentGroupId();
-    if (gid == 0) {
-        // Render All
-    } else {
-        // Render Current
-        auto utter = a->currentValidUtterance();
+    auto utter = a->validUtterance(gid);
 
-        if (!utter.notes.isEmpty()) {
+    if (utter.notes.isEmpty()) {
+        return;
+    }
 
-            // Wrap
-            RH::FUtt u;
-            u.name = utter.name;
-            u.singerId = utter.singer;
-            u.romScheme = utter.romScheme;
+    QDialog msgbox(q);
+    msgbox.setObjectName("block-message-box");
+    {
+        auto label = new QLabel(VogenTab::tr("Synthesizing, please wait..."));
+        label->setAlignment(Qt::AlignCenter);
 
-            QList<RH::FNote> notes;
-            for (const auto &note : qAsConst(utter.notes)) {
-                auto pair = splitLyricRom(note.rom);
-                RH::FNote p{note.noteNum, pair.first, pair.second, note.start, note.length};
-                notes.append(p);
-            }
-            u.notes = std::move(notes);
+        auto layout = new QHBoxLayout();
+        layout->setMargin(0);
+        layout->setSpacing(0);
+        layout->addWidget(label);
+        msgbox.setLayout(layout);
+        msgbox.resize(300, 100);
 
-            QString path = tempDir + "/temp_" + QString::number(a->currentGroupId()) + ".wav";
+        msgbox.setWindowTitle(qData->mainTitle());
+        msgbox.setWindowModality(Qt::ApplicationModal);
+        msgbox.setWindowFlags((msgbox.windowFlags() | Qt::WindowMinimizeButtonHint) &
+                              ~Qt::WindowCloseButtonHint);
+        msgbox.show();
+    }
 
-            // Render
-            RH::SynthArgs args{bpm0, u, path};
-            int code;
-            QList<double> pitches;
+    bool res = violentRender_helper(gid, utter);
 
-            QDialog msgbox(q);
-            {
-                auto label = new QLabel(VogenTab::tr("Synthesizing, please wait..."));
-                label->setAlignment(Qt::AlignCenter);
+    msgbox.close();
 
-                auto layout = new QHBoxLayout();
-                layout->setMargin(0);
-                layout->setSpacing(0);
-                layout->addWidget(label);
-                msgbox.setLayout(layout);
-                msgbox.resize(300, 100);
+    if (!res) {
+        QMessageBox::warning(q, qData->mainTitle(), VogenTab::tr("Synthesizing failed."));
+    }
+}
 
-                msgbox.setWindowTitle(qData->mainTitle());
-                msgbox.setWindowModality(Qt::ApplicationModal);
-                msgbox.setWindowFlags((msgbox.windowFlags() | Qt::WindowMinimizeButtonHint) &
-                                      ~Qt::WindowCloseButtonHint);
-                msgbox.show();
-            }
+void VogenTabPrivate::violentRenderAll() {
+    Q_Q(VogenTab);
 
-            bool res = qTheme->server()->synthAll(args, &pitches, &code);
+    auto a = piano->notesArea();
+    a->stop();
 
-            msgbox.close();
+    auto gids = a->groupIdList();
 
-            if (!res || code == RH::SYNTH_FAILED) {
-                QMessageBox::warning(q, qData->mainTitle(), VogenTab::tr("Synthesizing failed."));
-                return;
-            }
-            a->setGroupCache(gid, pitches, path);
+    QDialog msgbox(q);
+    msgbox.setObjectName("block-message-box");
+
+    auto label = new QLabel();
+    label->setAlignment(Qt::AlignCenter);
+    {
+        auto layout = new QHBoxLayout();
+        layout->setMargin(0);
+        layout->setSpacing(0);
+        layout->addWidget(label);
+        msgbox.setLayout(layout);
+        msgbox.resize(300, 100);
+
+        msgbox.setWindowTitle(qData->mainTitle());
+        msgbox.setWindowModality(Qt::ApplicationModal);
+        msgbox.setWindowFlags((msgbox.windowFlags() | Qt::WindowMinimizeButtonHint) &
+                              ~Qt::WindowCloseButtonHint);
+        msgbox.show();
+    }
+
+    bool success = true;
+    int groups = gids.size();
+    for (int i = 0; i < groups; ++i) {
+        // Display
+        label->setText(VogenTab::tr("Synthesizing %1/%2, please wait...")
+                           .arg(QString::number(i + 1), QString::number(groups)));
+
+        quint64 gid = gids.at(i);
+        if (a->hasCache(gid)) {
+            continue;
         }
+
+        auto utter = a->validUtterance(gid);
+        if (utter.notes.isEmpty()) {
+            continue;
+        }
+
+        bool res = violentRender_helper(gid, utter);
+        if (!res) {
+            success = false;
+        }
+    }
+
+    msgbox.close();
+
+    if (!success) {
+        QMessageBox::warning(q, qData->mainTitle(),
+                             VogenTab::tr("Synthesizing completed, but failure occured."));
     }
 }
 
@@ -484,10 +516,15 @@ void VogenTabPrivate::violentExportAudio() {
     QList<int> indexes;
 
     // Init Index List
+    int startIndex = 0;
     for (int i = 0; i < tracks.size(); ++i) {
         const auto &track = tracks.at(i);
         int index = double(track.first) / 1000 * SAMPLE_RATE;
         indexes.append(index);
+        startIndex = qMin(startIndex, index);
+    }
+    for (int i = 0; i < tracks.size(); ++i) {
+        indexes[i] -= startIndex;
     }
 
     QList<qint32> mergedSamples;
@@ -502,7 +539,7 @@ void VogenTabPrivate::violentExportAudio() {
         }
 
         // Merge
-        for (int i = qMax(-index, 0); i < samples.size(); ++i) {
+        for (int i = 0; i < samples.size(); ++i) {
             mergedSamples[index + i] += samples.at(i);
         }
     }
@@ -529,6 +566,41 @@ void VogenTabPrivate::violentExportAudio() {
         QMessageBox::critical(q, qData->errorTitle(), VogenTab::tr("Failed to write wave file."));
         return;
     }
+}
+
+bool VogenTabPrivate::violentRender_helper(quint64 gid, const TWProject::Utterance &utter) {
+    auto a = piano->notesArea();
+    auto bpm0 = a->tempo();
+
+    // Wrap
+    RH::FUtt u;
+    u.name = utter.name;
+    u.singerId = utter.singer;
+    u.romScheme = utter.romScheme;
+
+    QList<RH::FNote> notes;
+    for (const auto &note : qAsConst(utter.notes)) {
+        auto pair = splitLyricRom(note.rom);
+        RH::FNote p{note.noteNum, pair.first, pair.second, note.start, note.length};
+        notes.append(p);
+    }
+    u.notes = std::move(notes);
+
+    QString path = tempDir + "/temp_" + QString::number(gid) + ".wav";
+
+    // Render
+    RH::SynthArgs args{bpm0, u, path};
+    int code;
+    QList<double> pitches;
+
+    bool res = qTheme->server()->synthAll(args, &pitches, &code);
+
+    if (!res || code == RH::SYNTH_FAILED) {
+        return false;
+    }
+    a->setGroupCache(gid, pitches, path);
+
+    return true;
 }
 
 QString VogenTabPrivate::setTabNameProxy(const QString &tabName) {

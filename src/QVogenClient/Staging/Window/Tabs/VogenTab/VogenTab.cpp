@@ -271,6 +271,10 @@ void VogenTab::handleSpecificAction(ActionImpl::Action a) {
         d->violentRender();
         break;
     }
+    case ActionImpl::Playback_RenderAll: {
+        d->violentRenderAll();
+        break;
+    }
     case ActionImpl::Playback_MoveStart: {
         d->piano->notesArea()->moveToStart();
         break;
@@ -281,6 +285,14 @@ void VogenTab::handleSpecificAction(ActionImpl::Action a) {
     }
     case ActionImpl::Playback_RemoveCache: {
         d->piano->notesArea()->removeGroupCache(d->piano->notesArea()->currentGroupId());
+        break;
+    }
+    case ActionImpl::Playback_RemoveAllCache: {
+        auto a = d->piano->notesArea();
+        auto gids = a->groupIdList();
+        for (auto gid : qAsConst(gids)) {
+            a->removeGroupCache(gid);
+        }
         break;
     }
     case ActionImpl::Playback_ExportRecent: {

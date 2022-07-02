@@ -26,6 +26,7 @@ void ExtensionManagerPrivate::init() {
     host->setTempDir(qData->getStandardPath(DataManager::AppTemp) + "/server");
 
     QDialog msgbox;
+    msgbox.setObjectName("block-message-box");
     {
         auto label = new QLabel(ExtensionManager::tr("Connecting to server..."));
         label->setAlignment(Qt::AlignCenter);
@@ -51,7 +52,7 @@ void ExtensionManagerPrivate::init() {
     msgbox.close();
 
     if (!res) {
-        QMessageBox::critical(nullptr, "Fatal Error", "Server is not started yet!");
+        QMessageBox::critical(nullptr, "Fatal Error", "Failed to connect to server!");
         ::exit(-1);
     }
 }

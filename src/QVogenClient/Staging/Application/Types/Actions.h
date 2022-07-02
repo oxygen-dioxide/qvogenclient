@@ -70,9 +70,11 @@ namespace ActionImpl {
         Playback_Play,
         Playback_Stop,
         Playback_Render,
+        Playback_RenderAll,
         Playback_MoveStart,
         Playback_MoveEnd,
         Playback_RemoveCache,
+        Playback_RemoveAllCache,
         Playback_ExportRecent,
 
         Help_Welcome,

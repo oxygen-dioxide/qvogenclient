@@ -65,7 +65,10 @@ public:
     void changeVoice(TChangeVoiceEvent *event);
 
     void violentRender();
+    void violentRenderAll();
     void violentExportAudio();
+
+    bool violentRender_helper(quint64 gid, const TWProject::Utterance &utter);
 
     QString setTabNameProxy(const QString &tabName) override;
 };

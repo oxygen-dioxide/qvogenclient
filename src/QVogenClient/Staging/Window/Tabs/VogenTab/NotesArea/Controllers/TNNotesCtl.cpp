@@ -345,6 +345,9 @@ void TNNotesCtl::removeGroupCache(quint64 id) {
     if (!g) {
         return;
     }
+    if (!g->cache()) {
+        return;
+    }
     g->removeCache();
     updateScreen();
     updatePlayState();
@@ -616,7 +619,7 @@ void TNNotesCtl::updateScreen() {
         }
 
         double W = x2 - x1;
-        double H = 3 * curHeight;
+        double H = 2 * curHeight;
 
         double left = qMax(0.0, rect.left() - x1);
         double right = qMin(W, rect.right() - x1);
@@ -1516,10 +1519,10 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                         // Get note tick offset
                         int tickOffset = 0;
                         if (!m_selection->isEmpty()) {
-                            auto p = *m_selection->ends().back().second.rbegin();
+                            auto p = *m_selection->ends().back().second.begin();
                             tickOffset = p->start + p->length;
                         } else if (!m_currentGroup->isEmpty()) {
-                            auto p = *m_currentGroup->ends().back().second.rbegin();
+                            auto p = *m_currentGroup->ends().back().second.begin();
                             tickOffset = p->start + p->length;
                         }
 
@@ -1693,10 +1696,10 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                 // Get note tick offset
                 int tickOffset = 0;
                 if (!m_selection->isEmpty()) {
-                    auto p = *m_selection->ends().back().second.rbegin();
+                    auto p = *m_selection->ends().back().second.begin();
                     tickOffset = p->start + p->length;
                 } else if (!m_currentGroup->isEmpty()) {
-                    auto p = *m_currentGroup->ends().back().second.rbegin();
+                    auto p = *m_currentGroup->ends().back().second.begin();
                     tickOffset = p->start + p->length;
                 }
 
@@ -1809,7 +1812,8 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
             case QEventImpl::SceneActionEvent::Group: {
                 if (!m_selection->isEmpty() && (m_selection->count() < m_currentGroup->count() ||
                                                 m_currentGroup == m_mainGroup)) {
-                    auto g = createGroup(0, QString(), QString(), QString());
+                    auto g = createGroup(0, QString(), //
+                                         m_currentGroup->singerId, m_currentGroup->rom);
                     QList<quint64> ids;
 
                     // Move to new group
@@ -1956,6 +1960,50 @@ int TNNotesCtl::totalLength() const {
     const auto &set = ends.back().second;
     auto p = qobject_cast<TNRectNote *>(*set.begin());
     return p->start + p->length;
+}
+
+double TNNotesCtl::audioStartTime() const {
+    double time = 0;
+
+    const auto &starts = m_timeBounds->begins();
+    if (!starts.isEmpty()) {
+        const auto &set = starts.front().second;
+        for (auto p : qAsConst(set)) {
+            int tick = p->start;
+            time = a->tickToTime(tick);
+
+            auto g = p->group;
+            auto cache = g->cache();
+            if (cache) {
+                double startTime = a->tickToTime(g->firstBegin()) - 500;
+                time = qMin(time, startTime + cache->wave.duration() * 1000);
+            }
+        }
+    }
+
+    return time;
+}
+
+double TNNotesCtl::audioEndTime() const {
+    double time = 0;
+
+    const auto &ends = m_timeBounds->ends();
+    if (!ends.isEmpty()) {
+        const auto &set = ends.back().second;
+        for (auto p : qAsConst(set)) {
+            int tick = p->start + p->length;
+            time = a->tickToTime(tick);
+
+            auto g = p->group;
+            auto cache = g->cache();
+            if (cache) {
+                double startTime = a->tickToTime(g->firstBegin()) - 500;
+                time = qMax(time, startTime + cache->wave.duration() * 1000);
+            }
+        }
+    }
+
+    return time + 500; // Half second added
 }
 
 void TNNotesCtl::_q_beginChanged(int index, int oldIndex, TNRectNote *p) {

@@ -191,6 +191,7 @@ void TNotesArea::play() {
     m_playCtl->setPlaying(true);
 
     m_playCtl->setCurrentTick(timeToTick(m_player->pos()), true);
+    m_playerEndTime = m_notesCtl->audioEndTime();
     m_playerTimerId = this->startTimer(20);
 
     TPianoRollEvent e(TPianoRollEvent::PlayState);
@@ -203,6 +204,7 @@ void TNotesArea::stop() {
     }
 
     killTimer(m_playerTimerId);
+    m_playerEndTime = 0;
     m_playerTimerId = 0;
 
     m_playCtl->setPlaying(false);

@@ -116,9 +116,11 @@ public:
     QAction *play_play;
     QAction *play_stop;
     QAction *play_render;
+    QAction *play_renderAll;
     QAction *play_moveStart;
     QAction *play_moveEnd;
     QAction *play_removeCache;
+    QAction *play_removeAllCache;
     QAction *play_exportAudio;
 
     // Help

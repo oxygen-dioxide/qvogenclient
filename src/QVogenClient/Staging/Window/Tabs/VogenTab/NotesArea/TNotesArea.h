@@ -102,6 +102,7 @@ protected:
     TNNotesCtl *m_notesCtl;
 
     TMultiPlayer *m_player;
+    double m_playerEndTime;
     int m_playerTimerId;
 
     TNotesScroll *m_view;

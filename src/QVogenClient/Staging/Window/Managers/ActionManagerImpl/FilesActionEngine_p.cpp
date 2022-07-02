@@ -150,9 +150,11 @@ void FilesActionEnginePrivate::setup() {
     play_play = NewAction(ActionImpl::Playback_Play, playMenu);
     play_stop = NewAction(ActionImpl::Playback_Stop, playMenu);
     play_render = NewAction(ActionImpl::Playback_Render, playMenu);
+    play_renderAll = NewAction(ActionImpl::Playback_RenderAll, playMenu);
     play_moveStart = NewAction(ActionImpl::Playback_MoveStart, playMenu);
     play_moveEnd = NewAction(ActionImpl::Playback_MoveEnd, playMenu);
     play_removeCache = NewAction(ActionImpl::Playback_RemoveCache, playMenu);
+    play_removeAllCache = NewAction(ActionImpl::Playback_RemoveAllCache, playMenu);
     play_exportAudio = NewAction(ActionImpl::Playback_ExportRecent, playMenu);
 
     // Help
@@ -264,11 +266,14 @@ void FilesActionEnginePrivate::setup() {
     playMenu->addAction(play_stop);
     playMenu->addSeparator();
     playMenu->addAction(play_render);
+    playMenu->addAction(play_renderAll);
     playMenu->addSeparator();
     playMenu->addAction(play_moveStart);
     playMenu->addAction(play_moveEnd);
     playMenu->addSeparator();
     playMenu->addAction(play_removeCache);
+    playMenu->addAction(play_removeAllCache);
+    playMenu->addSeparator();
     playMenu->addAction(play_exportAudio);
 
     // Help
@@ -394,9 +399,11 @@ void FilesActionEnginePrivate::reloadStrings() {
     play_play->setText(QObject::tr("Play"));
     play_stop->setText(QObject::tr("Stop"));
     play_render->setText(QObject::tr("Render"));
+    play_renderAll->setText(QObject::tr("Render All"));
     play_moveStart->setText(QObject::tr("Move to Start"));
     play_moveEnd->setText(QObject::tr("Move to End"));
     play_removeCache->setText(QObject::tr("Remove Cache"));
+    play_removeAllCache->setText(QObject::tr("Remove All Caches"));
     play_exportAudio->setText(QObject::tr("Export Recent Audio..."));
 
     // Help
@@ -458,6 +465,7 @@ void FilesActionEnginePrivate::reloadShortcuts() {
     play_play->setShortcut(QKeySequence("Space"));
     play_stop->setShortcut(QKeySequence("F6"));
     play_render->setShortcut(QKeySequence("F5"));
+    play_renderAll->setShortcut(QKeySequence("Shift+F5"));
     play_exportAudio->setShortcut(QKeySequence("Ctrl+Shift+P"));
 
     // Help

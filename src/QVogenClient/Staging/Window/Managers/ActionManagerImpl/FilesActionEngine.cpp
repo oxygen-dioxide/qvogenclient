@@ -48,10 +48,12 @@ void FilesActionEngine::updateStates(ActionImpl::StateTypes st) {
         d->play_play->setEnabled(states & (ActionImpl::PlayFlag | ActionImpl::StopFlag));
         d->play_stop->setEnabled(states & ActionImpl::StopFlag);
         d->play_render->setEnabled(states & ActionImpl::RenderFlag);
+        d->play_renderAll->setEnabled(states & ActionImpl::DocumentFlag);
         d->play_moveStart->setEnabled(states & ActionImpl::DocumentFlag);
         d->play_moveEnd->setEnabled(states & ActionImpl::DocumentFlag);
         d->play_removeCache->setEnabled((states & ActionImpl::DocumentFlag) &&
                                         !d->play_render->isEnabled());
+        d->play_removeAllCache->setEnabled(states & ActionImpl::DocumentFlag);
         d->play_exportAudio->setEnabled(states & ActionImpl::DocumentFlag);
     }
 }

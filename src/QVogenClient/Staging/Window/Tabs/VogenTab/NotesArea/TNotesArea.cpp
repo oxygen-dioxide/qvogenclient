@@ -50,6 +50,7 @@ TNotesArea::TNotesArea(TNotesAreaPrivate &d, TNotesScroll *parent)
     m_timeSig = qMakePair(4, 4);
 
     m_player = new TMultiPlayer(this);
+    m_playerEndTime = 0;
     m_playerTimerId = 0;
 
     m_priorCtl = new TNPriorCtl(this);
