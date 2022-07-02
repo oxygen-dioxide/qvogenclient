@@ -823,6 +823,8 @@ void TNNotesCtl::addUtterancesCore(const QList<TWProject::Utterance> &utters,
 
         if (utter.name == Qs::MAIN_GROUP_NAME) {
             g = m_mainGroup;
+            g->singerId = utter.singer;
+            g->rom = utter.romScheme;
         } else {
             if (utter.notes.isEmpty()) {
                 continue;
