@@ -28,6 +28,10 @@ void TNPlayheadCtl::install() {
     updatePlayhead();
 }
 
+TNPlayhead *TNPlayheadCtl::playhead() const {
+    return m_playhead;
+}
+
 void TNPlayheadCtl::setPlaying(bool visible) {
     m_playhead->setPlaying(visible);
 }
@@ -36,9 +40,19 @@ bool TNPlayheadCtl::isPlaying() const {
     return m_playhead->playing();
 }
 
-void TNPlayheadCtl::setCurrentTick(int tick) {
+void TNPlayheadCtl::setCurrentTick(int tick, bool adjust) {
     m_playToTick = tick;
     updatePlayhead();
+    if (adjust) {
+        QRectF vp = a->view()->viewportRect();
+        if (qRecordCData.playheadState == 1) {
+            a->setVisionFitToItem(m_playhead, Qt::AnchorHorizontalCenter);
+        } else {
+            if (m_playhead->left() < vp.left() || m_playhead->right() > vp.right()) {
+                a->setVisionFitToItem(m_playhead, Qt::AnchorLeft);
+            }
+        }
+    }
 }
 
 int TNPlayheadCtl::currentTick() const {
@@ -50,17 +64,6 @@ void TNPlayheadCtl::updatePlayhead() {
         m_playhead->setRect(-1, 0, 2, a->sceneRect().height());
     }
     m_playhead->setPos(double(m_playToTick) / 480 * a->currentWidth() + a->zeroLine(), 0);
-
-    if (isPlaying()) {
-        QRectF vp = a->view()->viewportRect();
-        if (qRecordCData.playheadState == 1) {
-            a->setVisionFitToItem(m_playhead, Qt::AnchorHorizontalCenter);
-        } else {
-            if (m_playhead->left() < vp.left() || m_playhead->right() > vp.right()) {
-                a->setVisionFitToItem(m_playhead, Qt::AnchorLeft);
-            }
-        }
-    }
 }
 
 bool TNPlayheadCtl::eventFilter(QObject *obj, QEvent *event) {

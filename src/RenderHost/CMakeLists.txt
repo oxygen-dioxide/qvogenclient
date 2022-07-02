@@ -14,7 +14,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
 # Set Empty
-set(RENDER_HOST_TEST off)
+set(RENDER_HOST_TEST on)
 set(RENDER_HOST_STATIC off)
 
 set(QT_LIBS)

@@ -5,6 +5,7 @@
 #include <QFontDatabase>
 #include <QMessageBox>
 #include <QScreen>
+#include <QStandardPaths>
 #include <QTextCodec>
 
 #include "Namespace.h"

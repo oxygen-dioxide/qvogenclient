@@ -44,12 +44,14 @@ void ExtensionManagerPrivate::init() {
         msgbox.show();
     }
 
+    host->setTimeout(5000);
     bool res = host->launch(qApp->arguments());
+    host->setTimeout(30000);
 
     msgbox.close();
 
     if (!res) {
-        QMessageBox::critical(nullptr, "Fetal Error", "Server is not started yet!");
+        QMessageBox::critical(nullptr, "Fatal Error", "Server is not started yet!");
         ::exit(-1);
     }
 }

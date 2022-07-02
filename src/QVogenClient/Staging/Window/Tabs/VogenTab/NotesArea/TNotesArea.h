@@ -223,7 +223,10 @@ public:
     void stop();
     bool isPlaying() const;
 
-    void setCurrentTick(int tick) const;
+    void moveToStart();
+    void moveToEnd();
+
+    void setCurrentTick(int tick, bool adjust = false) const;
 
     // ----------------------------------------  Events  ----------------------------------------
 

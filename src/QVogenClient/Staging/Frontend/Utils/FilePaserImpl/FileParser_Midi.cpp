@@ -160,17 +160,23 @@ bool FileParser::parseMidiFile(const QString &filename, CommonScore &proj) {
         }
 
         // Change Tempo
+        double firstTempo = -1;
         for (int i = 0; i < tempos.size(); ++i) {
             auto it = noteMap.find(tempos.at(i).first);
             if (it == noteMap.end()) {
                 continue;
             }
             notes[it.value()].tempo = tempos.at(i).second;
+            if (firstTempo < 0) {
+                firstTempo = tempos.at(i).second;
+            }
         }
 
         // Update Tempo
-        if (!notes.isEmpty()) {
-            proj.tempo = (notes.at(0).tempo);
+        if (firstTempo > 0) {
+            proj.tempo = firstTempo;
+        } else if (!tempos.isEmpty()) {
+            proj.tempo = tempos.front().second;
         }
 
         proj.tracks.append(CommonScore::Track{trackNames.at(track), notes});

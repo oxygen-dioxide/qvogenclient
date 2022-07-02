@@ -2,13 +2,21 @@
 
 #include "RenderHost.h"
 
+#define TEST_VOICE_LIB 0
+
 int main(int argc, char *argv[]) {
     QCoreApplication a(argc, argv);
 
-    qDebug() << "[Test Connection]";
     RH::RenderHost host(14251);
-    if (host.launch(a.arguments())) {
-        qDebug() << "OK";
+
+    qDebug() << "[Test Connection]";
+    {
+        if (host.launch(a.arguments())) {
+            qDebug() << "OK";
+        } else {
+            qDebug() << "Err:" << host.lastErr();
+            goto fail;
+        }
     }
 
     ::_sleep(1000);
@@ -17,33 +25,57 @@ int main(int argc, char *argv[]) {
     qDebug() << "[Test Get Voice Libs]";
     {
         QList<RH::VoiceLibMetadata> metas;
-        qDebug() << host.getVoiceLibs(&metas);
-        for (int i = 0; i < metas.size(); ++i) {
-            qDebug() << metas[i];
+        if (host.getVoiceLibs(&metas)) {
+            for (int i = 0; i < metas.size(); ++i) {
+                qDebug() << metas[i];
+            }
+        } else {
+            qDebug() << "Err:" << host.lastErr();
+            goto fail;
         }
     }
 
-    ::_sleep(1000);
+    if (TEST_VOICE_LIB) {
+        ::_sleep(1000);
 
-    qDebug() << " ";
-    qDebug() << "[Test Install Voice Lib]";
-    {
-        RH::VoiceLibMetadata meta;
-        int code;
-        qDebug() << host.install(
-            R"(D:\Green Softwares\Vogen\Vogen.Client.v0.1.1.5\voicelib.silvia.vogeon)", &meta, &code);
-        qDebug() << code << meta;
+        qDebug() << " ";
+        qDebug() << "[Test Install Voice Lib]";
+        {
+            RH::VoiceLibMetadata meta;
+            int code;
+            if (host.install(
+                    R"(D:\Green Softwares\Vogen\Vogen.Client.v0.1.1.5\voicelib.silvia.vogeon)",
+                    &meta, &code)) {
+                qDebug() << code << meta;
+            } else {
+                qDebug() << "Err:" << host.lastErr();
+                goto fail;
+            }
+        }
+
+        ::_sleep(1000);
+
+        qDebug() << " ";
+        qDebug() << "[Test Uninstall Voice Lib]";
+        {
+            int code;
+            if (host.uninstall("Silvia", &code)) {
+                qDebug() << code;
+            } else {
+                qDebug() << "Err:" << host.lastErr();
+                goto fail;
+            }
+        }
     }
 
-    ::_sleep(1000);
-
     qDebug() << " ";
-    qDebug() << "[Test Uninstall Voice Lib]";
-    {
-        int code;
-        qDebug() << host.uninstall("Silvia", &code);
-        qDebug() << code;
-    }
+    qDebug() << "Test Finished";
+    goto out;
 
+fail:
+    qDebug() << " ";
+    qDebug() << "Test Failed";
+
+out:
     return a.exec();
 }

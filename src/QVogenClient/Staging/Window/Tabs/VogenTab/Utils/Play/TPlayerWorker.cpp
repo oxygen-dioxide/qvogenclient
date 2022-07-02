@@ -39,7 +39,7 @@ void TPlayerWorker::start() {
     auto dev = out.start();
 
     QList<int> indexes;
-    quint64 startTime = time;
+    qint64 startTime = time;
     int aheadSamples = 5 * SAMPLE_RATE;
 
     // Init Index List

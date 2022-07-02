@@ -13,10 +13,12 @@ public:
 public:
     void install() override;
 
+    TNPlayhead *playhead() const;
+
     void setPlaying(bool visible);
     bool isPlaying() const;
 
-    void setCurrentTick(int tick);
+    void setCurrentTick(int tick, bool adjust = false);
     int currentTick() const;
 
 protected:

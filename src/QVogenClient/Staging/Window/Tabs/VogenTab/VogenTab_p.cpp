@@ -454,13 +454,25 @@ void VogenTabPrivate::violentRender() {
 
 void VogenTabPrivate::violentExportAudio() {
     Q_Q(VogenTab);
-    auto tracks = piano->notesArea()->audioData();
+
+    auto a = piano->notesArea();
+    a->stop();
+
+    auto tracks = a->audioData();
     if (tracks.isEmpty()) {
         QMessageBox::warning(q, qData->mainTitle(), VogenTab::tr("No audio generated recently."));
         return;
     }
 
-    QString path = qData->saveFile(VogenTab::tr("Export Recent Audio"), QString(),
+    QString waveName;
+    if (filename.isEmpty()) {
+        waveName = "temp.wav";
+    } else {
+        QFileInfo info(filename);
+        waveName = info.absolutePath() + "/" + info.baseName() + ".wav";
+    }
+
+    QString path = qData->saveFile(VogenTab::tr("Export Recent Audio"), waveName,
                                    qData->getFileFilter(DataManager::ExportRecent),
                                    FLAG_EXPORT_RECENT, q->window());
     if (path.isEmpty()) {

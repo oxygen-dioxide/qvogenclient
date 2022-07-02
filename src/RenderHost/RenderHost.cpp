@@ -16,6 +16,10 @@
 
 RENDER_HOST_USE_NAMESPACE
 
+static QByteArray singleKeyValue(const QString &key, const QVariant &val) {
+    return QJsonDocument(QJsonObject({{key, val.toJsonValue()}})).toJson();
+}
+
 RenderHost::RenderHost(int port, QObject *parent) : QObject(parent), m_port(port) {
     m_timeout = 30000;
 }
@@ -77,7 +81,7 @@ bool RenderHost::getVoiceLibs(QList<VoiceLibMetadata> *metas) {
 
 bool RenderHost::install(const QString &path, VoiceLibMetadata *meta, int *code) {
     QByteArray data;
-    bool res = sendRequest("/install", path.toUtf8(), &data);
+    bool res = sendRequest("/install", singleKeyValue("path", path), &data);
     if (!res) {
         return false;
     }
@@ -111,7 +115,7 @@ bool RenderHost::install(const QString &path, VoiceLibMetadata *meta, int *code)
 
 bool RenderHost::uninstall(const QString &id, int *code) {
     QByteArray data;
-    bool res = sendRequest("/uninstall", id.toUtf8(), &data);
+    bool res = sendRequest("/uninstall", singleKeyValue("id", id), &data);
     if (!res) {
         return false;
     }
@@ -131,7 +135,7 @@ bool RenderHost::synthAll(const SynthArgs &args, QList<double> *pitches, int *co
     file.close();
 
     QByteArray data;
-    bool res = sendRequest("/synth/all", tmpFileName.toUtf8(), &data);
+    bool res = sendRequest("/synth/all", singleKeyValue("path", tmpFileName), &data);
 
     if (!res) {
         return false;
@@ -200,6 +204,10 @@ void RenderHost::setTempDir(const QString &tempDir) {
     }
 }
 
+QNetworkReply::NetworkError RenderHost::lastErr() const {
+    return err;
+}
+
 bool RenderHost::sendRequest(const char *url, const QByteArray &content, QByteArray *resp) {
     QNetworkRequest request;
     request.setTransferTimeout(m_timeout);
@@ -213,7 +221,7 @@ bool RenderHost::sendRequest(const char *url, const QByteArray &content, QByteAr
     timer.start();
 
     // Send get request
-    QNetworkReply *reply = manager.post(request, content);
+    QNetworkReply *reply = manager.post(request, content.toHex()); // To Hex String
     QEventLoop loop;
 
     // Wait for response

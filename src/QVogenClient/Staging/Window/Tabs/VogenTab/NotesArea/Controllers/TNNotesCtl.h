@@ -142,7 +142,7 @@ protected:
 
     bool eventFilter(QObject *obj, QEvent *event) override;
 
-protected:
+public:
     int startTick() const;
     int totalLength() const;
 

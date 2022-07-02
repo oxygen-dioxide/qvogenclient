@@ -139,7 +139,7 @@ void TNotesArea::timerEvent(QTimerEvent *event) {
         if (tick > sectionCount() * 4 * 480) {
             stop();
         } else {
-            m_playCtl->setCurrentTick(tick);
+            m_playCtl->setCurrentTick(tick, true);
         }
     }
 }

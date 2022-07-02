@@ -32,6 +32,8 @@ public:
     QString tempDir() const;
     void setTempDir(const QString &tempDir);
 
+    QNetworkReply::NetworkError lastErr() const;
+
 protected:
     int m_port;
     int m_timeout;

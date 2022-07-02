@@ -190,7 +190,7 @@ void TNotesArea::play() {
 
     m_playCtl->setPlaying(true);
 
-    m_playCtl->setCurrentTick(timeToTick(m_player->pos()));
+    m_playCtl->setCurrentTick(timeToTick(m_player->pos()), true);
     m_playerTimerId = this->startTimer(20);
 
     TPianoRollEvent e(TPianoRollEvent::PlayState);
@@ -218,6 +218,20 @@ bool TNotesArea::isPlaying() const {
     return m_player->isRunning();
 }
 
-void TNotesArea::setCurrentTick(int tick) const {
-    m_playCtl->setCurrentTick(tick);
+void TNotesArea::moveToStart() {
+    if (!isPlaying()) {
+        m_playCtl->setCurrentTick(m_notesCtl->startTick());
+        setVisionFitToItem(m_playCtl->playhead(), Qt::AnchorHorizontalCenter);
+    }
+}
+
+void TNotesArea::moveToEnd() {
+    if (!isPlaying()) {
+        m_playCtl->setCurrentTick(m_notesCtl->totalLength());
+        setVisionFitToItem(m_playCtl->playhead(), Qt::AnchorHorizontalCenter);
+    }
+}
+
+void TNotesArea::setCurrentTick(int tick, bool adjust) const {
+    m_playCtl->setCurrentTick(tick, adjust);
 }
