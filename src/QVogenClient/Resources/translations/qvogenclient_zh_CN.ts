@@ -250,7 +250,7 @@
         <translation type="unfinished">无</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/ExtensionManager_p.cpp" line="30"/>
+        <location filename="../../Staging/Application/Managers/ExtensionManager_p.cpp" line="31"/>
         <source>Connecting to server...</source>
         <translation type="unfinished">连接服务器中...</translation>
     </message>
@@ -1046,7 +1046,7 @@
         <translation type="unfinished">无法打开文件“%1”！</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="423"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="424"/>
         <source>Synthesizing failed.</source>
         <translation type="unfinished">渲染失败。</translation>
     </message>
@@ -1101,37 +1101,37 @@
         <translation type="unfinished">选择字典</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="401"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="402"/>
         <source>Synthesizing, please wait...</source>
         <translation type="unfinished">渲染中，请稍等...</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="457"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="460"/>
         <source>Synthesizing %1/%2, please wait...</source>
         <translation type="unfinished">渲染中 %1/%2，请稍等...</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="480"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="483"/>
         <source>Synthesizing completed, but failure occured.</source>
         <translation type="unfinished">渲染完毕，但是有错误发生。</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="492"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="495"/>
         <source>No audio generated recently.</source>
         <translation type="unfinished">最近没有生成音频。</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="504"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="507"/>
         <source>Export Recent Audio</source>
         <translation type="unfinished">导出最近的音频</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="543"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="551"/>
         <source>Failed to create file.</source>
         <translation type="unfinished">无法创建文件。</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="558"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="566"/>
         <source>Failed to write wave file.</source>
         <translation type="unfinished">无法写入 Wave 文件。</translation>
     </message>

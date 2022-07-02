@@ -3,7 +3,7 @@
 
 #include "QUtauStd.h"
 
-class QUTAUSTD_EXPORT Utau::Point {
+class QUTAUSTD_API Utau::Point {
 public:
     double mX;
     double mY;

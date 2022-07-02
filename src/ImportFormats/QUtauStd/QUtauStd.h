@@ -16,14 +16,19 @@
 #include <QString>
 
 #ifdef QUTAUSTD_BUILD_STATIC
-#define QUTAUSTD_EXPORT
+    #define QUTAUSTD_API
 #else
-#ifdef Q_OS_WINDOWS
-#define QUTAUSTD_EXPORT Q_DECL_EXPORT
-#else
-#define QUTAUSTD_EXPORT
+    #ifdef _WIN32
+        #ifdef QUTAUSTD_LIBRARY
+            #define QUTAUSTD_API __declspec(dllexport)
+        #else
+            #define QUTAUSTD_API __declspec(dllimport)
+        #endif
+    #else
+        #define QUTAUSTD_API
+    #endif
 #endif
-#endif
+
 
 const char NODEF_STRING[] = "%NODEF%";
 const int NODEF_INT = INT_MIN;
@@ -69,38 +74,38 @@ namespace Utau {
         Envelope,
     };
 
-    QString QUTAUSTD_EXPORT fromFrqName(const QString &filename);
-    QString QUTAUSTD_EXPORT toFrqName(const QString &filename);
-    QString QUTAUSTD_EXPORT mrqName();
+    QString QUTAUSTD_API fromFrqName(const QString &filename);
+    QString QUTAUSTD_API toFrqName(const QString &filename);
+    QString QUTAUSTD_API mrqName();
 
-    QList<Point> QUTAUSTD_EXPORT DefaultEnvelope();
-    QList<double> QUTAUSTD_EXPORT DefaultVibrato();
-    QList<Point> QUTAUSTD_EXPORT DefaultPortamento();
+    QList<Point> QUTAUSTD_API DefaultEnvelope();
+    QList<double> QUTAUSTD_API DefaultVibrato();
+    QList<Point> QUTAUSTD_API DefaultPortamento();
 
-    QString QUTAUSTD_EXPORT PointToString(PointType type);
-    PointType QUTAUSTD_EXPORT StringToPoint(const QString &name);
+    QString QUTAUSTD_API PointToString(PointType type);
+    PointType QUTAUSTD_API StringToPoint(const QString &name);
 
-    QList<Point> QUTAUSTD_EXPORT StringToPortamento(const PBStrings &pbstr);
-    PBStrings QUTAUSTD_EXPORT PortamentoToString(const QList<Point> &points);
+    QList<Point> QUTAUSTD_API StringToPortamento(const PBStrings &pbstr);
+    PBStrings QUTAUSTD_API PortamentoToString(const QList<Point> &points);
 
-    QList<Point> QUTAUSTD_EXPORT StringToEnvelope(const QString &str);
-    QString QUTAUSTD_EXPORT EnvelopeToString(const QList<Point> &points);
+    QList<Point> QUTAUSTD_API StringToEnvelope(const QString &str);
+    QString QUTAUSTD_API EnvelopeToString(const QList<Point> &points);
 
-    Genon QUTAUSTD_EXPORT StringToGenon(const QString &str);
-    QString QUTAUSTD_EXPORT GenonToString(const Genon &genon);
+    Genon QUTAUSTD_API StringToGenon(const QString &str);
+    QString QUTAUSTD_API GenonToString(const Genon &genon);
 
-    QList<double> QUTAUSTD_EXPORT StringsToDoubles(const QStringList &strs);
-    QStringList QUTAUSTD_EXPORT DoublesToStrings(const QList<double> &nums);
+    QList<double> QUTAUSTD_API StringsToDoubles(const QStringList &strs);
+    QStringList QUTAUSTD_API DoublesToStrings(const QList<double> &nums);
 
-    int QUTAUSTD_EXPORT ToneNameToToneNum(const QString &name);
-    QString QUTAUSTD_EXPORT ToneNumToToneName(int num);
-    QString QUTAUSTD_EXPORT ToneNumToToneName(int nameIndex, int octaveIndex);
+    int QUTAUSTD_API ToneNameToToneNum(const QString &name);
+    QString QUTAUSTD_API ToneNumToToneName(int num);
+    QString QUTAUSTD_API ToneNumToToneName(int nameIndex, int octaveIndex);
 
-    double QUTAUSTD_EXPORT TickToTime(int tick, double tempo);
-    int QUTAUSTD_EXPORT TimeToTick(double time, double tempo);
-    bool QUTAUSTD_EXPORT isRestLyric(const QString &oLyric);
+    double QUTAUSTD_API TickToTime(int tick, double tempo);
+    int QUTAUSTD_API TimeToTick(double time, double tempo);
+    bool QUTAUSTD_API isRestLyric(const QString &oLyric);
 
-    int QUTAUSTD_EXPORT StandardToneNum();
+    int QUTAUSTD_API StandardToneNum();
 
     // Constants
     const char TONE_NAMES[] = "CCDDEFFGGAAB";

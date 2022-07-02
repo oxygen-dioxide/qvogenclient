@@ -5,7 +5,7 @@
 #include "QUtauStd.h"
 
 // Normal Oto Sample
-class QUTAUSTD_EXPORT Utau::Genon {
+class QUTAUSTD_API Utau::Genon {
 public:
     QString mFileName;
     QString mAlias;

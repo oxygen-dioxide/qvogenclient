@@ -8,7 +8,7 @@
 #include "QControlPoint.h"
 #include "QUtauStd.h"
 
-class QUTAUSTD_EXPORT Utau::Note {
+class QUTAUSTD_API Utau::Note {
 public:
     Note();
     Note(int noteNum, int length);

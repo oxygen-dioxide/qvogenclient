@@ -7,7 +7,7 @@
 
 using SectionNotes = QList<QLinkNote>;
 
-class QUTAUSTD_EXPORT SequenceTextFile {
+class QUTAUSTD_API SequenceTextFile {
 public:
     SequenceTextFile();
     ~SequenceTextFile();

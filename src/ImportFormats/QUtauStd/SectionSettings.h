@@ -6,7 +6,7 @@
 
 #include "QUtauStd.h"
 
-class QUTAUSTD_EXPORT SectionSettings {
+class QUTAUSTD_API SectionSettings {
 public:
     SectionSettings();
     void clear();

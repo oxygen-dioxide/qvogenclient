@@ -5,7 +5,7 @@
 
 #include "QUtauStd.h"
 
-class QUTAUSTD_EXPORT QCorrectGenon {
+class QUTAUSTD_API QCorrectGenon {
 public:
     double PreUtterance;
     double VoiceOverlap;
