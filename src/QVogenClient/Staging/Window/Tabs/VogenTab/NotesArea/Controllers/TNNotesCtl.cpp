@@ -72,10 +72,10 @@ QList<TWProject::Utterance> TNNotesCtl::utterances() const {
 
     // Group List Temp
     QMap<QString, TNNoteGroup *> groups;
-    groups.insert(m_mainGroup->name, m_mainGroup);
-    for (const auto &g : m_noteGroups) {
+    for (const auto &g : qAsConst(m_noteGroups)) {
         groups.insert(g->name, g);
     }
+    groups.insert(m_mainGroup->name, m_mainGroup);
 
     for (const auto &group : groups) {
         if (group->isEmpty()) {
@@ -312,7 +312,7 @@ quint64 TNNotesCtl::currentGroupId() const {
 QList<quint64> TNNotesCtl::groupIdList() const {
     QList<quint64> ids;
     ids.append(m_mainGroup->id);
-    for (const auto &g : m_noteGroups) {
+    for (const auto &g : qAsConst(m_noteGroups)) {
         ids.append(g->id);
     }
     return ids;
@@ -338,6 +338,7 @@ void TNNotesCtl::setGroupCache(quint64 id, const QList<double> &pitches, const Q
 }
 
 void TNNotesCtl::removeGroupCache(quint64 id) {
+    forceStopPlay();
     auto g = findGroup(id);
     if (!g) {
         return;
@@ -348,10 +349,12 @@ void TNNotesCtl::removeGroupCache(quint64 id) {
 }
 
 void TNNotesCtl::removeAllCache() {
+    forceStopPlay();
     for (auto g : qAsConst(m_noteGroups)) {
         g->removeCache();
     }
     m_mainGroup->removeCache();
+
     updateScreen();
     updatePlayState();
 }
@@ -364,10 +367,10 @@ bool TNNotesCtl::hasCache(quint64 id) const {
     return g->cache() != nullptr;
 }
 
-QList<QPair<qint64, QWaveInfo *>> TNNotesCtl::playData() const {
+QList<QPair<qint64, QWaveInfo *>> TNNotesCtl::audioData() const {
     QList<QPair<qint64, QWaveInfo *>> res;
 
-    auto getter = [this, &res](TNNoteGroup *g) {
+    auto traverse = [this, &res](TNNoteGroup *g) {
         auto cache = g->cache();
         if (!cache) {
             return;
@@ -377,9 +380,9 @@ QList<QPair<qint64, QWaveInfo *>> TNNotesCtl::playData() const {
     };
 
     for (auto g : qAsConst(m_noteGroups)) {
-        getter(g);
+        traverse(g);
     }
-    getter(m_mainGroup);
+    traverse(m_mainGroup);
 
     return res;
 }
@@ -389,16 +392,19 @@ void TNNotesCtl::switchGroup(TNNoteGroup *group) {
         return;
     }
     m_currentGroup = group;
-    for (auto &g : m_noteGroups) {
+
+    auto traverse = [&](TNNoteGroup *g) {
         if (g != m_currentGroup) {
             setGroupSelected(g, false);
             setGroupEnabled(g, false);
         }
+    };
+
+    for (auto g : qAsConst(m_noteGroups)) {
+        traverse(g);
     }
-    if (m_mainGroup != m_currentGroup) {
-        setGroupSelected(m_mainGroup, false);
-        setGroupEnabled(m_mainGroup, false);
-    }
+    traverse(m_mainGroup);
+
     setGroupEnabled(m_currentGroup, true);
 
     updatePlayState();
@@ -539,7 +545,6 @@ void TNNotesCtl::adjustGroupGeometry(const TNNoteGroup *group) {
 
 void TNNotesCtl::invalidGroup(TNNoteGroup *group) {
     forceStopPlay();
-
     group->removeCache();
 
     const auto &all = group->begins();
@@ -588,14 +593,14 @@ void TNNotesCtl::updateScreen() {
     m_waveScreen->setRect(QRectF(QPointF(0, 0), rect.size()));
 
     int curWidth = a->currentWidth();
+    int curHeight = a->currentHeight();
 
     QList<QPair<double, QPixmap>> pixmaps;
 
-    // Calculate Bounding Rects
-    for (auto g : qAsConst(m_noteGroups)) {
+    auto traverse = [&](TNNoteGroup *g) {
         auto cache = g->cache();
         if (!cache) {
-            continue;
+            return;
         }
 
         int startTick = g->firstBegin() - a->timeToTick(500);
@@ -605,20 +610,20 @@ void TNNotesCtl::updateScreen() {
         double x2 = double(endTick) / 480 * curWidth + a->zeroLine();
 
         if (x2 < rect.left() || x1 > rect.right()) {
-            continue;
+            return;
         }
 
         double W = x2 - x1;
-        double H = 4 * a->currentHeight();
+        double H = 3 * curHeight;
 
         double left = qMax(0.0, rect.left() - x1);
         double right = qMin(W, rect.right() - x1);
 
         double W2 = right - left;
-        double H2 = H / 2 - 10;
+        double H2 = H / 2;
 
         if (W2 < 1) {
-            continue;
+            return;
         }
 
         QPixmap pixmap(W2, H);
@@ -660,7 +665,13 @@ void TNNotesCtl::updateScreen() {
         }
 
         pixmaps.append(qMakePair(x1, pixmap));
+    };
+
+    // Calculate Bounding Rects
+    for (auto g : qAsConst(m_noteGroups)) {
+        traverse(g);
     }
+    traverse(m_mainGroup);
 
     // Draw
     if (!pixmaps.isEmpty()) {
@@ -672,7 +683,8 @@ void TNNotesCtl::updateScreen() {
         for (const auto &pair : qAsConst(pixmaps)) {
             const auto &bmp = pair.second;
             double pos = qMax(0.0, pair.first - rect.left());
-            painter.drawPixmap(QRect(QPoint(pos, rect.height() - bmp.height()), bmp.size()), bmp);
+            painter.drawPixmap(
+                QRect(QPoint(pos, rect.height() - bmp.height() - curHeight), bmp.size()), bmp);
         }
 
         m_waveScreen->setPixmap(pixmap);

@@ -3,9 +3,13 @@
 #include "DataManager.h"
 
 #include <QApplication>
+#include <QDialog>
 #include <QMessageBox>
 #include <QStyle>
 #include <QWidget>
+
+#include <QHBoxLayout>
+#include <QLabel>
 
 ExtensionManagerPrivate::ExtensionManagerPrivate() {
 }
@@ -16,11 +20,35 @@ ExtensionManagerPrivate::~ExtensionManagerPrivate() {
 
 void ExtensionManagerPrivate::init() {
     Q_Q(ExtensionManager);
+
     // Init Client
     host = new RH::RenderHost(14251, q);
     host->setTempDir(qData->getStandardPath(DataManager::AppTemp) + "/server");
 
-    if (!host->launch(qApp->arguments())) {
+    QDialog msgbox;
+    {
+        auto label = new QLabel(ExtensionManager::tr("Connecting to server..."));
+        label->setAlignment(Qt::AlignCenter);
+
+        auto layout = new QHBoxLayout();
+        layout->setMargin(0);
+        layout->setSpacing(0);
+        layout->addWidget(label);
+        msgbox.setLayout(layout);
+        msgbox.resize(300, 100);
+
+        msgbox.setWindowTitle(qData->mainTitle());
+        msgbox.setWindowModality(Qt::ApplicationModal);
+        msgbox.setWindowFlags((msgbox.windowFlags() | Qt::WindowMinimizeButtonHint) &
+                              ~Qt::WindowCloseButtonHint);
+        msgbox.show();
+    }
+
+    bool res = host->launch(qApp->arguments());
+
+    msgbox.close();
+
+    if (!res) {
         QMessageBox::critical(nullptr, "Fetal Error", "Server is not started yet!");
         ::exit(-1);
     }

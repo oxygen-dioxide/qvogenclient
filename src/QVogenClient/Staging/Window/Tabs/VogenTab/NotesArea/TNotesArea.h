@@ -184,6 +184,8 @@ public:
     void removeAllCache();
     bool hasCache(quint64 id) const;
 
+    QList<QPair<qint64, QWaveInfo *>> audioData() const;
+
     TWProject::Utterance currentValidUtterance() const;
     TWProject::Utterance validUtterance(quint64 gid) const;
 

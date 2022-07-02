@@ -318,6 +318,7 @@ QString DataManager::getFileFilter(DataManager::FileFilter f) const {
         res = d->imageFilter;
         break;
     case AudioFiles:
+    case ExportRecent:
         res = d->audioFilter;
         break;
     case ExecutableFiles:

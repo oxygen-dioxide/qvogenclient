@@ -174,7 +174,7 @@ void TNotesArea::play() {
         return;
     }
 
-    auto playData = m_notesCtl->playData();
+    auto playData = m_notesCtl->audioData();
     for (const auto &data : qAsConst(playData)) {
         m_player->addTrack(data.first, data.second);
     }

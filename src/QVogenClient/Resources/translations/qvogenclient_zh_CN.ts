@@ -174,32 +174,32 @@
         <translation type="unfinished">Vogen 声库文件(*.vogeon);;所有文件(%1)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="380"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="381"/>
         <source>Error</source>
         <translation type="unfinished">错误</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="384"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="385"/>
         <source>Untitled</source>
         <translation type="unfinished">未命名</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="392"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="393"/>
         <source>(Deleted)</source>
         <translation type="unfinished">(已删除)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="397"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="398"/>
         <source>Explorer</source>
         <translation type="unfinished">文件资源管理器</translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="399"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="400"/>
         <source>Finder</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="401"/>
+        <location filename="../../Staging/Application/Managers/DataManager.cpp" line="402"/>
         <source>File Manager</source>
         <translation type="unfinished">文件管理器</translation>
     </message>
@@ -248,6 +248,11 @@
         <location filename="../../Staging/Application/Managers/ExtensionManager.cpp" line="97"/>
         <source>None</source>
         <translation type="unfinished">无</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Application/Managers/ExtensionManager_p.cpp" line="30"/>
+        <source>Connecting to server...</source>
+        <translation type="unfinished">连接服务器中...</translation>
     </message>
 </context>
 <context>
@@ -942,6 +947,14 @@
     </message>
 </context>
 <context>
+    <name>TNotesArea</name>
+    <message>
+        <location filename="../../Staging/Window/Tabs/VogenTab/NotesArea/TNotesArea_Sprite.cpp" line="187"/>
+        <source>Audio device not supported!</source>
+        <translation type="unfinished">音频设备不支持！</translation>
+    </message>
+</context>
+<context>
     <name>TabManager</name>
     <message>
         <location filename="../../Staging/Window/Managers/TabManager.cpp" line="291"/>
@@ -1023,64 +1036,84 @@
         <translation type="unfinished">无法打开文件“%1”！</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="383"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="447"/>
         <source>Synthesizing failed.</source>
         <translation type="unfinished">合成失败。</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="92"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="120"/>
         <source>Failed to save file!</source>
         <translation type="unfinished">无法保存文件！</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="207"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="246"/>
         <source>Enter the lyrics, separated by white space</source>
         <translation type="unfinished">输入歌词，使用空格分隔</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="223"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="265"/>
         <source>Enter the new time signature, e.g. 3/4, 4/4</source>
         <translation type="unfinished">输入新的拍号，如3/4、4/4</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="250"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="294"/>
         <source>Enter the new tempo (10 ~ 512)</source>
         <translation type="unfinished">输入新的曲速（10 ~ 512）</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="271"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="317"/>
         <source>Enter the transpose offset (0 ~ 84)</source>
         <translation type="unfinished">输入变调偏移量（0 ~ 84）</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="306"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="357"/>
         <source>Select Voice Library</source>
         <translation type="unfinished">选择声库</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="322"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="373"/>
         <source>Mandarin (man)</source>
         <translation type="unfinished">普通话 (man)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="323"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="374"/>
         <source>Cantonese (yue)</source>
         <translation type="unfinished">粤语-广东话 (yue)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="324"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="375"/>
         <source>Cantonese-Wuzhou (yue-wz)</source>
         <translation type="unfinished">粤语-梧州话 (yue-wz)</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="327"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="378"/>
         <source>Select Dictionary</source>
         <translation type="unfinished">选择字典</translation>
     </message>
     <message>
-        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="369"/>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="425"/>
         <source>Synthesizing, please wait...</source>
         <translation type="unfinished">合成中，请稍等...</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="459"/>
+        <source>No audio generated recently.</source>
+        <translation type="unfinished">最近没有生成音频。</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="463"/>
+        <source>Export Recent Audio</source>
+        <translation type="unfinished">导出最近的音频</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="501"/>
+        <source>Failed to create file.</source>
+        <translation type="unfinished">无法创建文件。</translation>
+    </message>
+    <message>
+        <location filename="../../Staging/Window/Tabs/VogenTab/VogenTab_p.cpp" line="515"/>
+        <source>Failed to write wave file.</source>
+        <translation type="unfinished">无法写入 Wave 文件。</translation>
     </message>
 </context>
 <context>

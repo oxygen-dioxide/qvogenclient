@@ -60,6 +60,7 @@ public:
         AudioFiles,
         ExecutableFiles,
         VoicePackage,
+        ExportRecent,
     };
 
     QString getFileFilter(FileFilter f) const;

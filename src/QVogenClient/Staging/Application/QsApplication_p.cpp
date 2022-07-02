@@ -66,6 +66,7 @@ void QsApplicationPrivate::initFonts() {
 #if defined(Q_OS_WINDOWS)
     QFont f("Microsoft YaHei");
     f.setStyleStrategy(QFont::PreferAntialias);
+    f.setPixelSize(12 * (qApp->primaryScreen()->logicalDotsPerInch() / 96.0));
     q->setFont(f);
 #elif defined(Q_OS_LINUX)
     // ?

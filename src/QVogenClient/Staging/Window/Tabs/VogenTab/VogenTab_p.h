@@ -64,7 +64,8 @@ public:
 
     void changeVoice(TChangeVoiceEvent *event);
 
-    void lazyRender();
+    void violentRender();
+    void violentExportAudio();
 
     QString setTabNameProxy(const QString &tabName) override;
 };

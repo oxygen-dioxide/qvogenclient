@@ -72,7 +72,13 @@ bool VogenTab::load() {
 
         QList<TWProject::Note> notes;
         for (const auto &note : utter.notes) {
-            TWProject::Note p{note.pitch, note.lyric, note.rom, note.start, note.duration};
+            QString lrc;
+            if (note.lyric != "-") {
+                lrc = note.lyric + note.rom;
+            } else {
+                lrc = note.rom;
+            }
+            TWProject::Note p{note.pitch, lrc, lrc, note.start, note.duration};
             notes.append(p);
         }
         u.notes = std::move(notes);
@@ -262,11 +268,15 @@ void VogenTab::handleSpecificAction(ActionImpl::Action a) {
         break;
     }
     case ActionImpl::Playback_Render: {
-        d->lazyRender();
+        d->violentRender();
         break;
     }
     case ActionImpl::Playback_RemoveCache: {
         d->piano->notesArea()->removeGroupCache(d->piano->notesArea()->currentGroupId());
+        break;
+    }
+    case ActionImpl::Playback_ExportRecent: {
+        d->violentExportAudio();
         break;
     }
     default:
@@ -313,7 +323,9 @@ void VogenTab::import(const CommonScore &proj) {
 
         QList<TWProject::Note> notes;
         for (const auto &note : utter.notes) {
-            TWProject::Note p{note.noteNum, QString(), note.lyric, note.start, note.length};
+            QString lrc = note.lyric;
+            TWProject::Note p{note.noteNum, QString(), lrc.isEmpty() ? "a" : lrc, note.start,
+                              note.length};
             notes.append(p);
         }
         u.notes = std::move(notes);
@@ -345,7 +357,9 @@ void VogenTab::append(const CommonScore &proj) {
 
         QList<TWProject::Note> notes;
         for (const auto &note : utter.notes) {
-            TWProject::Note p{note.noteNum, QString(), note.lyric, note.start, note.length};
+            QString lrc = note.lyric;
+            TWProject::Note p{note.noteNum, QString(), lrc.isEmpty() ? "a" : lrc, note.start,
+                              note.length};
             notes.append(p);
         }
         u.notes = std::move(notes);

@@ -367,6 +367,10 @@ bool TNotesArea::hasCache(quint64 id) const {
     return m_notesCtl->hasCache(id);
 }
 
+QList<QPair<qint64, QWaveInfo *>> TNotesArea::audioData() const {
+    return m_notesCtl->audioData();
+}
+
 TWProject::Utterance TNotesArea::currentValidUtterance() const {
     return m_notesCtl->currentValidUtterance();
 }

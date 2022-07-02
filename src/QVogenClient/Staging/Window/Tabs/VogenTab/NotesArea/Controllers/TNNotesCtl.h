@@ -47,7 +47,7 @@ public:
     void removeAllCache();
     bool hasCache(quint64 id) const;
 
-    QList<QPair<qint64, QWaveInfo *>> playData() const;
+    QList<QPair<qint64, QWaveInfo *>> audioData() const;
 
 protected:
     struct MovingData {

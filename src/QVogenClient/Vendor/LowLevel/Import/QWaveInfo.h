@@ -24,6 +24,7 @@ public:
     ~QWaveInfo();
 
     bool load(const QString &filename);
+
     void reset();
 
     bool isEmpty() const;

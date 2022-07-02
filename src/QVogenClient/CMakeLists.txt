@@ -114,6 +114,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE QMidi)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE QUtauStd)
 
+target_link_libraries(${PROJECT_NAME} PRIVATE wave)
+
 target_link_libraries(${PROJECT_NAME} PRIVATE QuaZip::QuaZip)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE RenderHost)

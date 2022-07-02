@@ -67,18 +67,11 @@ For detailed information, see [Build Instructions](./docs/build-insturctions.md)
 + Owner: Jean-loup Gailly and Mark Adler
 + Usage: For QuaZip to call
 
-#### World
-+ Source: https://github.com/mmorise/World
-+ License: Modified-BSD license
-+ Owner: mmorise
-+ Usage: RenderHost uses it to synthesize audio
-
-#### Microsoft ONNX Runtime
-
-+ Source: https://github.com/microsoft/onnxruntime
-+ License: MIt License
-+ Owner: Microsoft
-+ Usage: RenderHost uses it to deal with AI model
+#### Wave
++ Source: https://github.com/audionamix/wave
++ License: MIT license
++ Owner: audionamix
++ Usage: Export Wave Audio
 
 All libraries and their source code are unmodified and are called as dynamic links.
 

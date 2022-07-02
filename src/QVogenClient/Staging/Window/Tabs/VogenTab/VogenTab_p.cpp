@@ -18,11 +18,36 @@
 #include <QApplication>
 #include <QMessageBox>
 
+#include "wave/file.h"
+
 #include <cstdio>
 
 using namespace QEventImpl;
 
+static const char FLAG_EXPORT_RECENT[] = "%EXPORT_RECENT%";
+
 int VogenTabPrivate::s_untitledIndex = 0;
+
+static QPair<QString, QString> splitLyricRom(const QString &rom) {
+    QString newLrc, newRom;
+
+    if (rom != "-") {
+        for (const QChar &ch : qAsConst(rom)) {
+            if (ch < 128) {
+                // Latin1
+                newRom.append(ch);
+            } else {
+                // Unicode
+                newLrc.append(ch);
+            }
+        }
+    } else {
+        newLrc = "-";
+        newRom = "-";
+    }
+
+    return qMakePair(newLrc, newRom);
+}
 
 VogenTabPrivate::VogenTabPrivate() {
 }
@@ -74,13 +99,15 @@ bool VogenTabPrivate::saveFile(const QString &filename) {
     QList<QVogenFile::Utterance> utterances;
     for (const auto &utter : qAsConst(pd.utterances)) {
         QVogenFile::Utterance u;
+
         u.name = utter.name;
         u.singer = utter.singer;
         u.romScheme = utter.romScheme;
 
         QList<QVogenFile::Note> notes;
         for (const auto &note : utter.notes) {
-            QVogenFile::Note p{note.noteNum, note.lyric, note.rom, note.start, note.length, {}};
+            auto pair = splitLyricRom(note.rom);
+            QVogenFile::Note p{note.noteNum, pair.first, pair.second, note.start, note.length, {}};
             notes.append(p);
         }
         u.notes = std::move(notes);
@@ -355,7 +382,7 @@ void VogenTabPrivate::changeVoice(TChangeVoiceEvent *event) {
     }
 }
 
-void VogenTabPrivate::lazyRender() {
+void VogenTabPrivate::violentRender() {
     Q_Q(VogenTab);
 
     auto a = piano->notesArea();
@@ -380,7 +407,8 @@ void VogenTabPrivate::lazyRender() {
 
             QList<RH::FNote> notes;
             for (const auto &note : qAsConst(utter.notes)) {
-                RH::FNote p{note.noteNum, note.lyric, note.rom, note.start, note.length};
+                auto pair = splitLyricRom(note.rom);
+                RH::FNote p{note.noteNum, pair.first, pair.second, note.start, note.length};
                 notes.append(p);
             }
             u.notes = std::move(notes);
@@ -406,7 +434,8 @@ void VogenTabPrivate::lazyRender() {
 
                 msgbox.setWindowTitle(qData->mainTitle());
                 msgbox.setWindowModality(Qt::ApplicationModal);
-                msgbox.setWindowFlags(msgbox.windowFlags() & ~Qt::WindowCloseButtonHint);
+                msgbox.setWindowFlags((msgbox.windowFlags() | Qt::WindowMinimizeButtonHint) &
+                                      ~Qt::WindowCloseButtonHint);
                 msgbox.show();
             }
 
@@ -420,6 +449,73 @@ void VogenTabPrivate::lazyRender() {
             }
             a->setGroupCache(gid, pitches, path);
         }
+    }
+}
+
+void VogenTabPrivate::violentExportAudio() {
+    Q_Q(VogenTab);
+    auto tracks = piano->notesArea()->audioData();
+    if (tracks.isEmpty()) {
+        QMessageBox::warning(q, qData->mainTitle(), VogenTab::tr("No audio generated recently."));
+        return;
+    }
+
+    QString path = qData->saveFile(VogenTab::tr("Export Recent Audio"), QString(),
+                                   qData->getFileFilter(DataManager::ExportRecent),
+                                   FLAG_EXPORT_RECENT, q->window());
+    if (path.isEmpty()) {
+        return;
+    }
+
+#define SAMPLE_RATE 44100
+
+    QList<int> indexes;
+
+    // Init Index List
+    for (int i = 0; i < tracks.size(); ++i) {
+        const auto &track = tracks.at(i);
+        int index = double(track.first) / 1000 * SAMPLE_RATE;
+        indexes.append(index);
+    }
+
+    QList<qint32> mergedSamples;
+    for (int i = 0; i < indexes.size(); ++i) {
+        const auto &track = tracks.at(i);
+        const auto &samples = track.second->channel1();
+        int index = indexes.at(i);
+
+        // Complement
+        while (mergedSamples.size() < index + samples.size()) {
+            mergedSamples.append(0);
+        }
+
+        // Merge
+        for (int i = qMax(-index, 0); i < samples.size(); ++i) {
+            mergedSamples[index + i] += samples.at(i);
+        }
+    }
+
+    // Export wave file
+    wave::File write_file;
+    wave::Error err = write_file.Open(path.toStdWString(), wave::kOut);
+    if (err) {
+        QMessageBox::critical(q, qData->errorTitle(), VogenTab::tr("Failed to create file."));
+        return;
+    }
+
+    write_file.set_sample_rate(SAMPLE_RATE);
+    write_file.set_bits_per_sample(16);
+    write_file.set_channel_number(1);
+
+    std::vector<float> arr;
+    for (auto sample : qAsConst(mergedSamples)) {
+        arr.push_back(static_cast<float>(sample) / std::numeric_limits<qint16>::max());
+    }
+
+    err = write_file.Write(arr);
+    if (err) {
+        QMessageBox::critical(q, qData->errorTitle(), VogenTab::tr("Failed to write wave file."));
+        return;
     }
 }
 

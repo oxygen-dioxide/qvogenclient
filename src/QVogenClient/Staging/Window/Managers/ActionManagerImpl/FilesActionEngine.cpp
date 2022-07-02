@@ -52,7 +52,7 @@ void FilesActionEngine::updateStates(ActionImpl::StateTypes st) {
         d->play_moveEnd->setEnabled(states & ActionImpl::DocumentFlag);
         d->play_removeCache->setEnabled((states & ActionImpl::DocumentFlag) &&
                                         !d->play_render->isEnabled());
-        d->play_exportAudio->setEnabled(false);
+        d->play_exportAudio->setEnabled(states & ActionImpl::DocumentFlag);
     }
 }
 
