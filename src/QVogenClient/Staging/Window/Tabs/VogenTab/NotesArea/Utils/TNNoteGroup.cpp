@@ -28,8 +28,6 @@ void TNNoteGroup::install() {
 }
 
 void TNNoteGroup::uninstall() {
-    m_area->removeEventFilter(this);
-
     m_area->removeItem(m_hintItem);
     delete m_hintItem;
 }

@@ -206,6 +206,7 @@ void TNNotesCtl::removeNotes(const QList<quint64> &ids) {
     for (auto group : qAsConst(groups)) {
         if (group != m_mainGroup && group->isEmpty()) {
             removeGroup(group);
+            updateScreen();
         } else {
             invalidGroup(group);
         }
@@ -244,6 +245,7 @@ void TNNotesCtl::changeGroup(const QList<quint64> &ids, const TWNote::Group &gro
     for (auto group : qAsConst(groups)) {
         if (group != m_mainGroup && group->isEmpty()) {
             removeGroup(group);
+            updateScreen();
         } else {
             invalidGroup(group);
         }
@@ -1542,8 +1544,6 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
 
                         if (!ptrs.isEmpty()) {
                             adjustCanvas();
-                            invalidGroup(m_currentGroup);
-                            updatePlayState();
                             deselect();
 
                             QList<TONoteInsDel::NoteData> opNotes;
@@ -1577,6 +1577,9 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                             TOperateEvent e;
                             e.setData(op);
                             e.dispatch(a);
+
+                            invalidGroup(m_currentGroup);
+                            updatePlayState();
                         }
                     }
                 }
@@ -1639,6 +1642,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                         switchGroup(m_mainGroup);
 
                         removeGroup(oldGroup);
+                        updateScreen();
                     } else {
                         invalidGroup(m_currentGroup);
                     }
@@ -1787,6 +1791,9 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
                         TOperateEvent e;
                         e.setData(op);
                         e.dispatch(a);
+
+                        invalidGroup(m_currentGroup);
+                        updatePlayState();
                     }
                     break;
                 }
@@ -1832,6 +1839,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
 
                     if (oldGroup != m_mainGroup && oldGroup->isEmpty()) {
                         removeGroup(oldGroup);
+                        updateScreen();
                     } else {
                         invalidGroup(oldGroup);
                     }
@@ -1875,6 +1883,7 @@ bool TNNotesCtl::eventFilter(QObject *obj, QEvent *event) {
 
                     if (oldGroup->isEmpty() && oldGroup != m_mainGroup) {
                         removeGroup(oldGroup);
+                        updateScreen();
                     } else {
                         invalidGroup(oldGroup);
                     }

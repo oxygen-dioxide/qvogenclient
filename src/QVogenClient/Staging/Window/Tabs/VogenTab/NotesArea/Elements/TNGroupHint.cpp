@@ -49,8 +49,9 @@ TNNoteGroup *TNGroupHint::noteGroup() const {
 }
 
 QString TNGroupHint::hintText() const {
-    return QString("%1 | %2").arg(g->singerId.isEmpty() ? "(None)" : g->singerId,
-                                  g->rom.isEmpty() ? "(None)" : g->rom);
+    return QString("%1%2 | %3")
+        .arg(g->id == 1 ? "~" : QString(), g->singerId.isEmpty() ? "(None)" : g->singerId,
+             g->rom.isEmpty() ? "(None)" : g->rom);
 }
 
 void TNGroupHint::layoutRequestEvent(QEvent *event) {
