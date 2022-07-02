@@ -20,7 +20,7 @@ public:
 
     TMultiPlayer *q_ptr;
 
-    void start_helper(qint64 time);
+    bool start_helper(qint64 time);
     void stop_helper();
 
     struct Track {

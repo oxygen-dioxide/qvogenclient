@@ -5,7 +5,7 @@ TMultiPlayer::TMultiPlayer(QObject *parent) : TMultiPlayer(*new TMultiPlayerPriv
 }
 
 TMultiPlayer::~TMultiPlayer() {
-    if (isRunning()){
+    if (isRunning()) {
         stop();
     }
 }
@@ -15,6 +15,7 @@ TMultiPlayer::TMultiPlayer(TMultiPlayerPrivate &d, QObject *parent) : QObject(pa
 
     d.init();
 }
+
 void TMultiPlayer::addTrack(qint64 time, QWaveInfo *wave) {
     Q_D(TMultiPlayer);
 
@@ -48,13 +49,13 @@ void TMultiPlayer::clear() {
     d->tracks.clear();
 }
 
-void TMultiPlayer::start(qint64 time) {
+bool TMultiPlayer::start(qint64 time) {
     Q_D(TMultiPlayer);
     if (isRunning()) {
         qDebug() << "[TMultiPlayer] Player is running";
-        return;
+        return false;
     }
-    d->start_helper(time);
+    return d->start_helper(time);
 }
 
 void TMultiPlayer::stop() {

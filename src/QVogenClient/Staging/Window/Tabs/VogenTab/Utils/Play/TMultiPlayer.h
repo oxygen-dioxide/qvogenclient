@@ -18,7 +18,7 @@ public:
     void addTrack(qint64 time, QWaveInfo *wave);
     void clear();
 
-    void start(qint64 time);
+    bool start(qint64 time);
     void stop();
     bool isRunning() const;
 

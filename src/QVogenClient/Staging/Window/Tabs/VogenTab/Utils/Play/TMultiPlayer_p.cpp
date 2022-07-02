@@ -12,13 +12,17 @@ void TMultiPlayerPrivate::init() {
     playThread = new QThread(q);
 }
 
-void TMultiPlayerPrivate::start_helper(qint64 time) {
+bool TMultiPlayerPrivate::start_helper(qint64 time) {
     Q_Q(TMultiPlayer);
 
     // New Worker
     worker = new TPlayerWorker();
     worker->ref = this;
     worker->time = time;
+
+    if (!worker->test()) {
+        return false;
+    }
 
     // Add to Thread
     worker->moveToThread(playThread);
@@ -27,6 +31,8 @@ void TMultiPlayerPrivate::start_helper(qint64 time) {
 
     // Start
     playThread->start();
+
+    return true;
 }
 
 void TMultiPlayerPrivate::stop_helper() {

@@ -135,7 +135,12 @@ void TNotesArea::customEvent(QEvent *event) {
 
 void TNotesArea::timerEvent(QTimerEvent *event) {
     if (event->timerId() == m_playerTimerId) {
-        m_playCtl->setCurrentTick(timeToTick(m_player->pos()));
+        int tick = timeToTick(m_player->pos());
+        if (tick > sectionCount() * 4 * 480) {
+            stop();
+        } else {
+            m_playCtl->setCurrentTick(tick);
+        }
     }
 }
 

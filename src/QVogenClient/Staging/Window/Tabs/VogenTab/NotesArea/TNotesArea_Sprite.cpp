@@ -13,7 +13,10 @@
 
 #include "Types/Events.h"
 
+#include "DataManager.h"
+
 #include <QApplication>
+#include <QMessageBox>
 
 void TNotesArea::loadSprite(const QString &path) {
     m_spriteCtl->loadSprite(path);
@@ -178,7 +181,13 @@ void TNotesArea::play() {
 
     qint64 time = tickToTime(m_playCtl->currentTick());
 
-    m_player->start(time);
+    bool started = m_player->start(time);
+    if (!started) {
+        QMessageBox::critical(view()->window(), qData->errorTitle(),
+                              tr("Audio device not supported!"));
+        return;
+    }
+
     m_playCtl->setPlaying(true);
 
     m_playCtl->setCurrentTick(timeToTick(m_player->pos()));

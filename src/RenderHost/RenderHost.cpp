@@ -24,7 +24,18 @@ RenderHost::~RenderHost() {
 }
 
 bool RenderHost::launch(const QStringList &arguments) {
-    return sendRequest("/launch", QJsonDocument(QJsonArray::fromStringList(arguments)).toJson());
+    QByteArray data;
+    bool res = sendRequest("/launch", QJsonDocument(QJsonArray::fromStringList(arguments)).toJson(),
+                           &data);
+
+    if (!res) {
+        return false;
+    }
+
+    if (data != "OK") {
+        return false;
+    }
+    return true;
 }
 
 bool RenderHost::getVoiceLibs(QList<VoiceLibMetadata> *metas) {

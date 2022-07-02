@@ -1,8 +1,8 @@
 #ifndef TPLAYERWORKER_H
 #define TPLAYERWORKER_H
 
-#include <QObject>
 #include <QAudioOutput>
+#include <QObject>
 
 class TMultiPlayerPrivate;
 
@@ -18,6 +18,9 @@ public:
     QAtomicInteger<qint64> time;
     QAtomicInt sig;
 
+    QAudioFormat format;
+
+    bool test();
     void start();
 
 signals:

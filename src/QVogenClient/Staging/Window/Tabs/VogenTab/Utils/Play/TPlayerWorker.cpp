@@ -9,20 +9,19 @@
 TPlayerWorker::TPlayerWorker(QObject *parent) : QObject(parent) {
     sig = 0;
     time = 0;
-}
 
-TPlayerWorker::~TPlayerWorker() {
-}
-
-void TPlayerWorker::start() {
-    QAudioFormat format;
     format.setSampleRate(44100);
     format.setSampleSize(16);
     format.setChannelCount(1);
     format.setCodec("audio/pcm");
     format.setSampleType(QAudioFormat::SignedInt);
     format.setByteOrder(QAudioFormat::LittleEndian);
+}
 
+TPlayerWorker::~TPlayerWorker() {
+}
+
+bool TPlayerWorker::test() {
     // auto infos = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
     // for (const QAudioDeviceInfo &info : infos) {
     //     qDebug() << info.deviceName() << info.isFormatSupported(format);
@@ -30,9 +29,12 @@ void TPlayerWorker::start() {
     QAudioDeviceInfo info(QAudioDeviceInfo::defaultOutputDevice());
     if (!info.isFormatSupported(format)) {
         qDebug() << "Raw audio format not supported by backend, cannot play audio.";
-        return;
+        return false;
     }
+    return true;
+}
 
+void TPlayerWorker::start() {
     QAudioOutput out(format);
     auto dev = out.start();
 
