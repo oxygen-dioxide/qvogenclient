@@ -31,7 +31,6 @@ The whole QSynthesis source code is written in C++ with Qt library. In order to 
 | Component    | Requirement | Detailed                               |
 | :----:       | :----:      | :----:                                 |
 | Qt           | >=5.15      | Core, Gui, Svg, Network, Multimedia    |
-| ONNX Runtime | >=1.11.1    | /                                      |
 | Compiler     | >=C++17     | MSVC 2019, MinGW 0.8.1, GCC, Clang     |
 | CMake        | >=3.17      | >=3.20 is recommended                  |
 

@@ -2,12 +2,6 @@
 
 ## Dependencies
 
-### ONNX Runtime 
-
-Download latest release and extract to `src/RenderHost/Lib` directory, change `CMakeLists.txt` if necessary.
-
-Official Page: https://github.com/microsoft/onnxruntime
-
 ## Platform
 
 ### Windows
