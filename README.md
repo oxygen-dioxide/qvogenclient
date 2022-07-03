@@ -14,9 +14,9 @@ Vogen editor using **QSynthesis** framework.
 + Apple MacOS
 + Linux
 
-### How To Use
+## How To Use
 
-#### Windows
+### Windows
 
 See [User Instructions](./docs/usage-win.md).
 
@@ -77,6 +77,19 @@ For detailed information, see [Build Instructions](./docs/build-insturctions.md)
 + Usage: Export Wave Audio
 
 Most libraries and their source code are unmodified and are called as dynamic links.
+
+## Related Pages
+
+### Vogen Official
+
++ Gitee: https://gitee.com/aqtq314/Vogen.Client
++ GitHub: https://github.com/aqtq314/Vogen.Client
+
+### QVogenServer
+
++ Gitee: https://gitee.com/functioner/qvogenserver
+
+---
 
 ## License
 
