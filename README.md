@@ -14,9 +14,13 @@ Vogen editor using **QSynthesis** framework.
 + Apple MacOS
 + Linux
 
-### Rendering
+### How To Use
 
-GPU rendering is avaliable only on Windows and Linux.
+#### Windows
+
+See [User Instructions](./docs/usage-win.md).
+
++ Servers for other platforms are not currently under development.
 
 ## Build from source
 
@@ -73,14 +77,7 @@ For detailed information, see [Build Instructions](./docs/build-insturctions.md)
 + Owner: audionamix
 + Usage: Export Wave Audio
 
-All libraries and their source code are unmodified and are called as dynamic links.
-
-## Libraries built for QSynthesis
-
-#### QScrollableTabWidget
-
-+ Source: https://github.com/SineStriker/QScrollableTabWidget
-+ License: Apache 2.0 License
+Most libraries and their source code are unmodified and are called as dynamic links.
 
 ## License
 

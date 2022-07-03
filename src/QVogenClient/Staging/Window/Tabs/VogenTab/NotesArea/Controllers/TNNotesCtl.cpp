@@ -197,14 +197,13 @@ void TNNotesCtl::removeNotes(const QList<quint64> &ids) {
         groups.insert(oldGroup);
     }
 
-    // Switch group if necessary
-    if (groups.contains(m_currentGroup)) {
-        switchGroup(m_mainGroup);
-    }
-
     // Remove empty groups
     for (auto group : qAsConst(groups)) {
         if (group != m_mainGroup && group->isEmpty()) {
+            // Switch group if necessary
+            if (group == m_currentGroup) {
+                switchGroup(m_mainGroup);
+            }
             removeGroup(group);
             updateScreen();
         } else {
