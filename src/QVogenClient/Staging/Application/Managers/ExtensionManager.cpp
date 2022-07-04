@@ -48,13 +48,6 @@ void ExtensionManager::themeLoad(int index) {
 
     QCssAnalyzer qss;
 
-#if defined(Q_OS_MAC)
-    if (index == 0) {
-        qss.setFileName(":/themes/theme-mac.qss");
-    } else if (index == 1) {
-        qss.setFileName(":/themes/theme-mac-dark.qss");
-    }
-#else
     if (index == 0) {
         qss.setFileName(":/themes/dark-v3.qss");
     } else if (index == 1) {
@@ -65,7 +58,6 @@ void ExtensionManager::themeLoad(int index) {
         qApp->setStyleSheet(QString());
         return;
     }
-#endif
 
     double ratio = qApp->primaryScreen()->logicalDotsPerInch() / 96.0;
     qss.setRatio(0.8 * ratio);

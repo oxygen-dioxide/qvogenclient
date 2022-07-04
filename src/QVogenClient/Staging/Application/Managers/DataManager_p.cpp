@@ -18,6 +18,9 @@ DataManagerPrivate::~DataManagerPrivate() {
 void DataManagerPrivate::init() {
 #ifdef Q_OS_WINDOWS
     appDataPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+#elif defined(Q_OS_MAC)
+    appDataPath =
+        QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/.config/QVogenClient";
 #else
     appDataPath = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
 #endif

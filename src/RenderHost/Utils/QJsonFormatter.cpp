@@ -191,7 +191,6 @@ bool QJsonFormatter::fill(const QJsonValue &src, QJsonFormatter::Variant *dest) 
             if (v.is##Class()) {                                                                   \
                 list.append(v.to##Class());                                                        \
             } else {                                                                               \
-                qDebug() << QString::asprintf("QJsonFormattor: \"%s\" supposed to be %s", #Class); \
                 success = false;                                                                   \
                 break;                                                                             \
             }                                                                                      \
@@ -213,7 +212,6 @@ bool QJsonFormatter::fill(const QJsonValue &src, QJsonFormatter::Variant *dest) 
             if (v.is##Class()) {                                                                   \
                 map.insert(it.key(), v.to##Class());                                               \
             } else {                                                                               \
-                qDebug() << QString::asprintf("QJsonFormattor: \"%s\" supposed to be %s", #Class); \
                 success = false;                                                                   \
                 break;                                                                             \
             }                                                                                      \
