@@ -73,8 +73,8 @@ public:
     virtual void awake(); // Window Activate
     virtual void sleep(); // Window Deactivate
 
-    virtual void enter(); // Tab Switch In
-    virtual void leave(); // Tab Switch Out
+    void enter() override; // Tab Switch In
+    void leave() override; // Tab Switch Out
 
     virtual void change();
 

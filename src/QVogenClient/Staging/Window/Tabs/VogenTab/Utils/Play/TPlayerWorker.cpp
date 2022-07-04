@@ -44,7 +44,7 @@ void TPlayerWorker::start() {
     qint64 startTime = time;
     qint64 procTime = startTime; // Buffer End Time
 
-    double aheadTime = 2.5;
+    double aheadTime = 0.08;
     int aheadSamples = aheadTime * SAMPLE_RATE;
 
     // Init Index List
