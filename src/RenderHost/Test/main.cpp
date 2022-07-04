@@ -2,6 +2,8 @@
 
 #include "RenderHost.h"
 
+#include <QThread>
+
 #define TEST_VOICE_LIB 0
 
 int main(int argc, char *argv[]) {
@@ -19,7 +21,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    ::_sleep(1000);
+    QThread::msleep(1000);
 
     qDebug() << " ";
     qDebug() << "[Test Get Voice Libs]";
@@ -36,7 +38,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (TEST_VOICE_LIB) {
-        ::_sleep(1000);
+        QThread::msleep(1000);
 
         qDebug() << " ";
         qDebug() << "[Test Install Voice Lib]";
@@ -53,7 +55,7 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        ::_sleep(1000);
+        QThread::msleep(1000);
 
         qDebug() << " ";
         qDebug() << "[Test Uninstall Voice Lib]";

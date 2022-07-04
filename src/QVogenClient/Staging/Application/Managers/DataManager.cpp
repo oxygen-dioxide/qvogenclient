@@ -48,6 +48,8 @@ DataManager::~DataManager() {
 bool DataManager::load() {
     Q_D(DataManager);
 
+    qDebug() << "Data Path:" << d->appDataPath;
+
     // Create directories
     if (!Sys::isDirExist(d->appDataPath)) {
         if (!Sys::mkDir(d->appDataPath)) {
@@ -397,9 +399,9 @@ QString DataManager::fileManagerName() const {
 #ifdef Q_OS_WINDOWS
     return tr("Explorer");
 #elif defined(Q_OS_MAC)
-    return = tr("Finder");
+    return tr("Finder");
 #else
-    return = tr("File Manager");
+    return tr("File Manager");
 #endif
 }
 

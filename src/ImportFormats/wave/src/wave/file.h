@@ -26,7 +26,12 @@ namespace wave {
         /**
          * @brief Open wave file at given path
          */
+
+#ifdef _WIN32
         Error Open(const std::wstring &path, OpenMode mode);
+#else
+        Error Open(const std::string &path, OpenMode mode);
+#endif
 
         /**
          * @brief Read the entire content of file.
@@ -94,7 +99,13 @@ namespace wave {
          * else leave data intact. default to false
          */
         void Write(const std::vector<float> &data, std::error_code &err, bool clip = false);
+
+#ifdef _WIN32
+        void Open(const std::wstring &path, OpenMode mode, std::error_code &err);
+#else
         void Open(const std::string &path, OpenMode mode, std::error_code &err);
+#endif
+
 #endif // __cplusplus > 199711L
 
         uint16_t channel_number() const;

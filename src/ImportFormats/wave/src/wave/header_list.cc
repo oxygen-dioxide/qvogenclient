@@ -34,7 +34,11 @@ namespace wave {
         return !operator==(rhs);
     }
 
+#ifdef _WIN32
     Error HeaderList::Init(const std::wstring &path) {
+#else
+    Error HeaderList::Init(const std::string &path) {
+#endif
         stream_.open(path.c_str(), std::ios::binary);
         if (!stream_.is_open()) {
             return Error::kFailedToOpen;

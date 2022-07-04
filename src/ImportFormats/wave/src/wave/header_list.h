@@ -24,7 +24,11 @@ namespace wave {
             uint64_t position_;
         };
 
+#ifdef _WIN32
         Error Init(const std::wstring &path);
+#else
+        Error Init(const std::string &path);
+#endif
         Iterator begin();
         Iterator end();
 

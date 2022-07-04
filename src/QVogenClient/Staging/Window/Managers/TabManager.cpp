@@ -277,12 +277,12 @@ void TabManager::triggerCurrent(ActionImpl::Action a) {
         dlg->deleteLater();
         break;
     }
-    case Help_Instructions:{
+    case Help_Instructions: {
         SynthClient cli;
         cli.launchServer();
         break;
     }
-    case Help_CheckUpdate:{
+    case Help_CheckUpdate: {
         SynthClient cli;
         cli.httpTest();
         break;
@@ -338,7 +338,10 @@ bool TabManager::eventFilter(QObject *obj, QEvent *event) {
             break;
         }
         case QEvent::Close: {
-            event->setAccepted(closeAll());
+            if (!closeAll()) {
+                event->ignore();
+                return true;
+            }
             break;
         }
 

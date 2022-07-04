@@ -6,6 +6,7 @@
 
 #include <QJsonArray>
 #include <QJsonObject>
+#include <QPoint>
 
 #include "Import/QWaveInfo.h"
 

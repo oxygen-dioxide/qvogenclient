@@ -3,6 +3,7 @@
 
 #include <QList>
 #include <QString>
+#include <QPoint>
 
 #include "CompressedFile.h"
 

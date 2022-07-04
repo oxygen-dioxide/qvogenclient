@@ -30,6 +30,8 @@
 
 #include <QJsonDocument>
 
+#include <QtMath>
+
 #include <cstdio>
 
 static const char LYRICS_SEPARATOR = ' ';
@@ -670,7 +672,7 @@ void TNNotesCtl::updateScreen() {
         {
             const auto &data = cache->wave.channel1();
 
-            double A = pow(2.0, 8.0 * cache->wave.bytesPerSample() - 1);
+            double A = qPow(2.0, 8.0 * cache->wave.bytesPerSample() - 1);
 
             int count = data.size();
             double delta = 0.5;

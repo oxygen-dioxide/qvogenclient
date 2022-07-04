@@ -175,7 +175,11 @@ namespace wave {
 #endif
     }
 
+#ifdef _WIN32
     Error File::Open(const std::wstring &path, OpenMode mode) {
+#else
+    Error File::Open(const std::string &path, OpenMode mode) {
+#endif
         if (mode == OpenMode::kOut) {
             impl_->ostream.open(path.c_str(), std::ios::binary | std::ios::trunc);
             if (!impl_->ostream.is_open()) {
@@ -423,7 +427,11 @@ namespace wave {
         err = make_error_code(wave_error);
     }
 
+#ifdef _WIN32
+    void File::Open(const std::wstring &path, OpenMode mode, std::error_code &err) {
+#else
     void File::Open(const std::string &path, OpenMode mode, std::error_code &err) {
+#endif
         auto wave_error = Open(path, mode);
         err = make_error_code(wave_error);
     }

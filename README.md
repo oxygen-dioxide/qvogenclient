@@ -18,7 +18,11 @@ Vogen editor using **QSynthesis** framework.
 
 ### Windows
 
-See [User Instructions](./docs/usage-win.md).
+See [Windows Instructions](./docs/usage-win.md).
+
+### Linux
+
+See [Linux Instructions](./docs/usage-linux.md).
 
 + Servers for other platforms are not currently under development.
 

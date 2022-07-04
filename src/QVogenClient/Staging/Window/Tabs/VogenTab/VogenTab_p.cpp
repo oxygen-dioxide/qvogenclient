@@ -566,7 +566,12 @@ void VogenTabPrivate::violentExportAudio() {
 
     // Export wave file
     wave::File write_file;
+
+#ifdef Q_OS_WINDOWS
     wave::Error err = write_file.Open(path.toStdWString(), wave::kOut);
+#else
+    wave::Error err = write_file.Open(path.toStdString(), wave::kOut);
+#endif
     if (err) {
         QMessageBox::critical(q, qData->errorTitle(), VogenTab::tr("Failed to create file."));
         return;

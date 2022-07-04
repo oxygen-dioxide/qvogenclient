@@ -3,6 +3,8 @@
 
 #include "TNController.h"
 
+#include <QPoint>
+
 class TNTransformCtl : public TNController {
     Q_OBJECT
 public:

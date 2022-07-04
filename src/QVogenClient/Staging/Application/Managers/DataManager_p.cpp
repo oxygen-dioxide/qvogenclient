@@ -16,7 +16,11 @@ DataManagerPrivate::~DataManagerPrivate() {
 }
 
 void DataManagerPrivate::init() {
+#ifdef Q_OS_WINDOWS
     appDataPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+#else
+    appDataPath = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+#endif
     if (!appDataPath.endsWith(Qs::AppName)) {
         appDataPath += Slash + Qs::AppName;
     }

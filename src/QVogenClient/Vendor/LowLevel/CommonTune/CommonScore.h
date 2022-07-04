@@ -2,6 +2,7 @@
 #define COMMONSCORE_H
 
 #include <QList>
+#include <QPoint>
 
 #include "CommonNote.h"
 
