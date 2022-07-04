@@ -17,7 +17,7 @@ set(CMAKE_AUTORCC ON)
 set(QT_LIBS)
 set(QT_RESOURCES)
 set(RC_FILES)
-set(ICONS)
+set(MAC_RES)
 
 set(PROJECT_SOURCES)
 set(PROJECT_HEADERS)
@@ -47,7 +47,7 @@ if(SYS_WIN)
     add_current_files(RC_FILES Resources/logo/win/res.rc)
 elseif(SYS_MAC)
     # Add mac icon file
-    add_current_files(ICONS Resources/logo/mac/qsynth2.icns)
+    add_current_files(MAC_RES Resources/logo/mac/QVogenClient.icns)
 endif()
 
 # Add fixed files
@@ -81,8 +81,11 @@ if(SYS_WIN)
     # Windows need rc files
     add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${QT_RESOURCES} ${RC_FILES})
 elseif(SYS_MAC)
+    foreach (Item ${MAC_RES})
+        set_source_files_properties(${Item} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+    endforeach()
     # Mac need icon
-    add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${QT_RESOURCES} ${ICONS})
+    add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${QT_RESOURCES} ${MAC_RES})
 else()
     # Linux
     add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS} ${QT_RESOURCES})
@@ -92,7 +95,8 @@ endif()
 if(SYS_WIN)
     target_link_libraries(${PROJECT_NAME} PRIVATE dwmapi user32 shell32 advapi32 winmm)
 elseif(SYS_MAC)
-    # target_link_libraries(${PROJECT_NAME} PRIVATE CoreMIDI CoreFoundation CoreAudio)
+    set_property(TARGET ${PROJECT_NAME} PROPERTY
+          MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Resources/logo/mac/Info.plist.in")
 else()
     target_link_libraries(${PROJECT_NAME} PRIVATE asound)
 endif()
