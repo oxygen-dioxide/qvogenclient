@@ -157,8 +157,15 @@ namespace wave {
             return total_data_size / bytes_per_sample;
         }
 
+#ifdef __MINGW32__
+//        std::wfstream istream;
+//        std::wfstream ostream;
         std::ifstream istream;
         std::ofstream ostream;
+#else
+        std::ifstream istream;
+        std::ofstream ostream;
+#endif
         WAVEHeader header;
         uint64_t data_offset_;
     };
