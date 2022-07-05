@@ -86,3 +86,4 @@ CMakeSettings*
 out
 .vs
 release/
+.cache

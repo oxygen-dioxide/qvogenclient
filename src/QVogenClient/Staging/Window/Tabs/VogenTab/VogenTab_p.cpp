@@ -165,53 +165,54 @@ void VogenTabPrivate::dispatchEvent(TPianoRollEvent *event) {
     Q_Q(VogenTab);
 
     switch (event->pType()) {
-    case TPianoRollEvent::Operate: {
-        auto e = static_cast<TOperateEvent *>(event);
-        addHistory(e->takeData());
-        break;
-    }
-    case TPianoRollEvent::Select: {
-        selectionFlags = piano->notesArea()->hasSelection();
-
-        QEventImpl::MenuUpdateRequestEvent e(ActionImpl::SelectState);
-        qApp->sendEvent(q->window(), &e);
-        break;
-    }
-    case TPianoRollEvent::ChangeTimeSig: {
-        inputBeat();
-        break;
-    }
-    case TPianoRollEvent::ChangeTempo: {
-        inputTempo();
-        break;
-    }
-    case TPianoRollEvent::ChangeVoice: {
-        auto e = static_cast<TChangeVoiceEvent *>(event);
-        changeVoice(e);
-        break;
-    }
-    case TPianoRollEvent::PlayState: {
-        auto a = piano->notesArea();
-
-        playFlags = 0;
-        playFlags |= a->isPlaying() ? ActionImpl::StopFlag : ActionImpl::PlayFlag;
-        playFlags |= a->hasCache(a->currentGroupId()) ? ActionImpl::NoFlag : ActionImpl::RenderFlag;
-
-        QEventImpl::MenuUpdateRequestEvent e(ActionImpl::PlayState);
-        qApp->sendEvent(q->window(), &e);
-        break;
-    }
-    case TPianoRollEvent::SetPlayhead: {
-        auto e = static_cast<TSetPlayheadEvent *>(event);
-        auto a = piano->notesArea();
-        if (!a->isPlaying()) {
-            int tick = a->convertPositionToValue(QPointF(e->x, 0)).first;
-            a->setCurrentTick(tick);
+        case TPianoRollEvent::Operate: {
+            auto e = static_cast<TOperateEvent *>(event);
+            addHistory(e->takeData());
+            break;
         }
-        break;
-    }
-    default:
-        break;
+        case TPianoRollEvent::Select: {
+            selectionFlags = piano->notesArea()->hasSelection();
+
+            QEventImpl::MenuUpdateRequestEvent e(ActionImpl::SelectState);
+            qApp->sendEvent(q->window(), &e);
+            break;
+        }
+        case TPianoRollEvent::ChangeTimeSig: {
+            inputBeat();
+            break;
+        }
+        case TPianoRollEvent::ChangeTempo: {
+            inputTempo();
+            break;
+        }
+        case TPianoRollEvent::ChangeVoice: {
+            auto e = static_cast<TChangeVoiceEvent *>(event);
+            changeVoice(e);
+            break;
+        }
+        case TPianoRollEvent::PlayState: {
+            auto a = piano->notesArea();
+
+            playFlags = 0;
+            playFlags |= a->isPlaying() ? ActionImpl::StopFlag : ActionImpl::PlayFlag;
+            playFlags |=
+                a->hasCache(a->currentGroupId()) ? ActionImpl::NoFlag : ActionImpl::RenderFlag;
+
+            QEventImpl::MenuUpdateRequestEvent e(ActionImpl::PlayState);
+            qApp->sendEvent(q->window(), &e);
+            break;
+        }
+        case TPianoRollEvent::SetPlayhead: {
+            auto e = static_cast<TSetPlayheadEvent *>(event);
+            auto a = piano->notesArea();
+            if (!a->isPlaying()) {
+                int tick = a->convertPositionToValue(QPointF(e->x, 0)).first;
+                a->setCurrentTick(tick);
+            }
+            break;
+        }
+        default:
+            break;
     }
 }
 
@@ -232,7 +233,8 @@ void VogenTabPrivate::inputLyrics() {
     struct Hint : public QCommandPalette::Hint {
         TNotesArea *notesArea;
         Hint(TNotesArea *a, const QString &text, const QString &placeholder, bool hold = false)
-            : QCommandPalette::Hint(text, placeholder, hold), notesArea(a){};
+            : QCommandPalette::Hint(text, placeholder, hold)
+            , notesArea(a){};
         void preview(const QString &text) override {
             // Call editor to update stdin
             StdinRequestEvent e2(StdinRequestEvent::Lyrics, StdinRequestEvent::InputUpdate);
@@ -565,28 +567,25 @@ void VogenTabPrivate::violentExportAudio() {
     }
 
     // Export wave file
-    wave::File write_file;
+    QWave::File waveFile;
+    QWave::Error err = waveFile.Open(path, QWave::kOut);
+    qDebug() << "After Open";
 
-#ifdef Q_OS_WINDOWS
-    wave::Error err = write_file.Open(path.toStdWString(), wave::kOut);
-#else
-    wave::Error err = write_file.Open(path.toStdString(), wave::kOut);
-#endif
-    if (err) {
+    if (err != QWave::kNoError) {
         QMessageBox::critical(q, qData->errorTitle(), VogenTab::tr("Failed to create file."));
         return;
     }
 
-    write_file.set_sample_rate(SAMPLE_RATE);
-    write_file.set_bits_per_sample(16);
-    write_file.set_channel_number(1);
+    waveFile.set_sample_rate(SAMPLE_RATE);
+    waveFile.set_bits_per_sample(16);
+    waveFile.set_channel_number(1);
 
-    std::vector<float> arr;
+    QVector<float> arr;
     for (auto sample : qAsConst(mergedSamples)) {
         arr.push_back(static_cast<float>(sample) / std::numeric_limits<qint16>::max());
     }
 
-    err = write_file.Write(arr);
+    err = waveFile.Write(arr);
     if (err) {
         QMessageBox::critical(q, qData->errorTitle(), VogenTab::tr("Failed to write wave file."));
         return;

@@ -1,6 +1,8 @@
 #ifndef WAVE_WAVE_ERROR_H_
 #define WAVE_WAVE_ERROR_H_
 
+#include <QtGlobal>
+
 #ifndef WAVE_API
 
 #ifdef WAVE_BUILD_STATIC
@@ -8,9 +10,9 @@
 #else
     #ifdef _WIN32
         #ifdef WAVE_LIBRARY
-            #define WAVE_API __declspec(dllexport)
+            #define WAVE_API Q_DECL_EXPORT
         #else
-            #define WAVE_API __declspec(dllimport)
+            #define WAVE_API Q_DECL_IMPORT
         #endif
     #else
         #define WAVE_API
@@ -19,7 +21,7 @@
 
 #endif
 
-namespace wave {
+namespace QWave {
 
     enum Error {
         kNoError = 0,

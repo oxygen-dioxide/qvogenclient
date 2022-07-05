@@ -1,8 +1,8 @@
 #include "wave/header_list.h"
 
-namespace wave {
+namespace QWave {
 
-    HeaderList::Iterator::Iterator(std::ifstream *stream, uint64_t position)
+    HeaderList::Iterator::Iterator(QIODevice *stream, qint64 position)
         : stream_(stream), position_(position) {
     }
 
@@ -34,13 +34,9 @@ namespace wave {
         return !operator==(rhs);
     }
 
-#ifdef _WIN32
-    Error HeaderList::Init(const std::wstring &path) {
-#else
-    Error HeaderList::Init(const std::string &path) {
-#endif
-        stream_.open(path.c_str(), std::ios::binary);
-        if (!stream_.is_open()) {
+    Error HeaderList::Init(const QString &path) {
+        stream_.setFileName(path);
+        if (!stream_.open(QIODevice::ReadOnly)) {
             return Error::kFailedToOpen;
         }
         return Error::kNoError;
@@ -51,13 +47,10 @@ namespace wave {
     }
 
     HeaderList::Iterator HeaderList::end() {
-        stream_.seekg(0, std::ios::end);
-        uint64_t size = stream_.tellg();
-        stream_.seekg(0, std::ios::beg);
-        return HeaderList::Iterator(&stream_, size);
+        return HeaderList::Iterator(&stream_, stream_.size());
     }
 
-    Header HeaderList::header(const std::string &header_id) {
+    Header HeaderList::header(const QByteArray &header_id) {
         for (auto iterator = begin(); iterator != end(); iterator++) {
             auto header = *iterator;
             if (header.chunk_id() == header_id) {

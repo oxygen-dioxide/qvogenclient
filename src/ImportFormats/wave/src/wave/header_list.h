@@ -1,18 +1,18 @@
 #ifndef WAVE_WAVE_HEADER_LIST_H_
 #define WAVE_WAVE_HEADER_LIST_H_
 
-#include <fstream>
+#include <QFile>
 
 #include "wave/error.h"
 #include "wave/header.h"
 
-namespace wave {
+namespace QWave {
 
     class WAVE_API HeaderList {
     public:
         class Iterator {
         public:
-            Iterator(std::ifstream *stream, uint64_t position);
+            Iterator(QIODevice *stream, qint64 position);
             Iterator operator++();
             Iterator operator++(int);
             Header operator*();
@@ -20,15 +20,12 @@ namespace wave {
             bool operator!=(const Iterator &rhs);
 
         private:
-            std::ifstream *stream_;
-            uint64_t position_;
+            QIODevice *stream_;
+            qint64 position_;
         };
 
-#ifdef _WIN32
-        Error Init(const std::wstring &path);
-#else
-        Error Init(const std::string &path);
-#endif
+        Error Init(const QString &path);
+
         Iterator begin();
         Iterator end();
 
@@ -37,9 +34,11 @@ namespace wave {
         Header data();
 
     private:
-        Header header(const std::string &header_id);
-        std::ifstream stream_;
+        Header header(const QByteArray &header_id);
+
+        QFile stream_;
     };
+
 } // namespace wave
 
 #endif // WAVE_WAVE_HEADER_LIST_H_

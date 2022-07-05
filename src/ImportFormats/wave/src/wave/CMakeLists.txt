@@ -25,6 +25,11 @@ else()
     add_library(wave SHARED ${sources})
 endif()
 target_compile_definitions(wave PRIVATE WAVE_LIBRARY)
+target_link_libraries(wave PUBLIC ${QT_LIBS})
+
+set_target_properties(wave PROPERTIES
+        OUTPUT_NAME qt${QT_VERSION_MAJOR}-wave
+)
 
 # include path
 target_include_directories(wave

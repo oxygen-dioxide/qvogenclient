@@ -2,39 +2,39 @@
 
 #include "wave/header/riff_header.h"
 
-namespace wave {
-  Error Header::Init(std::ifstream* stream, uint64_t position) {
-    position_ = position;
-    if (!stream->is_open()) {
-      return Error::kNotOpen;
+namespace QWave {
+    Error Header::Init(QIODevice *stream, qint64 position) {
+        position_ = position;
+        if (!stream->isOpen()) {
+            return Error::kNotOpen;
+        }
+
+        // read chunk ID
+        const auto chunk_id_size = 4;
+        stream->seek(position_);
+        char result[chunk_id_size];
+        stream->read(result, chunk_id_size * sizeof(char));
+        id_ = QByteArray(result, chunk_id_size);
+
+        // and size
+        stream->read(reinterpret_cast<char *>(&size_), sizeof(quint32));
+        size_ += chunk_id_size * sizeof(char) + sizeof(quint32);
+
+        return Error::kNoError;
     }
 
-    // read chunk ID
-    const auto chunk_id_size = 4;
-    stream->seekg(position_, std::ios::beg);
-    char result[chunk_id_size];
-    stream->read(result, chunk_id_size * sizeof(char));
-    id_ = std::string(result, chunk_id_size);
+    QByteArray Header::chunk_id() const {
+        return id_;
+    }
 
-    // and size
-    stream->read(reinterpret_cast<char*>(&size_), sizeof(uint32_t));
-    size_ += chunk_id_size * sizeof(char) + sizeof(uint32_t);
+    quint32 Header::chunk_size() const {
+        if (chunk_id() == "RIFF") {
+            return sizeof(QWave::RIFFHeader);
+        }
+        return size_;
+    }
 
-    return Error::kNoError;
-  }
-
-std::string Header::chunk_id() const {
-  return id_;
-}
-
-uint32_t Header::chunk_size() const {
-  if (chunk_id() == "RIFF") {
-    return sizeof(wave::RIFFHeader);
-  }
-  return size_;
-}
-
-uint64_t Header::position() const {
-  return position_;
-}
-};  // namespace wave
+    qint64 Header::position() const {
+        return position_;
+    }
+}; // namespace wave

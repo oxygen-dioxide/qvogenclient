@@ -71,24 +71,24 @@ bool DataManager::load() {
     if (qRecordCData.translationIndex < 0 || qRecordCData.translationIndex > localeCount()) {
         QLocale ql;
         switch (ql.country()) {
-        case QLocale::China: {
-            qRecordData.translationIndex = 1;
-            break;
-        }
-        case QLocale::HongKong:
-        case QLocale::Macau:
-        case QLocale::Taiwan: {
-            qRecordData.translationIndex = 2;
-            break;
-        }
-        case QLocale::Japan: {
-            qRecordData.translationIndex = 3;
-            break;
-        }
-        default: {
-            qRecordData.translationIndex = 0;
-            break;
-        }
+            case QLocale::China: {
+                qRecordData.translationIndex = 1;
+                break;
+            }
+            case QLocale::HongKong:
+            case QLocale::Macau:
+            case QLocale::Taiwan: {
+                qRecordData.translationIndex = 2;
+                break;
+            }
+            case QLocale::Japan: {
+                qRecordData.translationIndex = 3;
+                break;
+            }
+            default: {
+                qRecordData.translationIndex = 0;
+                break;
+            }
         }
     }
     localeLoad(qRecordCData.translationIndex);
@@ -195,21 +195,21 @@ void DataManager::localeLoad(int index) {
     Q_D(DataManager);
     d->eliminate();
     switch (index) {
-    case 0:
-        reloadStrings();
-        break;
-    case 1:
-        d->translate(Sys::appPath() + "/translations/qvogenclient_zh_CN.qm");
-        d->translate(Sys::appPath() + "/translations/qtbase_zh_CN.qm");
-        break;
-    case 2:
-        reloadStrings();
-        break;
-    case 3:
-        reloadStrings();
-        break;
-    default:
-        break;
+        case 0:
+            reloadStrings();
+            break;
+        case 1:
+            d->translate(Sys::appPath() + "/translations/qvogenclient_zh_CN.qm");
+            d->translate(Sys::appPath() + "/translations/qtbase_zh_CN.qm");
+            break;
+        case 2:
+            reloadStrings();
+            break;
+        case 3:
+            reloadStrings();
+            break;
+        default:
+            break;
     }
 }
 
@@ -220,20 +220,20 @@ int DataManager::localeCount() const {
 QString DataManager::localeName(int index) const {
     QString res;
     switch (index) {
-    case 0:
-        res = "English"; // English
-        break;
-    case 1:
-        res = Q_FROM_UTFCODE(ZH_CN); // 简体中文
-        break;
-    case 2:
-        res = Q_FROM_UTFCODE(ZH_CHT); // 繁體中文
-        break;
-    case 3:
-        res = Q_FROM_UTFCODE(JA_JP); // 日本語
-        break;
-    default:
-        break;
+        case 0:
+            res = "English"; // English
+            break;
+        case 1:
+            res = Q_FROM_UTFCODE(ZH_CN); // 简体中文
+            break;
+        case 2:
+            res = Q_FROM_UTFCODE(ZH_CHT); // 繁體中文
+            break;
+        case 3:
+            res = Q_FROM_UTFCODE(JA_JP); // 日本語
+            break;
+        default:
+            break;
     }
     return res;
 }
@@ -298,36 +298,36 @@ QString DataManager::getFileFilter(DataManager::FileFilter f) const {
     Q_D(const DataManager);
     QString res;
     switch (f) {
-    case ImportFile:
-        res = d->importFilter;
-        break;
-    case AppendFile:
-        res = d->appendFilter;
-        break;
-    case ExportSelection:
-        res = d->exportSelectionFilter;
-        break;
-    case ExportTrack:
-        res = d->exportSelectionFilter;
-        break;
-    case ExportOtoIni:
-        res = d->exportOtoIniFilter;
-        break;
-    case ProjectFiles:
-        res = d->projectFilter;
-        break;
-    case ImageFiles:
-        res = d->imageFilter;
-        break;
-    case AudioFiles:
-    case ExportRecent:
-        res = d->audioFilter;
-        break;
-    case ExecutableFiles:
-        res = d->toolsFilter;
-        break;
-    case VoicePackage:
-        res = d->voiceFilter;
+        case ImportFile:
+            res = d->importFilter;
+            break;
+        case AppendFile:
+            res = d->appendFilter;
+            break;
+        case ExportSelection:
+            res = d->exportSelectionFilter;
+            break;
+        case ExportTrack:
+            res = d->exportSelectionFilter;
+            break;
+        case ExportOtoIni:
+            res = d->exportOtoIniFilter;
+            break;
+        case ProjectFiles:
+            res = d->projectFilter;
+            break;
+        case ImageFiles:
+            res = d->imageFilter;
+            break;
+        case AudioFiles:
+        case ExportRecent:
+            res = d->audioFilter;
+            break;
+        case ExecutableFiles:
+            res = d->toolsFilter;
+            break;
+        case VoicePackage:
+            res = d->voiceFilter;
     };
     return res;
 }
@@ -336,29 +336,29 @@ QString DataManager::getStandardPath(DataManager::StandardPath s) const {
     Q_D(const DataManager);
     QString res;
     switch (s) {
-    case Voice:
-        res = d->appDataPath + Slash + Qs::DIR_NAME_VOICE;
-        break;
-    case Plugins:
-        break;
-    case Extensions:
-        break;
-    case Fonts:
-        res = Sys::appPath() + Slash + Qs::DIR_NAME_CONFIG_FONTS;
-        break;
-    case Record:
-        res = d->appDataPath + Slash + Qs::FILE_NAME_RECORD_JSON;
-        break;
-    case SettingConfig:
-        break;
-    case KeyboardConfig:
-        break;
-    case AppData:
-        res = d->appDataPath;
-        break;
-    case AppTemp:
-        res = d->appTempPath;
-        break;
+        case Voice:
+            res = d->appDataPath + Slash + Qs::DIR_NAME_VOICE;
+            break;
+        case Plugins:
+            break;
+        case Extensions:
+            break;
+        case Fonts:
+            res = Sys::appPath() + Slash + Qs::DIR_NAME_CONFIG_FONTS;
+            break;
+        case Record:
+            res = d->appDataPath + Slash + Qs::FILE_NAME_RECORD_JSON;
+            break;
+        case SettingConfig:
+            break;
+        case KeyboardConfig:
+            break;
+        case AppData:
+            res = d->appDataPath;
+            break;
+        case AppTemp:
+            res = d->appTempPath;
+            break;
     }
     return res;
 }

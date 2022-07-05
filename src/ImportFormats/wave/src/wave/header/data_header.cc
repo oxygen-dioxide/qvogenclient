@@ -1,11 +1,13 @@
 #include "wave/header/data_header.h"
 
-#include <cstring>
+#include <QString>
 
-namespace wave {
+namespace QWave {
+
     DataHeader MakeDataHeader() {
         DataHeader header;
-        strncpy(header.sub_chunk_2_id, "data", 4);
+        memcpy(header.sub_chunk_2_id, "data", 4);
         return header;
     }
-} // namespace wave
+
+} // namespace QWave
