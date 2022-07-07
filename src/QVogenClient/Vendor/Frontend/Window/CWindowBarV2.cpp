@@ -8,38 +8,45 @@
 CWindowBarV2::CWindowBarV2(QMenuBar *menuBar, QWidget *parent) : CBaseTitleBarV2(parent) {
     m_titleMargin = 20;
 
-    m_iconButton = new CToolButton();
-    m_iconButton->setObjectName("icon-button");
-
     m_titleLabel = new QLabel();
     m_titleLabel->setObjectName("win-title-label");
     m_titleLabel->installEventFilter(this);
-
-    m_minButton = new CToolButton();
-    m_maxButton = new CToolButton();
-    m_closeButton = new CToolButton();
-
-    m_minButton->setObjectName("min-button");
-    m_maxButton->setObjectName("max-button");
-    m_closeButton->setObjectName("win-close-button");
-
     m_titleLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    m_iconButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    m_minButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    m_maxButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    m_closeButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
     m_menuBar = menuBar ? menuBar : new QMenuBar();
     m_menuBar->setObjectName("win-menu-bar");
 
-    connect(m_maxButton, &QAbstractButton::toggled, this, &CWindowBarV2::reloadMaxButtonState);
+#ifndef Q_OS_MAC
+    m_iconButton = new CToolButton();
+    m_iconButton->setObjectName("icon-button");
+    m_iconButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 
-    setIconButton(m_iconButton);
+    m_minButton = new CToolButton();
+    m_minButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    m_minButton->setObjectName("min-button");
+
+    m_maxButton = new CToolButton();
+    m_maxButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    m_maxButton->setObjectName("max-button");
+
+    m_closeButton = new CToolButton();
+    m_closeButton->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    m_closeButton->setObjectName("win-close-button");
+
+    connect(m_maxButton, &QAbstractButton::toggled, this, &CWindowBarV2::reloadMaxButtonState);
+#else
+    m_iconButton = m_minButton = m_maxButton = m_closeButton = nullptr;
+#endif
+
     setTitleLabel(m_titleLabel);
+    setMenuBar(m_menuBar);
+
+#ifndef Q_OS_MAC
+    setIconButton(m_iconButton);
     setMinButton(m_minButton);
     setMaxButton(m_maxButton);
     setCloseButton(m_closeButton);
-    setMenuBar(m_menuBar);
+#endif
 
     reloadStrings();
 }
@@ -48,13 +55,16 @@ CWindowBarV2::~CWindowBarV2() {
 }
 
 void CWindowBarV2::reloadStrings() {
+#ifndef Q_OS_MAC
     m_minButton->setToolTip(tr("Minimize"));
     m_closeButton->setToolTip(tr("Close"));
     reloadMaxButtonState();
+#endif
 }
 
 void CWindowBarV2::reloadMaxButtonState(bool checked) {
     Q_UNUSED(checked)
+#ifndef Q_OS_MAC
     if (window()->windowState() == Qt::WindowMaximized) {
         m_maxButton->setChecked(true);
         m_maxButton->setToolTip(tr("Restore%1").arg(""));
@@ -62,6 +72,7 @@ void CWindowBarV2::reloadMaxButtonState(bool checked) {
         m_maxButton->setChecked(false);
         m_maxButton->setToolTip(tr("Maximize"));
     }
+#endif
 }
 
 QPixelSize CWindowBarV2::titleMargin() const {

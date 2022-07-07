@@ -1,10 +1,11 @@
 #include "BasicWindow.h"
 #include "CMenuBar.h"
 
-#include <FramelessWidgetsHelper>
-
 #include <QApplication>
 #include <QDesktopWidget>
+
+#ifndef Q_OS_MAC
+#include <FramelessWidgetsHelper>
 
 FRAMELESSHELPER_USE_NAMESPACE
 
@@ -18,6 +19,7 @@ BasicWindow::BasicWindow(QWidget *parent) : FramelessMainWindow(parent) {
 
     // New Window Bar
     m_titleBar = new CWindowBarV2(bar);
+    m_titleBar->installEventFilter(this);
 
     // setMenuWidget(): make the menu widget become the first row of the window.
     this->setMenuWidget(m_titleBar);
@@ -29,18 +31,37 @@ BasicWindow::BasicWindow(QWidget *parent) : FramelessMainWindow(parent) {
     helper->setSystemButton(m_titleBar->closeButton(), SystemButtonType::Close);
     helper->setHitTestVisible(bar); // IMPORTANT!
 }
+#else
+#include <QResizeEvent>
+
+BasicWindow::BasicWindow(QWidget *parent) {
+    // Insert Menu Bar To Title Bar
+    auto bar = new CMenuBar();
+
+    // New Window Bar
+    m_titleBar = new CWindowBarV2(bar);
+    m_titleBar->installEventFilter(this);
+
+    // setMenuWidget(): make the menu widget become the first row of the window.
+    this->setMenuWidget(m_titleBar);
+    m_titleBar->setWidget(this);
+}
+
+#endif
 
 BasicWindow::~BasicWindow() {
 }
 
 void BasicWindow::setMenuBar(QMenuBar *menuBar) {
+#ifndef Q_OS_MAC
     auto helper = FramelessWidgetsHelper::get(this);
     auto orgBar = this->menuBar();
     if (orgBar) {
         helper->setHitTestVisible(orgBar, false);
     }
-    m_titleBar->setMenuBar(menuBar);
     helper->setHitTestVisible(menuBar);
+#endif
+    m_titleBar->setMenuBar(menuBar);
 }
 
 QMenuBar *BasicWindow::menuBar() const {
@@ -64,4 +85,23 @@ void BasicWindow::resizeByDesktop(double r, bool centralize) {
     } else {
         setGeometry(x(), y(), size.width(), size.height());
     }
+}
+
+bool BasicWindow::eventFilter(QObject *obj, QEvent *event) {
+#ifdef Q_OS_MAC
+    if (obj == m_titleBar) {
+        switch (event->type()) {
+        case QEvent::Resize: {
+            auto e = static_cast<QResizeEvent *>(event);
+            if (e->oldSize().height() != e->size().height()) {
+                setTitleBarHeight(m_titleBar->height());
+            }
+            break;
+        }
+        default:
+            break;
+        }
+    }
+#endif
+    return Super::eventFilter(obj, event);
 }

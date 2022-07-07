@@ -22,7 +22,7 @@
   SOFTWARE.
 ]]
 
-cmake_minimum_required(VERSION 3.20)
+#cmake_minimum_required(VERSION 3.20)
 
 project(FramelessHelper
     VERSION 2.1.8.0

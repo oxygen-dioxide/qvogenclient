@@ -295,9 +295,9 @@ void FilesActionEnginePrivate::setup() {
     menuBar->addMenu(playMenu);
     menuBar->addMenu(helpMenu);
 
-    help_aboutApp->setMenuRole(QAction::AboutRole);
-    help_aboutQt->setMenuRole(QAction::AboutQtRole);
-    file_preferences->setMenuRole(QAction::PreferencesRole);
+    roleMap.insert(QAction::AboutRole, help_aboutApp);
+    roleMap.insert(QAction::AboutQtRole, help_aboutQt);
+    roleMap.insert(QAction::PreferencesRole, file_preferences);
 
     // Signals
     Q_Q(FilesActionEngine);
@@ -316,8 +316,8 @@ void FilesActionEnginePrivate::reloadStrings() {
     // File
     recentMenu->setTitle(QObject::tr("Recent")); // *
     exportMenu->setTitle(QObject::tr("Export"));
-    preferencesMenu->setTitle(QObject::tr("Preferences"));
 
+    preferencesMenu->setTitle(QObject::tr("Preferences"));
     file_newFile->setText(QObject::tr("New File"));
     file_newWindow->setText(QObject::tr("New Window"));
     file_openFile->setText(QObject::tr("Open..."));
@@ -414,6 +414,17 @@ void FilesActionEnginePrivate::reloadStrings() {
     help_checkUpdate->setText(QObject::tr("Check Update"));
     help_aboutApp->setText(QObject::tr("About %1").arg(qData->appName()));
     help_aboutQt->setText(QObject::tr("About %1").arg("Qt"));
+
+    for (auto it = roleMap.begin(); it != roleMap.end(); ++it) {
+        auto role = it.key();
+        auto action = it.value();
+        if (role == QAction::PreferencesRole) {
+            action->setText(preferencesMenu->title());
+            action->setMenuRole(QAction::NoRole); // Refuse mac's preferences role
+        } else {
+            action->setMenuRole(role);
+        }
+    }
 }
 
 void FilesActionEnginePrivate::reloadShortcuts() {

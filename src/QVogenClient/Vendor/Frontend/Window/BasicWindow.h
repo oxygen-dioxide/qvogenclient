@@ -1,12 +1,19 @@
 #ifndef BASICWINDOW_H
 #define BASICWINDOW_H
 
-#include <FramelessMainWindow>
-
 #include "CWindowBarV2.h"
 
+#ifndef Q_OS_MAC
+#include <FramelessMainWindow>
 class BasicWindow : public FRAMELESSHELPER_NAMESPACE::FramelessMainWindow {
     Q_OBJECT
+    using Super = FRAMELESSHELPER_NAMESPACE::FramelessMainWindow;
+#else
+#include "MacMainWindow.h"
+class BasicWindow : public MacMainWindow {
+    Q_OBJECT
+    using Super = MacMainWindow;
+#endif
 public:
     explicit BasicWindow(QWidget *parent = nullptr);
     ~BasicWindow();
@@ -19,6 +26,8 @@ public:
 
 protected:
     CWindowBarV2 *m_titleBar;
+
+    bool eventFilter(QObject *obj, QEvent *event) override;
 
 signals:
 };

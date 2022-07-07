@@ -52,4 +52,5 @@ signals:
 
     void styleChanged();
 };
+
 #endif // CWINDOWBARV2_H

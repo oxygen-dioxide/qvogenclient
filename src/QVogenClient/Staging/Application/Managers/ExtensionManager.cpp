@@ -60,7 +60,11 @@ void ExtensionManager::themeLoad(int index) {
     }
 
     double ratio = qApp->primaryScreen()->logicalDotsPerInch() / 96.0;
+#ifndef Q_OS_MAC
     qss.setRatio(0.8 * ratio);
+#else
+    qss.setRatio(ratio);
+#endif
     if (qss.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qApp->setStyleSheet(qss.readAndApply());
         qss.close();

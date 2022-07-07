@@ -112,7 +112,11 @@ if(APP_DEPLOY)
 endif()
 
 # Link Custom libraries
-target_link_libraries(${PROJECT_NAME} PRIVATE FramelessHelper::Widgets)
+if (NOT SYS_MAC)
+    target_link_libraries(${PROJECT_NAME} PRIVATE FramelessHelper::Widgets)
+else()
+    target_link_libraries(${PROJECT_NAME} PRIVATE MacWindowButtonsLib)
+endif()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE QMidi)
 

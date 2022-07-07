@@ -57,7 +57,11 @@ add_compile_definitions(APP_VERSION="${APP_VERSION}")
 # ------------------------------ Sub Projects ------------------------------
 
 # Libraries
-add_subdirectory(FramelessHelper)
+if (NOT SYS_MAC)
+    add_subdirectory(FramelessHelper)
+else()
+    add_subdirectory(MacWindowButtons)
+endif()
 
 add_subdirectory(ImportFormats)
 

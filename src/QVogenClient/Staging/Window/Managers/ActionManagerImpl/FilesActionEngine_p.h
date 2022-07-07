@@ -28,6 +28,8 @@ public:
 
     QMap<QAction *, ActionImpl::Action> map;
 
+    QMap<QAction::MenuRole, QAction *> roleMap;
+
     QMenu *fileMenu;
     QMenu *editMenu;
     QMenu *viewMenu;
