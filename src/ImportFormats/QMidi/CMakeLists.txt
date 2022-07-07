@@ -33,7 +33,7 @@ endif ()
 # Add library
 if (BUILD_STATIC)
     add_library(${PROJECT_NAME} STATIC ${SOURCES})
-    target_compile_definitions(${PROJECT_NAME} PRIVATE Q_MIDI_BUILD_STATIC)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC Q_MIDI_BUILD_STATIC)
 else ()
     add_library(${PROJECT_NAME} SHARED ${SOURCES})
 endif ()

@@ -24,7 +24,7 @@ file(GLOB QUTAUSTD_FILES ${QUTAUSTD_DIR}/*.h ${QUTAUSTD_DIR}/*.cpp)
 # 构建库
 if(BUILD_STATIC_LIBRARY)
     add_library(${QUTAUSTD_NAME} STATIC ${QUTAUSTD_FILES} ${RES_FILES})
-    target_compile_definitions(${QUTAUSTD_NAME} PRIVATE QUTAUSTD_BUILD_STATIC)
+    target_compile_definitions(${QUTAUSTD_NAME} PUBLIC QUTAUSTD_BUILD_STATIC)
 else()
     add_library(${QUTAUSTD_NAME} SHARED ${QUTAUSTD_FILES} ${RES_FILES})
 endif()

@@ -47,8 +47,8 @@ list_add_recursively(SOURCE_FILES
 
 # Add Library
 if (RENDER_HOST_STATIC)
-    add_compile_definitions(RENDER_HOST_BUILD_STATIC)
     add_library(${RENDER_HOST_LIB_NAME} STATIC ${SOURCE_FILES} ${RESOURCE_FILES})
+    target_compile_definitions(${RENDER_HOST_LIB_NAME} PUBLIC RENDER_HOST_BUILD_STATIC)
 else()
     add_library(${RENDER_HOST_LIB_NAME} SHARED ${SOURCE_FILES} ${RESOURCE_FILES})
 endif()

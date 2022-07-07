@@ -50,7 +50,12 @@ set(SOURCES
 
 if(WIN32 AND NOT FRAMELESSHELPER_BUILD_STATIC)
     enable_language(RC)
-    list(APPEND SOURCES framelesshelperwidgets.rc)
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/../core/framelesshelper.rc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/framelesshelperwidgets.rc @ONLY)
+    list(APPEND SOURCES
+        ${CMAKE_CURRENT_BINARY_DIR}/framelesshelperwidgets.rc
+    )
 endif()
 
 if(FRAMELESSHELPER_BUILD_STATIC)
@@ -76,7 +81,7 @@ target_compile_definitions(${SUB_PROJ_NAME} PRIVATE
     QT_NO_FOREACH
     QT_USE_QSTRINGBUILDER
     QT_DEPRECATED_WARNINGS
-    QT_DISABLE_DEPRECATED_BEFORE=0x060400
+    QT_DISABLE_DEPRECATED_BEFORE=0x060500
     FRAMELESSHELPER_WIDGETS_LIBRARY
 )
 

@@ -20,7 +20,7 @@ list(APPEND sources
 
 if (build_static)
     add_library(wave STATIC ${sources})
-    target_compile_definitions(wave PRIVATE WAVE_BUILD_STATIC)
+    target_compile_definitions(wave PUBLIC WAVE_BUILD_STATIC)
 else()
     add_library(wave SHARED ${sources})
 endif()
@@ -28,7 +28,7 @@ target_compile_definitions(wave PRIVATE WAVE_LIBRARY)
 target_link_libraries(wave PUBLIC ${QT_LIBS})
 
 set_target_properties(wave PROPERTIES
-        OUTPUT_NAME qt${QT_VERSION_MAJOR}-wave
+        OUTPUT_NAME wave-qt${QT_VERSION_MAJOR}
 )
 
 # include path

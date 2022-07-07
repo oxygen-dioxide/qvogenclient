@@ -53,7 +53,14 @@ public:
 
     bool operator==(const Note &note) const;
 
-    friend QDebug operator<<(QDebug debug, const Note &oNote);
+    friend QDebug operator<<(QDebug debug, const Note &oNote) {
+        QString info = QString("Note(lyric:%1; length:%2; noteNum:%3)")
+                           .arg(oNote.lyric)
+                           .arg(oNote.length)
+                           .arg(oNote.noteNum);
+        debug.noquote() << info;
+        return debug;
+    }
 };
 
 typedef Utau::Note QLinkNote;
