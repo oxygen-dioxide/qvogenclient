@@ -49,6 +49,7 @@ bool DataManager::load() {
     Q_D(DataManager);
 
     qDebug() << "Data Path:" << d->appDataPath;
+    qDebug() << "Temp Path:" << d->appTempPath;
 
     // Create directories
     if (!Sys::isDirExist(d->appDataPath)) {

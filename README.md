@@ -22,11 +22,13 @@ Vogen editor using **QSynthesis** framework.
 
 See [Windows Instructions](./docs/usage-win.md).
 
+#### Mac
+
+See [Mac Instructions](./docs/usage-mac.md).
+
 #### Linux
 
 See [Linux Instructions](./docs/usage-linux.md).
-
-+ Servers for other platforms are not currently under development.
 
 ### User Interface
 
