@@ -53,6 +53,6 @@ GCC_64 (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0
 
 ### 注意事项
 
-+ 使用客户端前，必须先打开服务端`resources/server/CSRenderHost`（或使用`CSRenderHost.sh`脚本启动），当前会话需要`DOTNET_ROOT`环境变量（一般是`~/.dotnet`），确保使用本地`14251`端口没有被占用。
++ 使用客户端前，必须先打开服务端`resources/synth/CSRenderHost`（或使用`CSRenderHost.sh`脚本启动），当前会话需要`DOTNET_ROOT`环境变量（一般是`~/.dotnet`），确保使用本地`14251`端口没有被占用。
 
 + 不宜打开超过一个客户端进程。

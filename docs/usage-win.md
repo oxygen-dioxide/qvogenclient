@@ -57,6 +57,6 @@ Microsoft Visual C++ 2019
 
 ### 注意事项
 
-+ 使用客户端前，必须先打开服务端`resources/server/CSRenderHost.exe`（或使用`CSRenderHost.bat`脚本启动），确保使用本地`14251`端口没有被占用。
++ 使用客户端前，必须先打开服务端`resources/synth/CSRenderHost.exe`（或使用`CSRenderHost.bat`脚本启动），确保使用本地`14251`端口没有被占用。
 
 + 不宜打开超过一个客户端进程。
