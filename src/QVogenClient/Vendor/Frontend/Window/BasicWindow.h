@@ -9,10 +9,14 @@ class BasicWindow : public FRAMELESSHELPER_NAMESPACE::FramelessMainWindow {
     Q_OBJECT
     using Super = FRAMELESSHELPER_NAMESPACE::FramelessMainWindow;
 #else
-#include "MacMainWindow.h"
-class BasicWindow : public MacMainWindow {
+// #include "MacMainWindow.h"
+// class BasicWindow : public MacMainWindow {
+//     Q_OBJECT
+//     using Super = MacMainWindow;
+#include <QMainWindow>
+class BasicWindow : public QMainWindow {
     Q_OBJECT
-    using Super = MacMainWindow;
+    using Super = QMainWindow;
 #endif
 public:
     explicit BasicWindow(QWidget *parent = nullptr);

@@ -115,7 +115,7 @@ endif()
 if (NOT SYS_MAC)
     target_link_libraries(${PROJECT_NAME} PRIVATE FramelessHelper::Widgets)
 else()
-    target_link_libraries(${PROJECT_NAME} PRIVATE MacWindowButtonsLib)
+   # target_link_libraries(${PROJECT_NAME} PRIVATE MacWindowButtonsLib)
 endif()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE QMidi)

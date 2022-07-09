@@ -60,7 +60,7 @@ add_compile_definitions(APP_VERSION="${APP_VERSION}")
 if (NOT SYS_MAC)
     add_subdirectory(FramelessHelper)
 else()
-    add_subdirectory(MacWindowButtons)
+   # add_subdirectory(MacWindowButtons)
 endif()
 
 add_subdirectory(ImportFormats)

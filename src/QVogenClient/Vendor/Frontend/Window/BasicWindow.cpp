@@ -89,19 +89,19 @@ void BasicWindow::resizeByDesktop(double r, bool centralize) {
 
 bool BasicWindow::eventFilter(QObject *obj, QEvent *event) {
 #ifdef Q_OS_MAC
-    if (obj == m_titleBar) {
-        switch (event->type()) {
-        case QEvent::Resize: {
-            auto e = static_cast<QResizeEvent *>(event);
-            if (e->oldSize().height() != e->size().height()) {
-                setTitleBarHeight(m_titleBar->height());
-            }
-            break;
-        }
-        default:
-            break;
-        }
-    }
+//    if (obj == m_titleBar) {
+//        switch (event->type()) {
+//        case QEvent::Resize: {
+//            auto e = static_cast<QResizeEvent *>(event);
+//            if (e->oldSize().height() != e->size().height()) {
+//                setTitleBarHeight(m_titleBar->height());
+//            }
+//            break;
+//        }
+//        default:
+//            break;
+//        }
+//    }
 #endif
     return Super::eventFilter(obj, event);
 }
