@@ -32,19 +32,21 @@ BasicWindow::BasicWindow(QWidget *parent) : FramelessMainWindow(parent) {
     helper->setHitTestVisible(bar); // IMPORTANT!
 }
 #else
-#include <QResizeEvent>
+// #include <QResizeEvent>
 
-BasicWindow::BasicWindow(QWidget *parent) {
+BasicWindow::BasicWindow(QWidget *parent) : QMainWindow(parent) {
     // Insert Menu Bar To Title Bar
-    auto bar = new CMenuBar();
+    // auto bar = new CMenuBar();
 
-    // New Window Bar
-    m_titleBar = new CWindowBarV2(bar);
-    m_titleBar->installEventFilter(this);
+    // // New Window Bar
+    // m_titleBar = new CWindowBarV2(bar);
+    // m_titleBar->installEventFilter(this);
 
-    // setMenuWidget(): make the menu widget become the first row of the window.
-    this->setMenuWidget(m_titleBar);
-    m_titleBar->setWidget(this);
+    // // setMenuWidget(): make the menu widget become the first row of the window.
+    // this->setMenuWidget(m_titleBar);
+    // m_titleBar->setWidget(this);
+
+    setMenuBar(new CMenuBar());
 }
 
 #endif
@@ -52,21 +54,21 @@ BasicWindow::BasicWindow(QWidget *parent) {
 BasicWindow::~BasicWindow() {
 }
 
-void BasicWindow::setMenuBar(QMenuBar *menuBar) {
 #ifndef Q_OS_MAC
+void BasicWindow::setMenuBar(QMenuBar *menuBar) {
     auto helper = FramelessWidgetsHelper::get(this);
     auto orgBar = this->menuBar();
     if (orgBar) {
         helper->setHitTestVisible(orgBar, false);
     }
     helper->setHitTestVisible(menuBar);
-#endif
     m_titleBar->setMenuBar(menuBar);
 }
 
 QMenuBar *BasicWindow::menuBar() const {
     return m_titleBar->menuBar();
 }
+#endif
 
 void BasicWindow::resizeByDesktop(double r, bool centralize) {
     QWidget *desktop = qApp->desktop();

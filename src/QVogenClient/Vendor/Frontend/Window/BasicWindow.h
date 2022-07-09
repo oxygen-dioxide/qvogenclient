@@ -13,7 +13,11 @@ class BasicWindow : public FRAMELESSHELPER_NAMESPACE::FramelessMainWindow {
 // class BasicWindow : public MacMainWindow {
 //     Q_OBJECT
 //     using Super = MacMainWindow;
+
 #include <QMainWindow>
+
+#include "CMenu.h"
+
 class BasicWindow : public QMainWindow {
     Q_OBJECT
     using Super = QMainWindow;
@@ -23,13 +27,19 @@ public:
     ~BasicWindow();
 
 public:
+
+#ifndef Q_OS_MAC
     void setMenuBar(QMenuBar *menuBar);
     QMenuBar *menuBar() const;
+#endif
 
     void resizeByDesktop(double r, bool centralize = false);
 
 protected:
+
+#ifndef Q_OS_MAC
     CWindowBarV2 *m_titleBar;
+#endif
 
     bool eventFilter(QObject *obj, QEvent *event) override;
 
