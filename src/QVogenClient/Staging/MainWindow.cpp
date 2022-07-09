@@ -105,7 +105,9 @@ MainWindow::~MainWindow() {
 
 void MainWindow::reloadStrings() {
     // Proxy
+#ifndef Q_OS_MAC
     m_titleBar->reloadStrings();
+#endif
     m_actionMgr->reloadStrings();
 
     m_ctrlCard->setText(tr("Control"));

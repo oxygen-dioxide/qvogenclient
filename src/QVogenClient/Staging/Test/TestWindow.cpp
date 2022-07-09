@@ -70,5 +70,7 @@ TestWindow::~TestWindow() {
 }
 
 void TestWindow::reloadStrings() {
+#ifndef Q_OS_MAC
     m_titleBar->reloadStrings();
+#endif
 }
