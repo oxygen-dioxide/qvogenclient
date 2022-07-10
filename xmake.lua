@@ -2,10 +2,9 @@
 task("f2")
     on_run(function()
         import("core.base.task")
-        import("core.project.config")
 
         -- generate compile commands
-        task.run("project", { kind = "compile_commands", outputdir = config.buildir() })
+        task.run("project", { kind = "compile_commands", outputdir = "$(buildir)" })
     end)
 
     set_menu {
@@ -23,6 +22,7 @@ set_project("QVogenClient")
 set_version("0.2.22")
 
 -- set runtime output dir
-set_config("runtime_output_dir", path.absolute("build/bin"))
+set_config("runtime_output_dir", "bin")
+set_config("archive_output_dir", "lib")
 
-
+print("$(env PROGRAMFILES)")

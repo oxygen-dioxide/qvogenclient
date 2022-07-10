@@ -93,7 +93,7 @@ endif()
 
 # Link OS dependent libraries
 if(SYS_WIN)
-    target_link_libraries(${PROJECT_NAME} PRIVATE dwmapi user32 shell32 advapi32 winmm)
+#    target_link_libraries(${PROJECT_NAME} PRIVATE dwmapi user32 shell32 advapi32 winmm)
 elseif(SYS_MAC)
     set_property(TARGET ${PROJECT_NAME} PROPERTY
           MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Resources/logo/mac/Info.plist.in")
